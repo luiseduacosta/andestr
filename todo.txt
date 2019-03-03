@@ -1,0 +1,42 @@
+Papeis dos usuários:
+1) Relator pode inserir, editar, excluir, ver, listar e fazer relatório das votações do seu grupo (senha grupo1, grupo2. etc.)
+2) Editor não pode votar, pode inserir, editar, excluir textos de apoio e textos de resolução (senha: root)
+3) Admin pode tudo (senha: admin)
+
+Criar um método provisório como o campo grupo para colocar o usuario_id na tabela de votacaos. FEITO!
+
+Aprovar todos os items que não foram destacados em votação específica. FEITO!
+
+Resolver o problema de criar ou não subitems. FEITO!
+
+Impedir que um grupo veja os trabalhos do outro. FEITO!
+
+Transformar blocos do código do método add da classe votacaos em funções. EM PROCESSO, SÓ FALTA UM.
+
+Criar os grupos. Não é essencial.
+
+Verficações na tabela Votacaos: verificar se foi modificada que o campo texto esteja com algum conteúdo. 
+Se foi incluido o campo texto tem que ter conteudo. Se for aprovada ou suprimida o campo de texto tem que estar vazio.
+
+A minoritária pode ser registrada duas vezes: 1a. votação, e na segunda se registra o resultado (suprime, aprova, modifica) e em observações se anota que esta é a votação minoritária.
+Pode ser automático: quando o sistema calcula que há uma minoritária então a tela volta como todos os dados preenchidos para digitar o resultado da minoritária. FEITO!
+
+O campo resultado tem como valores: 
+1) aprovada, 
+2) modificada, 
+3) suprimida, 
+4) minoritária, TIRAR?
+5) inclusão, 
+6) remitida, 
+7) outra
+
+RELATÓRIO
+1) No relatório incluir quais grupos trabalharam a TR total ou parcialmente. FEITO!
+2) Não repetir o texto original a cada grupo. FEITO!
+3) Acrescentar um título Inclusões de novos items. Não é essencial
+4) Calcular e registrar a votação MINORITÁRIA no relatório
+
+DICA!
+$log = $this->Votacao->getDataSource()->getLog(false, false);
+debug($log);
+  
