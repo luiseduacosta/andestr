@@ -31,7 +31,7 @@
             )
         ));
         echo $this->Form->input('titulo');
-        echo $this->Form->input('autor');
+        echo $this->Form->input('autor', ['class' => 'ckeditor']);
         echo $this->Form->input('texto', array('type' => 'textarea', array('rows' => '4'), 'class' => 'ckeditor'));
         ?>
     </fieldset>

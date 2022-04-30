@@ -13,7 +13,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
+$cakeDescription = __d('cake_dev', 'Andes-SN: plataforma para os grupos mistos dos Conads e Congressos');
 $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 ?>
 <!DOCTYPE html>
@@ -45,7 +45,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                     <?php
                     if (isset($usuario)):
                         if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'):
-                            echo $this->Html->link('Votação', '/Items/index');
+                            echo $this->Html->link('Votação', '/Votacaos/index');
                         elseif ($usuario['papel'] == 'relator'):
                             echo $this->Html->link('Votação', '/Items/index' . '/grupo:' . $usuario['grupo']);
                         endif;
@@ -53,7 +53,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                     ?>
                     <?php
                     if (isset($usuario)):
-                        if ($usuario['papel'] == 'editor'):
+                        if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'):
                             echo $this->Html->link('Grupos', '/Votacaos/index');
                         elseif ($usuario['papel'] == 'relator'):
                             echo $this->Html->link('Grupos', '/Votacaos/index' . '/grupo:' . $usuario['grupo']);

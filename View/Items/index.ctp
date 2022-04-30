@@ -1,6 +1,6 @@
-<?php // pr($items);                                                            ?>
-<?php // pr($tr);                                                          ?>
-<?php // pr($votacao);                                                               ?>
+<?php // pr($items);                                                             ?>
+<?php // pr($tr);                                                           ?>
+<?php // pr($votacao);                                                                ?>
 
 <div class="items index">
     <h2><?php echo __('TR por Items'); ?></h2>
@@ -15,84 +15,84 @@
         </thead>
         <tbody>
             <?php if (isset($items)): ?>
-            <?php foreach ($items as $c_item): ?>
-            <?php // pr($c_item); ?>
-                <tr>
-                    <td><?php
-                        if (isset($usuario)):
-                            if ($usuario['papel'] == 'admin' || $usuario['papel'] == 'editor'):
-                                echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), 'index/tr:' . substr($c_item['Item']['item'], 0, 2));
-                            elseif ($usuario['papel'] == 'relator'):
-                                echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), 'index/tr:' . substr($c_item['Item']['item'], 0, 2) . '/grupo:' . $usuario['grupo']);
-                            endif;
-                        else:
-                            echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), 'index/tr:' . substr($c_item['Item']['item'], 0, 2));
-                        endif;
-                        ?>&nbsp;</td>
-
-                    <td><?php
-                        if (isset($usuario)):
-                            if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'):
-                                echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
-                            elseif ($usuario['papel'] == 'relator'):
-                                echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id'] . '/grupo:' . $usuario['grupo']);
-                            endif;
-                        else:
-                            echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
-                        endif;
-                        ?>&nbsp;</td>
-
-                    <td><?php echo $this->Text->truncate($c_item['Item']['texto'], 500, array('ellipsis' => ' ...', 'exact' => false)); ?>&nbsp;</td>
-
-                    <td class="actions">
-
-                        <?php
-                        if (isset($usuario)):
-
-                            /* Relator vota */
-                            if ($usuario['papel'] == 'relator'):
-                                echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id'] . '/grupo:' . $usuario['grupo']);
-                                if (count($c_item['Votacao']) > 0):
-                                    echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
-                                else:
-                                    echo "Sem votação";
+                <?php foreach ($items as $c_item): ?>
+                    <?php // pr($c_item); ?>
+                    <tr>
+                        <td><?php
+                            if (isset($usuario)):
+                                if ($usuario['papel'] == 'admin' || $usuario['papel'] == 'editor'):
+                                    echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2)]);
+                                elseif ($usuario['papel'] == 'relator'):
+                                    echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2) . '/grupo:' . $usuario['grupo']]);
                                 endif;
-                            
-                            /* Editor não vota */
-                            elseif ($usuario['papel'] == 'editor'):
-                                if (count($c_item['Votacao']) > 0):
-                                    echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
-                                else:
-                                    echo "Sem votação";
-                                endif;
-
-                            /* Admin pode votar */
-                            elseif ($usuario['papel'] == 'admin'):
-                                if (count($c_item['Votacao']) > 0):
-                                    echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id'] . '/item' . substr($c_item['Item']['item'], 0, 5));
-                                    echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
-                                else:
-                                    echo $this->Html->link(__('Sem votação'), '/votacaos/add/' . $c_item['Item']['id']);
-                                    echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id']);
-                                endif;
-
-                            endif;
-
-                        else:
-                            /* Visitante não vota */
-                            if (count($c_item['Votacao']) > 0):
-                                echo 'Votações: ' . count($c_item['Votacao']);
-                            // echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
                             else:
-                                echo "Sem votação";
+                                echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2)]);
                             endif;
-                        endif;
-                        ?> 
+                            ?>&nbsp;</td>
 
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-           <?php endif; ?>     
+                        <td><?php
+                            if (isset($usuario)):
+                                if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'):
+                                    echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
+                                elseif ($usuario['papel'] == 'relator'):
+                                    echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id'] . '/grupo:' . $usuario['grupo']);
+                                endif;
+                            else:
+                                echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
+                            endif;
+                            ?>&nbsp;</td>
+
+                        <td><?php echo $this->Text->truncate($c_item['Item']['texto'], 500, array('ellipsis' => ' ...', 'exact' => false)); ?>&nbsp;</td>
+
+                        <td class="actions">
+
+                            <?php
+                            if (isset($usuario)):
+
+                                /* Relator vota */
+                                if ($usuario['papel'] == 'relator'):
+                                    echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id'] . '/grupo:' . $usuario['grupo']);
+                                    if (count($c_item['Votacao']) > 0):
+                                        echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
+                                    else:
+                                        echo "Sem votação";
+                                    endif;
+
+                                /* Editor não vota */
+                                elseif ($usuario['papel'] == 'editor'):
+                                    if (count($c_item['Votacao']) > 0):
+                                        echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
+                                    else:
+                                        echo "Sem votação";
+                                    endif;
+
+                                /* Admin pode votar */
+                                elseif ($usuario['papel'] == 'admin'):
+                                    if (count($c_item['Votacao']) > 0):
+                                        echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id'] . '/item' . substr($c_item['Item']['item'], 0, 5));
+                                        echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
+                                    else:
+                                        echo $this->Html->link(__('Sem votação'), '/votacaos/add/' . $c_item['Item']['id']);
+                                        echo $this->Html->link(__('Registrar votação'), '/votacaos/add/' . $c_item['Item']['id']);
+                                    endif;
+
+                                endif;
+
+                            else:
+                                /* Visitante não vota */
+                                if (count($c_item['Votacao']) > 0):
+                                    echo 'Votações: ' . count($c_item['Votacao']);
+                                // echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5));
+                                else:
+                                    echo "Sem votação";
+                                endif;
+                            endif;
+                            ?> 
+
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>     
         </tbody>
     </table>
     <p>
@@ -162,7 +162,7 @@
                 <?php endif; ?>
             <?php else: ?>
 
-                    <li><?php echo $this->Html->link('TR: ' . $c_tr['items']['tr'], 'index/tr:' . $c_tr['items']['tr']); ?></li>                        
+                <li><?php echo $this->Html->link('TR: ' . $c_tr['items']['tr'], 'index/tr:' . $c_tr['items']['tr']); ?></li>                        
             <?php endif; ?>
 
         <?php endforeach; ?>

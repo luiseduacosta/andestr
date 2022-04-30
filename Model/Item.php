@@ -24,7 +24,7 @@ class Item extends AppModel {
             'allowEmpty' => FALSE,
             'message' => 'Digite o número de TR'
         ),
-        
+
         'item' => array(
             'rule' => '/^\d{2}.\d{2}$/i',
             'required' => TRUE,

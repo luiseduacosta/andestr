@@ -1,4 +1,4 @@
-<?php // pr($apoio);   ?>
+<?php // pr($apoio);    ?>
 
 <div class="apoios view">
     <h2><?php echo __('Texto de apoio: ' . $apoio['Apoio']['numero_texto']); ?></h2>
@@ -43,7 +43,7 @@
         <dt><?php echo __('Texto de apoio'); ?></dt>
         <dd>
             <?php
-            echo $this->Text->truncate($apoio['Apoio']['texto'], 200, array('ellipsis' => $this->Html->link('...', 'apoiocompleto/' . $apoio['Apoio']['id']), 'exact' => false));
+            echo $this->Text->truncate($apoio['Apoio']['texto'], 200, array('ellipsis' => $this->Html->link(' ...', 'apoiocompleto/' . $apoio['Apoio']['id']), 'exact' => false));
             ?>
             &nbsp;
         </dd>
@@ -76,14 +76,14 @@
         <?php if (isset($usuario)): ?>
             <?php if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'): ?>
 
-                <li><?php echo $this->Html->link(__('Editar Apoio'), array('action' => 'edit', $apoio['Apoio']['id'])); ?> </li>
-                <li><?php echo $this->Form->postLink(__('Delete Apoio'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $apoio['Apoio']['id']))); ?> </li>
-                <li><?php echo $this->Html->link(__('Listar Apoios'), array('action' => 'index')); ?> </li>
-                <li><?php echo $this->Html->link(__('Novo Apoio'), array('action' => 'add')); ?> </li>
+                <li><?php echo $this->Html->link(__('Editar Texto de apoio'), array('action' => 'edit', $apoio['Apoio']['id'])); ?> </li>
+                <li><?php echo $this->Form->postLink(__('Excluir Texto de Apoio'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Está seguro que quer excluir este registro # %s?', $apoio['Apoio']['id']))); ?> </li>
+                <li><?php echo $this->Html->link(__('Listar Todos'), array('action' => 'index')); ?> </li>
+                <li><?php echo $this->Html->link(__('Novo Texto de Apoio'), array('action' => 'add')); ?> </li>
 
             <?php else: ?>
 
-                <li><?php echo $this->Html->link(__('Listar Apoios'), array('action' => 'index')); ?> </li>
+                <li><?php echo $this->Html->link(__('Listar Todos Apoios'), array('action' => 'index')); ?> </li>
 
             <?php endif; ?>
         <?php endif; ?>

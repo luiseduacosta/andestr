@@ -14,7 +14,7 @@
         </td>
         <td>
             <?php
-            echo $votacao['Votacao']['grupo'];
+            echo $this->Html->link($votacao['Votacao']['grupo'], '/Votacaos/index/grupo:' . $votacao['Votacao']['grupo']);
             ?>
         </td>
     </tr>
@@ -41,7 +41,7 @@
 
         <td>
             <?php
-            echo 'TR suprimida?';
+            echo 'Supressão';
             ?>
         </td>
 

@@ -6,10 +6,10 @@
 
     <?php echo $this->Form->create('Item'); ?>
     <fieldset>
-        <legend><?php echo "Itmes da TR "; ?></legend>
+        <legend><?php echo "Items da TR "; ?></legend>
         <?php 
         echo $this->Form->input('apoio_id', array('label' => 'TR', 'type' => 'select', 'options' => $tr));
-        echo $this->Form->input('item', array('label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.'));
+        echo $this->Form->input('item', array('label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'placeholder' => '00.00'));
         echo $this->Form->input('texto', array('label' => 'Item do texto de resolução', 'class'=>'ckeditor'));
         ?>
     </fieldset>

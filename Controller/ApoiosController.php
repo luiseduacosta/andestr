@@ -66,6 +66,19 @@ class ApoiosController extends AppController {
      * @return void
      */
     public function view($id = null) {
+
+        $tr = $this->request->query('tr');
+        // pr($tr);
+        if (isset($tr) && !empty($tr)) {
+            $idquery = $this->Apoio->find('first', ['conditions' => ['numero_texto' => $tr], 'fields' => ['id']]);
+            // pr($idquery);
+            if ($idquery) {
+                $id = $idquery['Apoio']['id'];
+                // pr($id);
+            }
+        }
+        // echo $id;
+        // die();
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
@@ -81,6 +94,7 @@ class ApoiosController extends AppController {
      * @return void
      */
     public function apoiocompleto($id = null) {
+
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
@@ -94,6 +108,7 @@ class ApoiosController extends AppController {
      * @return void
      */
     public function add() {
+
         if ($this->request->is('post')) {
 
             // pr($this->request->data);
@@ -121,15 +136,16 @@ class ApoiosController extends AppController {
      * @return void
      */
     public function edit($id = null) {
+
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Invalid apoio'));
         }
         if ($this->request->is(array('post', 'put'))) {
             if ($this->Apoio->save($this->request->data)) {
-                $this->Flash->success(__('The apoio has been saved.'));
-                return $this->redirect(array('action' => 'index'));
+                $this->Flash->success(__('Registro atualizado.'));
+                return $this->redirect(array('action' => 'view', $id));
             } else {
-                $this->Flash->error(__('The apoio could not be saved. Please, try again.'));
+                $this->Flash->error(__('Não foi possível atualizar. Tente novamente.'));
             }
         } else {
             $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
@@ -145,6 +161,7 @@ class ApoiosController extends AppController {
      * @return void
      */
     public function delete($id = null) {
+
         $this->Apoio->id = $id;
         if (!$this->Apoio->exists()) {
             throw new NotFoundException(__('Invalid apoio'));

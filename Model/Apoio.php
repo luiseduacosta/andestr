@@ -42,7 +42,7 @@ class Apoio extends AppModel {
                 'GT Verbas',
                 'Comissão da Verdade',
                 'Tesouraria',
-                'Secretaria',                
+                'Secretaria',
                 'Outras'))
         )
     );

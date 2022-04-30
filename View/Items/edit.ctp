@@ -23,17 +23,17 @@
         <?php
         echo $this->Form->input('id', array('type' => 'hidden'));
         echo $this->Form->input('tr', array('label' => "TR", 'value' => $resolucaos['Item']['tr']));
-        echo $this->Form->input('item', array('class' => 'ckeditor'));
-        echo $this->Form->input('texto');
+        echo $this->Form->input('item');
+        echo $this->Form->input('texto', ['class' => 'ckeditor', 'style' => ['font-size: 16px']]);
         ?>
     </fieldset>
     <?php echo $this->Form->end(__('Submit')); ?>
 
 </div>
 <div class="actions">
-    <h3><?php echo __('Actions'); ?></h3>
+    <h3><?php echo __('Ações'); ?></h3>
     <ul>
-        <li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Item.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Item.id')))); ?></li>
-        <li><?php echo $this->Html->link(__('List Items'), array('action' => 'index')); ?></li>
+        <li><?php echo $this->Form->postLink(__('Excluir'), array('action' => 'delete', $this->Form->value('Item.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Item.id')))); ?></li>
+        <li><?php echo $this->Html->link(__('Listar items'), array('action' => 'index')); ?></li>
     </ul>
 </div>

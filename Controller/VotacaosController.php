@@ -501,8 +501,7 @@ class VotacaosController extends AppController {
     public function usuario($data) {
 
         $this->request->data['Votacao'] = $data;
-// pr($this->request->data);
-// die();
+        
         if ($this->Auth->user('role') === 'admin'):
 
             $grupoId = $this->request->data['Votacao']['Votacao']['grupo'];
@@ -510,7 +509,6 @@ class VotacaosController extends AppController {
 
             $this->loadModel('User');
             $usuarioData = $this->User->find('first', array('conditions' => array('User.username' => $grupo)));
-
             $this->request->data['Votacao']['user_id'] = $usuarioData['User']['id'];
 // pr($this->request->data['Votacao']['user_id']);
 // die();

@@ -48,7 +48,7 @@
         if (isset($usuario)):
             if ($usuario['papel'] == 'editor' || $usuario['papel'] == 'admin'):
                 ?>
-                <li><?php echo $this->Html->link(__('Nova TR'), array('controller' => 'Item', 'action' => 'add')); ?> </li>        
+                <li><?php echo $this->Html->link(__('Nova TR'), array('controller' => 'Items', 'action' => 'add')); ?> </li>        
                 <?php
             endif;
         endif;

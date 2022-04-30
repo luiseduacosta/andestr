@@ -34,13 +34,16 @@ if (!defined('DS')) {
  */
 if (!defined('ROOT')) {
 	define('ROOT', dirname(dirname(dirname(__FILE__))));
+	// print "ROOT " . ROOT . "<BR>";
 }
 
 /**
  * The actual directory name for the "app".
  */
 if (!defined('APP_DIR')) {
-	define('APP_DIR', basename(dirname(dirname(__FILE__))));
+	// define('APP_DIR', basename(dirname(dirname(__FILE__))));
+	define('APP_DIR', 'andestr');
+	// print "APP_DIR " . APP_DIR . "<BR>";
 }
 
 /**
@@ -57,7 +60,10 @@ if (!defined('APP_DIR')) {
  * The following line differs from its sibling
  * /lib/Cake/Console/Templates/skel/webroot/index.php
  */
-//define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
+// define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
+define('CAKE_CORE_INCLUDE_PATH', ROOT);
+// define('CAKE_CORE_INCLUDE_PATH', DS . 'usr' . DS . 'share' . DS . 'php');
+// print "CAKE_CORE_INCLUDE_PATH " . CAKE_CORE_INCLUDE_PATH . "<BR>";
 
 /**
  * This auto-detects CakePHP as a composer installed library.
@@ -75,9 +81,11 @@ if (!defined('CAKE_CORE_INCLUDE_PATH') && file_exists($vendorPath . DS . $dispat
  */
 if (!defined('WEBROOT_DIR')) {
 	define('WEBROOT_DIR', basename(dirname(__FILE__)));
+	// print WEBROOT_DIR;
 }
 if (!defined('WWW_ROOT')) {
 	define('WWW_ROOT', dirname(__FILE__) . DS);
+	// print WWW_ROOT;
 }
 
 // For the built-in server

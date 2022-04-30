@@ -124,27 +124,27 @@ class ItemsController extends AppController {
         // debug($this->request->data);
         // die();
         if (!$this->Item->exists($id)) {
-            throw new NotFoundException(__('Invalid item'));
+            throw new NotFoundException(__('Item inválido'));
         }
         if ($this->request->is(array('post', 'put'))) {
 
             // A partir do TR busco o Id na tabela Resolucao para prencher o campo resolucao_id
-            if ($this->request->data['Item']['outrotr']) {
+            if ($this->request->data['Item']['tr']) {
 
                 // A partir do TR busco o id na tabela Apoio para prencher o campo apoio_id
                 $this->loadModel('Apoio');
                 $outro_apoio = $this->Apoio->find('first', array(
-                    'conditions' => array('Apoio.numero_texto = ' . $this->request->data['Item']['outrotr']
+                    'conditions' => array('Apoio.numero_texto = ' . $this->request->data['Item']['tr']
                 )));
                 // pr($outro_apoio['Apoio']['id']);
-                $this->request->data['Item']['apoio_id'] = $outro_apoio['Resolucao']['id'];
+                // $this->request->data['Item']['apoio_id'] = $outro_apoio['Resolucao']['id'];
                 // pr($this->request->data);
                 // die();
             }
 
             if ($this->Item->save($this->request->data)) {
                 $this->Flash->success(__('Item inserido.'));
-                // return $this->redirect(array('controller' => 'Items', 'action' => 'view/' . $this->request->data['Item']['resolucao_id']));
+                return $this->redirect(array('controller' => 'Items', 'action' => 'view/' . $this->request->data['Item']['id']));
             } else {
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
