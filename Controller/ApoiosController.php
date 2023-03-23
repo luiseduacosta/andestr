@@ -36,9 +36,16 @@ class ApoiosController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
 
-        if ($this->Auth->user('id')):
-            $usuario = $this->autenticausuario();
+        $usuario = $this->Auth->user();
+        if (isset($usuario) && $usuario['role'] == 'relator'):
+            if (strlen($usuario['username']) == 6):
+                $usuariogrupo = substr($usuario['username'], 5, 1);
+            elseif (strlen($usuario['username']) == 7):
+                $usuariogrupo = substr($usuario['username'], 5, 2);
+            endif;
+            $this->set('usuariogrupo', $usuariogrupo);
         endif;
+        $this->set('usuario', $usuario);
     }
 
     /**
@@ -48,14 +55,41 @@ class ApoiosController extends AppController {
      */
     public function index() {
 
+        $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : $this->request->query('evento_id');
+
+        $this->loadModel('Evento');
+        $eventos = $this->Evento->find('list', [
+            'order' => ['ordem' => 'asc']
+        ]);
+
+        /* Se evento não veio como parametro então seleciono o último evento */
+        if (empty($evento)):
+            end($eventos); // o ponteiro está no último registro
+            $evento = key($eventos);
+        endif;
+
         if (isset($this->params['named']['tema'])):
             $tema = $this->params['named']['tema'];
-            $this->Apoio->recursive = 0;
-            $this->set('apoios', $this->Paginator->paginate('Apoio', array('Apoio.tema' => $tema)));
+            $this->Paginator->settings = [
+                'Apoio' => [
+                    'conditions' => ['Apoio.evento_id' => $evento, 'Apoio.tema' => $tema],
+                    'order' => ['Apoio.numero_texto' => 'asc']
+                ]
+            ];
+
         else:
-            $this->Apoio->recursive = 0;
-            $this->set('apoios', $this->Paginator->paginate());
+            $this->Paginator->settings = [
+                'Apoio' => [
+                    'conditions' => ['Apoio.evento_id' => $evento],
+                    'order' => ['Apoio.numero_texto' => 'asc']
+                ]
+            ];
+
         endif;
+
+        $this->set('apoios', $this->Paginator->paginate());
+        $this->set('evento', $evento);
+        $this->set('eventos', $eventos);
     }
 
     /**
@@ -68,17 +102,20 @@ class ApoiosController extends AppController {
     public function view($id = null) {
 
         $tr = $this->request->query('tr');
-        // pr($tr);
+        $evento = $this->request->query('evento');
+
         if (isset($tr) && !empty($tr)) {
-            $idquery = $this->Apoio->find('first', ['conditions' => ['numero_texto' => $tr], 'fields' => ['id']]);
+            $idquery = $this->Apoio->find('first',
+                    ['conditions' => ['numero_texto' => $tr, 'evento_id' => $evento],
+                        'fields' => ['id']
+            ]);
             // pr($idquery);
             if ($idquery) {
                 $id = $idquery['Apoio']['id'];
                 // pr($id);
             }
         }
-        // echo $id;
-        // die();
+
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
@@ -111,21 +148,30 @@ class ApoiosController extends AppController {
 
         if ($this->request->is('post')) {
 
-            // pr($this->request->data);
-            $apoio = $this->Apoio->find('first', array('conditions' => array('Apoio.numero_texto' => $this->request->data['Apoio']['numero_texto'])));
-            // pr($apoio);
+            $this->Apoio->contain();
+            $apoio = $this->Apoio->find('first',
+                    ['conditions' =>
+                        [
+                            'Apoio.numero_texto' => $this->request->data['Apoio']['numero_texto'],
+                            'Apoio.evento_id' => $this->request->data['Apoio']['evento_id']
+                        ]
+                    ]
+            );
             if ($apoio):
-                $this->Flash->error(__('Já há um texto de apio com essa numeração. Verifique e tente novamente.'));
+                $this->Flash->error(__('Já há um texto de apio com essa numeração no evento. Verifique e tente novamente.'));
             else:
                 $this->Apoio->create();
                 if ($this->Apoio->save($this->request->data)) {
                     $this->Flash->success(__('Texto de apoio inserido.'));
-                    return $this->redirect(array('action' => 'index'));
+                    return $this->redirect(array('action' => 'view', $this->Apoio->getLastInsertId()));
                 } else {
                     $this->Flash->error(__('Não foi possível inserir o texto de apoio . Tente novamente.'));
                 }
             endif;
         }
+        $eventos = $this->Apoio->Evento->find('list',
+                ['fields' => ['evento']]);
+        $this->set('eventos', $eventos);
     }
 
     /**
@@ -150,6 +196,7 @@ class ApoiosController extends AppController {
         } else {
             $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
             $this->request->data = $this->Apoio->find('first', $options);
+            $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'evento']));
         }
     }
 

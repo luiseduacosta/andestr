@@ -4,8 +4,31 @@
 App::uses('AppModel', 'Model');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
+/**
+ * User Model
+ *
+ * @property Votacao $Votacao
+ */
+
 class User extends AppModel {
 
+    public $displayField = 'username';
+    public $actsAs = array('Containable');
+    public $hasMany = array(
+        'Votacao' => array(
+            'className' => 'Votacao',
+            'foreignKey' => 'user_id',
+            'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
+        )
+    );
     public $validate = array(
         'username' => array(
             'required' => array(
@@ -39,4 +62,5 @@ class User extends AppModel {
     }
 
 }
+
 ?>

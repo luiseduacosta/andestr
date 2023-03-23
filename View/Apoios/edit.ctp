@@ -1,16 +1,49 @@
 <?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
-<div class="apoios form">
-    <?php echo $this->Form->create('Apoio'); ?>
-    <fieldset>
-        <legend><?php echo __('Editar Textos de Apoio'); ?></legend>
+
+<div class="row">
+
+    <div class="col-2">
+        <h3 class="h3"><?php echo __('Ações'); ?></h3>
+        <ul class="list-group">
+
+            <?php if (isset($usuario)): ?>
+                <?php if (($usuario['role'] == 'editor') || ($usuario['role'] == 'admin')): ?>
+                    <li class="list-group-item list-group-item-action"><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Apoio.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Apoio.id')))); ?></li>
+                <?php endif; ?>
+            <?php endif; ?>
+            <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Lista Apoios'), array('action' => 'index')); ?></li>
+
+        </ul>
+    </div>
+
+    <div class="col-10">
         <?php
-        echo $this->Form->input('id');
-        echo $this->Form->input('caderno', array('type' => 'select', 'options' => array('Principal' => 'Principal', 'Anexo' => 'Anexo')));
-        echo $this->Form->input('numero_texto');
-        echo $this->Form->input('tema', array('type' => 'select',
-            'options' => array('I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV')));
-        echo $this->Form->input('gt', array('label' => 'Setor ou grupo de trabalho',
-            'options' => array(
+        echo $this->Form->create('Apoio', [
+            'class' => 'form-horizontal',
+            'role' => 'form',
+            'inputDefaults' => [
+                'format' => ['before', 'label', 'between', 'input', 'after', 'error'],
+                'div' => ['class' => 'form-group row'],
+                'label' => ['class' => 'col-4'],
+                'between' => "<div class = 'col-8'>",
+                'class' => ['form-control'],
+                'after' => "</div>",
+                'error' => ['attributes' => ['wrap' => 'span', 'class' => 'help-inline']]
+            ]
+        ]);
+        ?>
+        <fieldset>
+            <legend><?php echo __('Editar Textos de Apoio'); ?></legend>
+            <?php
+            echo $this->Form->input('id');
+            echo $this->Form->input('evento_id', ['options' => $eventos]);
+            echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
+            echo $this->Form->input('numero_texto');
+            echo $this->Form->input('tema', ['type' => 'select',
+                'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV']
+            ]);
+            echo $this->Form->input('gt', ['label' => ['text' => 'Setor ou grupo de trabalho', 'class' => 'col-4'],
+                'options' => [[
                 'Federais' => 'Federais',
                 'Estaduais' => 'Estaduais',
                 'GTCQERGDS' => 'GTCQERGDS',
@@ -28,26 +61,21 @@
                 'Tesouraria' => 'Tesouraria',
                 'Secretaria' => 'Secretaria',
                 'Outras' => 'Outras'
-            )
-        ));
-        echo $this->Form->input('titulo');
-        echo $this->Form->input('autor', ['class' => 'ckeditor']);
-        echo $this->Form->input('texto', array('type' => 'textarea', array('rows' => '4'), 'class' => 'ckeditor'));
-        ?>
-    </fieldset>
-    <?php echo $this->Form->end(__('Submit')); ?>
-</div>
+                    ],
+                    'empty' => true
+                ]
+            ]);
+            echo $this->Form->input('titulo');
+            echo $this->Form->input('autor', ['class' => 'ckeditor']);
+            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '6', 'cols' => '50', 'class' => 'ckeditor']);
+            ?>
+        </fieldset>
+        <div class='row justify-content-left'>
+            <div class='col-auto'>
+                <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
+                <?= $this->Form->end() ?>
+            </div>
+        </div>
+    </div>
 
-<div class="actions">
-    <h3><?php echo __('Ações'); ?></h3>
-    <ul>
-
-        <?php if (isset($usuario)): ?>
-            <?php if (($usuario['papel'] == 'editor') || ($usuario['papel'] == 'admin')): ?>
-                <li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Apoio.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Apoio.id')))); ?></li>
-            <?php endif; ?>
-        <?php endif; ?>
-        <li><?php echo $this->Html->link(__('Lista Apoios'), array('action' => 'index')); ?></li>
-
-    </ul>
 </div>

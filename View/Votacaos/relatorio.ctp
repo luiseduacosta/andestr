@@ -1,17 +1,60 @@
-<?php // pr($this->data);                ?>
-<?php // pr($relatorio);                ?>
-<?php // pr($situacao);                ?>
-<?php // pr($quantidade);                ?>
+<?php // pr($this->data);                              ?>
+<?php // pr($relatorio);                              ?>
+<?php // pr($situacao);                              ?>
+<?php // pr($quantidade);                              ?>
+
+<script>
+    $(document).ready(function () {
+        var url = "<?= $this->Html->url(['controller' => 'votacaos', 'action' => 'relatorio?evento_id=']); ?>";
+        $("#EventoEventoId").change(function () {
+            var evento_id = $(this).val();
+            /* alert(evento_id); */
+            window.location = url + evento_id;
+        })
+
+    })
+</script>
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+
+        <?php if (isset($usuario) && $usuario['role'] == 'admin'): ?>
+            <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos&nbsp', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento, 'class' => 'form-control']); ?>
+            <?php echo $this->Form->end(); ?>
+        <?php else: ?>
+            <h1 style="text-align: center;"><?php echo end($eventos); ?></h1>
+        <?php endif; ?>
+    </div>
+</div>
 
 <?php if (!(isset($relatorio))): ?>
     <?php isset($usuario['grupo']) ? $titulo = 'Relatório do grupo: ' . $usuario['grupo'] : $titulo = 'Relatório geral'; ?>
 
     <legend><?php echo $titulo; ?></legend>
-    <?php echo $this->Form->create('Relatorio'); ?>
+    <?php
+    echo $this->Form->create('Relatorio', [
+        'class' => 'form-horizontal',
+        'role' => 'form',
+        'inputDefaults' => [
+            'format' => ['before', 'label', 'between', 'input', 'after', 'error'],
+            'div' => ['class' => 'form-group row'],
+            'label' => ['class' => 'col-4'],
+            'between' => "<div class = 'col-8'>",
+            'class' => ['form-control'],
+            'after' => "</div>",
+            'error' => ['attributes' => ['wrap' => 'span', 'class' => 'help-inline']]
+        ]
+    ]);
+    ?>
 
-    <?php echo $this->Form->input('trs', array('label' => 'TR. Se for a solicitar mais de uma TR, separe cada uma por vírgulas')); ?>
-
-    <?php echo $this->Form->end(__('Salvar')); ?>
+    <?php echo $this->Form->input('trs', ['label' => ['text' => 'TR', 'class' => 'col-1'], 'placeholder' => 'Se for a solicitar mais de uma TR, separe cada uma por vírgulas']); ?>
+    <div class='row justify-content-left'>
+        <div class='col-auto'>
+            <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
 
 <?php else: ?>
     <?php
@@ -32,51 +75,40 @@
             <?php echo $situacao[$i] . "<br>"; ?>
             <?php $i++; ?>
 
-            <?php $m = 1; ?>
-            <?php $mtotal = NULL; ?>
+            <?php $textotr = NULL; // Para colocar o texto da TR somente uma vez ?>
             <?php foreach ($c_relatorio as $tr_relatorio): ?>
-
                 <?php
-                if (strlen(strval($m)) == 1):
-                    $m1 = substr($tr_relatorio['Votacao']['item'], 0, 3);
-                    $m2 = '0';
-                    $m3 = strval($m);
-                    $mtotal = $m1 . $m2 . $m3;
-                elseif (strlen(strval($m)) == 2):
-                    $m1 = substr($tr_relatorio['Votacao']['item'], 0, 3);
-                    $m2 = '';
-                    $m3 = strval($m);
-                    $mtotal = $m1 . $m2 . $m3;
+                if ($textotr != $tr_relatorio['Votacao']['item']):
+                    if (substr($tr_relatorio['Votacao']['item'], 3, 2) == '99'):
+                        echo '<p style="font-size:18px;">';
+                        echo "<b>Inclusões</b>";
+                        echo '</p>';
+                    else:
+                        echo '<p style="font-size:18px; text-align: justify;">';
+                        echo '<b>Item: ' . substr($tr_relatorio['Votacao']['item'], 3, 2) . '</b>: ' . strip_tags($tr_relatorio['Item']['texto']);
+                        echo "</p>";
+                    endif;
                 endif;
-
-                if ($tr_relatorio['Votacao']['item'] === $mtotal):
-                    echo '<p>';
-                    echo '<b>Item: ' . substr($tr_relatorio['Votacao']['item'], 3, 2) . '</b>: ' . $tr_relatorio['Item']['texto'];
-                    echo "</p>";
-                    $m++;
-                endif;
+                $textotr = $tr_relatorio['Votacao']['item']; // Guardo o texto da TR para comparar e saber se mudou e assim garantir que não coloque outra vez
                 ?>
 
-                <?php // echo 'Índice -> ' . $i; ?>
-                <?php // echo "<p><b>Item " . substr($tr_relatorio['Votacao']['item'], 3, 2) . ": </b>"; ?>
-                <?php // echo $tr_relatorio['Item']['texto'] . '</p>'; ?>
                 <?php echo "<p>Grupo: " . $tr_relatorio['Votacao']['grupo']; ?>
-                <?php // echo '<br>'; ?>
                 <?php echo ". Resultado: " . '<b>' . $tr_relatorio['Votacao']['resultado'] . '</b>'; ?>
                 <?php echo ". Votação: (" . $tr_relatorio['Votacao']['votacao'] . ')'; ?>
                 <?php if ($tr_relatorio['Votacao']['observacoes']): ?>
                     <?php echo ". Observações: " . $tr_relatorio['Votacao']['observacoes']; ?>
                 <?php endif; ?>
                 <?php if ($tr_relatorio['Votacao']['item_modificada']): ?>
-                    <?php echo '<p><i>' . $tr_relatorio['Votacao']['item_modificada'] . "</i>"; ?>
+                    <?php echo '<ul><i>' . strip_tags($tr_relatorio['Votacao']['item_modificada']) . "</i>"; ?>
+                    <?php echo "</ul>"; ?>
+                    <?php echo "<br>"; ?>
                 <?php endif; ?>
-                <?php echo "</p>"; ?>
 
-                <?php // pr($c_relatorio);  ?>
+                <?php // pr($c_relatorio);    ?>
 
             <?php endforeach; ?>
 
-            <?php // echo $i;     ?>
+            <?php // echo $i;       ?>
 
             <?php echo '<br>'; ?>
 

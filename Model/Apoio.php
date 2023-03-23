@@ -14,9 +14,9 @@ class Apoio extends AppModel {
      * @var string
      */
     public $displayField = 'tema';
-    // public $hasOne = array('Resolucao');
+    public $actsAs = array('Containable');
+    public $belongsTo = ['Evento'];
     public $hasMany = array('Item');
-    
     public $validate = array(
         'caderno' => array(
             'rule' => array('inList', array('Principal', 'Anexo')),
@@ -27,23 +27,25 @@ class Apoio extends AppModel {
         ),
         'gt' => array(
             'rule' => array('inList', array(
-                'Federais',
-                'Estaduais',
-                'GTCQERGDS',
-                'GTCA',
-                'GTC',
-                'GTCT',
-                'GT Fundações',
-                'GTHMD',
-                'GTPAUA',
-                'GTPE',
-                'GTPFS',
-                'GTSSA',
-                'GT Verbas',
-                'Comissão da Verdade',
-                'Tesouraria',
-                'Secretaria',
-                'Outras'))
+                    'Federais',
+                    'Estaduais',
+                    'GTCQERGDS',
+                    'GTCA',
+                    'GTC',
+                    'GTCT',
+                    'GT Fundações',
+                    'GTHMD',
+                    'GTPAUA',
+                    'GTPE',
+                    'GTPFS',
+                    'GTSSA',
+                    'GT Verbas',
+                    'Comissão da Verdade',
+                    'Tesouraria',
+                    'Secretaria',
+                    'Outras')),
+            'required' => FALSE,
+            'allowEmpty' => TRUE,
         )
     );
 

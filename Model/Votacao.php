@@ -14,7 +14,8 @@ class Votacao extends AppModel {
      * @var string
      */
     public $displayField = 'resultado';
-    public $belongsTo = array('Item');
+    public $actsAs = array('Containable');
+    public $belongsTo = ['Evento', 'Item'];
     public $validate = array(
         'grupo' => array(
             'rule' => '/^\d{1,2}$/i',
@@ -29,7 +30,7 @@ class Votacao extends AppModel {
             'message' => 'Digite dois carateres numéricos'
         ),
         'item' => array(
-            'rule' => '/^\d{2}.\d{2}$/i',
+            'rule' => '/^\d{2}.\d{2}(.\d{2})?$/i',
             'required' => TRUE,
             'allowEmpty' => FALSE,
             'message' => 'Digite primeiro dois carateres numéricos da TR, "." e a seguir dois carateres númericos do item. Assim: nn.nn.nn'

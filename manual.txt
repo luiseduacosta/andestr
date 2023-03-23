@@ -1,0 +1,16 @@
+Há três usuarios: admin, editor e relator.
+O admin pode fazer tudo. 
+O editor é quem insere e atualiza os textos de apoio e as resoluções. Ele não lança as votações.
+O relator é quem lança as votações. Há tantos relatores como grupos mistos. Mas, ele não pode inserir Textos de Apoio nem Textos de Resolução.
+O visitante só pode ver os textos e as votações. Também pode fazer relatórios.
+
+Há 7 resultados de votação:
+1) suprimida
+2) aprovada
+3) modificada
+4) minoritária
+5) remitida
+6) inclusão
+7) outro
+
+pr($this->Model->validationErrors);

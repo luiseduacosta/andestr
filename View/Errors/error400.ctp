@@ -15,7 +15,7 @@
  */
 ?>
 <h2><?php echo $message; ?></h2>
-<p class="error">
+<p class="alert alert-danger" role="alert">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
 	<?php printf(
 		__d('cake', 'The requested address %s was not found on this server.'),

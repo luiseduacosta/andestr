@@ -52,7 +52,7 @@ class AppController extends Controller {
             'loginError' => 'Login errado. Tente novamente.',
             'authorize' => array('Controller')
         ),
-
+        'DebugKit.Toolbar',
     );
 
     public function isAuthorized($user) {
@@ -68,21 +68,20 @@ class AppController extends Controller {
 
     public function beforeFilter() {
 
-        $this->Auth->allow('index', 'view', 'apoiocompleto');
+        $this->Auth->allow('index', 'view', 'apoiocompleto', 'relatorio');
         // $this->Auth->allow('login');
         // debug($this->Auth->user());
-        $usuarioTeste = $this->Auth->user();
-        // pr($usuarioTeste['role']);
-        
-        $this->set('usuarioAutorizado', $this->Auth->user());
-        
+        // die();
+        $this->set('usuario', $this->Auth->user());
     }
 
     public function autenticausuario() {
 
         if ($this->Auth->user('id')):
             $this->loadModel('User');
-            $usuario = $this->User->findById($this->Auth->user('id'));
+            $usuario = $this->User->find('first', [
+                'conditions' => ['User.id' => $this->Auth->user('id')]
+            ]);
             // pr($usuario);
             if (!empty($usuario)):
                 if ($usuario['User']['role'] == 'editor' || $usuario['User']['role'] == 'admin'):
@@ -92,12 +91,12 @@ class AppController extends Controller {
                     $grupo = substr($usuario['User']['username'], 5, 2);
                     $papel = $usuario['User']['role'];
                 endif;
-
-                $usuario = array('grupo' => $grupo, 'papel' => $papel);
+                $usuario = ['grupo' => $grupo, 'role' => $papel];
             endif;
-            // pr($usuario);
-            $this->set('usuario', $usuario);
-            return $usuario;
+        // pr($usuario);
+        // die();
+        // $this->set('usuario', $usuario);
+        // return $usuario;
         endif;
     }
 

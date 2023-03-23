@@ -15,7 +15,7 @@ Transformar blocos do código do método add da classe votacaos em funções. EM
 
 Criar os grupos. Não é essencial.
 
-Verficações na tabela Votacaos: verificar se foi modificada que o campo texto esteja com algum conteúdo. 
+Verficações na tabela Votacaos: verificar se foi modificada que o campo texto esteja com algum conteúdo. ok!
 Se foi incluido o campo texto tem que ter conteudo. Se for aprovada ou suprimida o campo de texto tem que estar vazio.
 
 A minoritária pode ser registrada duas vezes: 1a. votação, e na segunda se registra o resultado (suprime, aprova, modifica) e em observações se anota que esta é a votação minoritária.

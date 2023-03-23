@@ -28,14 +28,13 @@
         </dd>
         <dt><?php echo __('Titulo'); ?></dt>
         <dd>
-            <?php echo h($apoio['Apoio']['titulo']); ?>
+            <?php echo strip_tags($apoio['Apoio']['titulo']); ?>
             &nbsp;
         </dd>
         <dt><?php echo __('Autor(es)'); ?></dt>
         <dd>
             <?php
-            echo $apoio['Apoio']['autor'];
-
+            echo strip_tags($apoio['Apoio']['autor']);
             ?>
             &nbsp;
         </dd>
@@ -49,15 +48,23 @@
     </dl>
 
 </div>
+<?php if (isset($usuario) && $usuario['role'] == 'admin' && $usuario['role'] == 'editor'): ?>
 
+<?php endif; ?>
 <div class="actions">
-    <h3><?php echo __('Actions'); ?></h3>
+    <h3><?php echo __('Ações'); ?></h3>
     <ul>
-        <li><?php echo $this->Html->link(__('Editar este texto'), array('action' => 'edit', $apoio['Apoio']['id'])); ?> </li>
-        <li><?php echo $this->Form->postLink(__('Excluir este texto'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $apoio['Apoio']['id']))); ?> </li>
+        <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
+            <li><?php echo $this->Html->link(__('Editar este texto'), array('action' => 'edit', $apoio['Apoio']['id'])); ?> </li>
+            <li><?php echo $this->Form->postLink(__('Excluir este texto'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $apoio['Apoio']['id']))); ?> </li>
+        <?php endif; ?>
         <li><?php echo $this->Html->link(__('Textos de apoio'), array('action' => 'index')); ?> </li>
-        <li><?php echo $this->Html->link(__('Novo texto de apoio'), array('action' => 'add')); ?> </li>
+        <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
+            <li><?php echo $this->Html->link(__('Novo texto de apoio'), array('action' => 'add')); ?> </li>
+        <?php endif; ?>
         <li><?php echo $this->Html->link(__('Resoluções'), array('controller' => 'items', 'action' => 'index')); ?> </li>
-        <li><?php echo $this->Html->link(__('Inserir resoluçao'), array('controller' => 'items', 'action' => 'add')); ?> </li>
+        <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
+            <li><?php echo $this->Html->link(__('Inserir resoluçao'), array('controller' => 'items', 'action' => 'add')); ?> </li>
+        <?php endif; ?>
     </ul>
 </div>

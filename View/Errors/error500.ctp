@@ -15,7 +15,7 @@
  */
 ?>
 <h2><?php echo $message; ?></h2>
-<p class="error">
+<p class="alert alert-danger" role="alert">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
 	<?php echo __d('cake', 'An Internal Error Has Occurred.'); ?>
 </p>

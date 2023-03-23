@@ -16,7 +16,7 @@ class ItemsController extends AppController {
 
     public function isAuthorized($user) {
 
-        if (isset($user['role']) && $user['role'] === 'editor') {
+        if (isset($user['role']) && $user['role'] == 'editor') {
             return true;
         }
 
@@ -31,35 +31,106 @@ class ItemsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
 
-        $usuario = $this->autenticausuario();
+        $usuario = $this->Auth->user();
+        if (isset($usuario) && $usuario['role'] == 'relator'):
+            if (strlen($usuario['username']) == 6):
+                $usuariogrupo = substr($usuario['username'], 5, 1);
+            elseif (strlen($usuario['username']) == 7):
+                $usuariogrupo = substr($usuario['username'], 5, 2);
+            endif;
+            $this->set('usuariogrupo', $usuariogrupo);
+        endif;
+        $this->set('usuario', $usuario);
     }
 
     public function index() {
 
-        if (isset($this->params['named']['tr'])):
-            $tr = $this->params['named']['tr'];
-            $this->Item->recursive = 2;
-            $this->set('items', $this->Paginator->paginate('Item', array('Item.tr' => $tr)));
-        else:
-            $this->Item->recursive = 2;
-            $this->set('items', $this->Paginator->paginate());
+        $evento_id = isset($this->request->params['named']['evento_id']) ? $this->request->params['named']['evento_id'] : NULL;
+        if (empty($evento_id)):
+            $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : NULL;
         endif;
 
-        $tr = $this->Item->query('select DISTINCT tr as tr FROM items order by tr');
+        // pr($evento_id);
+        // die();
+        
+        $this->loadModel('Evento');
+        $eventos = $this->Evento->find('list', [
+            'order' => ['ordem' => 'asc']
+        ]);
 
-        $this->set('tr', $tr);
+        /* Se evento não veio como parametro então seleciono o último evento */
+        if (empty($evento_id)):
+            end($eventos); // o ponteiro está no último registro
+            $evento_id = key($eventos);
+        endif;
+
+        $this->loadModel('Apoio');
+
+        if (isset($this->params['named']['tr'])):
+
+            $tr = $this->params['named']['tr'];
+            // pr($tr);
+            // die('named tr');
+            $this->Paginator->settings = [
+                'Item' => [
+                    'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
+                    'order' => ['item' => 'asc']
+                ]
+            ];
+        elseif (isset($this->request->query['tr'])):
+
+            $tr = $this->request->query['tr'];
+            // pr($tr);
+            // die('query tr');
+            $this->Paginator->settings = [
+                'Item' => [
+                    'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
+                    'order' => ['item' => 'asc']
+                ]
+            ];
+        else:
+            $this->Paginator->settings = [
+                'Item' => [
+                    'conditions' => ['Apoio.evento_id' => $evento_id],
+                    'order' => ['item' => 'asc']
+                ]
+            ];
+        endif;
+
+        $this->set('items', $this->Paginator->paginate());
+
+        $tresolucao = $this->Apoio->Item->find('all', [
+            'conditions' => ['Apoio.evento_id' => $evento_id],
+            'fields' => ['tr'],
+            'group' => ['tr']
+        ]);
+
+        $this->set('tr', $tresolucao);
+        $this->set('evento_id', $evento_id);
+        $this->set('eventos', $eventos);
     }
 
     public function add() {
 
-        // debug($this->request);
-        // die();
+        $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : NULL;
+
+        $this->loadModel('Evento');
+        $eventos = $this->Evento->find('list', [
+            'order' => ['id' => 'asc']
+        ]);
+
+        if (empty($evento)):
+            end($eventos); // o ponteiro está no último registro
+            $evento = key($eventos);
+        endif;
+
         if ($this->request->is('post')) {
             // debug($this->request);
             // A partir do Tr busco o id na tabela Resolucao
             if ($this->request->data['Item']['apoio_id']) {
 
-                $verifica_tr = $this->Item->Apoio->find('first', array('conditions' => array('Apoio.id' => $this->request->data['Item']['apoio_id'])));
+                $verifica_tr = $this->Item->Apoio->find('first',
+                        array('conditions' => array('Apoio.id' => $this->request->data['Item']['apoio_id'])));
                 // pr($verifica_tr);
                 // $log = $this->Item->getDataSource()->getLog(false, false);
                 // debug($log);
@@ -95,7 +166,14 @@ class ItemsController extends AppController {
                 $this->Flash->error(__('The item could not be saved. Please, try again.'));
             }
         }
-        $this->set('tr', $tr = $this->Item->Apoio->find('list', array('fields' => array('Apoio.numero_texto'))));
+
+        $tr = $this->Item->Apoio->find('list', [
+            'fields' => ['numero_texto'],
+            'conditions' => ['Apoio.evento_id' => $evento]]
+        );
+        $this->set('tr', $tr);
+        $this->set('eventos', $eventos);
+        $this->set('evento', $evento);
     }
 
     public function view($id = null) {
@@ -168,7 +246,7 @@ class ItemsController extends AppController {
 
         $items = $this->Item->find('all');
 
-        // pr($items); 
+        // pr($items);
         // die();
 
         foreach ($items as $c_item):
@@ -218,7 +296,7 @@ class ItemsController extends AppController {
         } else {
             $this->Flash->error(__('The item could not be deleted. Please, try again.'));
         }
-        return $this->redirect(array('controller' => 'Item', 'action' => 'index'));
+        return $this->redirect(array('controller' => 'items', 'action' => 'index'));
     }
 
     public function seleciona_lista() {

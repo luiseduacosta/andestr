@@ -5,16 +5,16 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'test_database_name',
+		'login' => 'admin',
+		'password' => 'root',
+		'database' => 'andes_caderno',
 	);
 	public $default = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
 		'port' => 3306,
-		'login' => 'root',
+		'login' => 'admin',
 		'password' => 'root',
 		'database' => 'andes_caderno',
 	);

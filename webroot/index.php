@@ -41,8 +41,8 @@ if (!defined('ROOT')) {
  * The actual directory name for the "app".
  */
 if (!defined('APP_DIR')) {
-	// define('APP_DIR', basename(dirname(dirname(__FILE__))));
-	define('APP_DIR', 'andestr');
+	define('APP_DIR', basename(dirname(dirname(__FILE__))));
+	// define('APP_DIR', 'andestr');
 	// print "APP_DIR " . APP_DIR . "<BR>";
 }
 
@@ -60,10 +60,10 @@ if (!defined('APP_DIR')) {
  * The following line differs from its sibling
  * /lib/Cake/Console/Templates/skel/webroot/index.php
  */
-// define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
-define('CAKE_CORE_INCLUDE_PATH', ROOT);
+define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'Cake' . DS . 'lib');
+// define('CAKE_CORE_INCLUDE_PATH', ROOT);
 // define('CAKE_CORE_INCLUDE_PATH', DS . 'usr' . DS . 'share' . DS . 'php');
-// print "CAKE_CORE_INCLUDE_PATH " . CAKE_CORE_INCLUDE_PATH . "<BR>";
+	// print "CAKE_CORE_INCLUDE_PATH " . CAKE_CORE_INCLUDE_PATH . "<BR>";
 
 /**
  * This auto-detects CakePHP as a composer installed library.
@@ -74,7 +74,7 @@ $dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
 if (!defined('CAKE_CORE_INCLUDE_PATH') && file_exists($vendorPath . DS . $dispatcher)) {
 	define('CAKE_CORE_INCLUDE_PATH', $vendorPath);
 }
-
+// print_r($vendorPath);
 /**
  * Editing below this line should NOT be necessary.
  * Change at your own risk.
