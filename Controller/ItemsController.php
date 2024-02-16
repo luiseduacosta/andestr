@@ -112,7 +112,9 @@ class ItemsController extends AppController {
 
     public function add() {
 
-        $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : NULL;
+        $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : $this->request->query('evento');
+        // pr($evento);
+        // die();
 
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
@@ -123,6 +125,14 @@ class ItemsController extends AppController {
             end($eventos); // o ponteiro está no último registro
             $evento = key($eventos);
         endif;
+
+        if (empty($evento)) {
+            $this->Flash->error(__('Sem inicação de evento'));
+            // echo "Erro";
+            die();
+        }
+        // pr($evento);
+        // die();
 
         if ($this->request->is('post')) {
             // debug($this->request);
@@ -166,11 +176,24 @@ class ItemsController extends AppController {
                 $this->Flash->error(__('The item could not be saved. Please, try again.'));
             }
         }
-
+        // pr($evento);
+        // die();
         $tr = $this->Item->Apoio->find('list', [
             'fields' => ['numero_texto'],
             'conditions' => ['Apoio.evento_id' => $evento]]
         );
+
+        // $log = $this->Item->Apoio->getDataSource()->getLog(false, false);
+        // debug($log);
+        // pr($tr);
+        // die();
+
+        if (!isset($tr)) {
+            $this->Flash->error(__('Não há textos de resolução cadastrados!'));
+            return $this->redirect(['controller' => 'Apoios', 'action' => 'index']);
+            die("Erro: Não há textos de resolução cadastrados!");
+        }
+        
         $this->set('tr', $tr);
         $this->set('eventos', $eventos);
         $this->set('evento', $evento);

@@ -1,3 +1,4 @@
+
 <?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
 
 <div class="row">
@@ -9,7 +10,7 @@
             if (isset($usuario)):
                 if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                     ?>
-                    <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Nova TR'), array('controller' => 'Items', 'action' => 'add')); ?> </li>        
+                    <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Nova TR'), array('controller' => 'Items', 'action' => 'add')); ?> </li>
                     <?php
                 endif;
             endif;
@@ -36,9 +37,9 @@
         <fieldset>
             <legend><?php echo __('Adicionar texto de apoio'); ?></legend>
             <?php
-            echo $this->Form->input('evento_id', ['type' => 'select', 'options' => [$eventos]]);
-            echo $this->Form->input('caderno', array('type' => 'select', 'options' => array('Principal' => 'Principal', 'Anexo' => 'Anexo')));
-            echo $this->Form->input('numero_texto');
+            echo $this->Form->input('evento_id', ['type' => 'select', 'default' => array_key_last($eventos), 'options' => [$eventos]]);
+            echo $this->Form->input('caderno', array('type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']));
+            echo $this->Form->input('numero_texto', ['required']);
             echo $this->Form->input('autor', array('class' => 'ckeditor'));
             echo $this->Form->input('titulo');
             echo $this->Form->input('tema', array('type' => 'select',

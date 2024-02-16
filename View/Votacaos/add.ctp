@@ -1,6 +1,6 @@
 <?php // pr($usuario);      ?>
 <?php // pr($item['Item']['texto']);      ?>
-<?php pr($votacao['Votacao']['id']); ?>
+<?php // pr($votacao['Votacao']['id']); ?>
 <?php // $this->request->data = $votacao;    ?>
 <?php // pr($this->data);    ?>
 <?php // die();    ?>
@@ -37,9 +37,9 @@ echo $this->Form->create('Votacao', [
             <?php $tamanho = strlen($usuario['username']) ?>
             <?php
             if ($tamanho == 7):
-                $usuariogrupo = substr($usuario['User']['username'], 5, 2);
+                $usuariogrupo = substr($usuario['username'], 5, 2);
             elseif ($tamanho == 6):
-                $usuariogrupo = substr($usuario['User']['username'], 5, 1);
+                $usuariogrupo = substr($usuario['username'], 5, 1);
             endif;
             ?>
             <legend><?php echo __('Grupo ' . $usuariogrupo . '. Inserir votação'); ?></legend>
@@ -56,7 +56,7 @@ echo $this->Form->input('evento_id', array('type' => 'hidden', 'value' => $item[
 if (isset($usuario)):
     // pr($usuario);
     if ($usuario['role'] == 'relator'):
-        echo $this->Form->input('grupo', ['type' => 'hidden', 'value' => substr($usuario['User']['username'], 5, 2), 'required']);
+        echo $this->Form->input('grupo', ['type' => 'hidden', 'value' => substr($usuario['username'], 5, 2), 'required']);
     elseif ($usuario['role'] == 'admin'):
         if (isset($votacao)):
             // echo "1 *";
@@ -107,7 +107,7 @@ endif;
     echo $this->Form->input('resultado', [
         'label' => ['text' => 'Resolução', 'class' => 'col-4'],
         'type' => 'select',
-        'selected' => $votacao['Votacao']['resultado'],
+        'selected' => isset($votacao) ? $votacao['Votacao']['resultado'] : null,
         'empty' => 'Selecione',
         'options' => ['aprovada' => 'Aprovada sem alterações',
             'modificada' => 'Aprovada com modificações',
@@ -134,7 +134,7 @@ endif;
         <?php
         echo $this->Html->link("Verificador de diferenças entre textos", "https://editor.mergely.com/", ['target' => 'blank']);
         echo "<br>";
-        echo $this->Form->input('item_modificada', ['label' => ['text' => 'Item modificado, novo item, item remetido para outro tema e/ou TR ou item aprovado como minoritário', 'class' => 'col-4'], 'value' => $item_modificada ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'ckeditor']);
+        echo $this->Form->input('item_modificada', ['label' => ['text' => 'Item modificado, novo item, item remetido para outro tema e/ou TR ou item aprovado como minoritário', 'class' => 'col-4'], 'value' => isset($item_modificada) ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'ckeditor']);
         ?>
     </div>
 </fieldset>

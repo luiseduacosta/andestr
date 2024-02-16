@@ -91,15 +91,16 @@
     </table>
     <p>
         <?php
-        echo $this->Paginator->counter(array(
+        echo $this->Paginator->counter([
             'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-        ));
-        ?>	</p>
-    <div class="paging">
+        ]);
+        ?>
+    </p>
+    <div class="pagination justify-content-center">
         <?php
-        echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-        echo $this->Paginator->numbers(array('separator' => ''));
-        echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+        echo $this->Paginator->prev('< ' . __('previous'), [], null, ['class' => 'prev disabled']);
+        echo $this->Paginator->numbers(['separator' => ''], ['class' => 'page-link']);
+        echo $this->Paginator->next(__('next') . ' >', [], null, ['class' => 'next disabled']);
         ?>
     </div>
 </div>
