@@ -5,7 +5,7 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'admin',
+		'login' => 'root',
 		'password' => 'root',
 		'database' => 'andes_caderno',
 	);
