@@ -51,7 +51,7 @@
         <thead class="thead-light">
             <tr>
                 <th><?php echo $this->Paginator->sort('id'); ?></th>
-                <th><?php echo $this->Paginator->sort('evento'); ?></th>
+                <th><?php echo $this->Paginator->sort('nomedoevento'); ?></th>
                 <th><?php echo $this->Paginator->sort('caderno'); ?></th>
                 <th><?php echo $this->Paginator->sort('numero_texto', 'Nº'); ?></th>
                 <th><?php echo $this->Paginator->sort('tema'); ?></th>
@@ -64,9 +64,10 @@
         </thead>
         <tbody>
             <?php foreach ($apoios as $apoio): ?>
+                <?php // pr($apoio) ?>
                 <tr>
                     <td><?php echo h($apoio['Apoio']['id']); ?>&nbsp;</td>
-                    <td><?php echo h($apoio['Evento']['evento']); ?>&nbsp;</td>
+                    <td><?php echo h($apoio['Evento']['nome']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['caderno']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['numero_texto']); ?>&nbsp;</td>
                     <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), 'index/tema:' . $apoio['Apoio']['tema']); ?>&nbsp;</td>
@@ -81,7 +82,7 @@
                             if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                                 ?>
                                 <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $apoio['Apoio']['id'])); ?>
-                                <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id']))); ?>
+                                <?php echo $this->Form->postLink(__('Excluir'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id']))); ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     </td>

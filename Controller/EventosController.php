@@ -40,7 +40,9 @@ class EventosController extends AppController {
      * @return void
      */
     public function index() {
-        $this->Evento->recursive = 0;
+        
+        $this->Evento->contain(['Apoio'=>'Item']);
+        // $this->Evento->recursive = 0;
         $this->set('eventos', $this->Paginator->paginate());
     }
 

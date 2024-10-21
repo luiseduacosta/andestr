@@ -1,4 +1,4 @@
-<?php // pr($votacao)                  ?>
+<?php // pr($votacao) ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <?php if (isset($usuario)): ?>
@@ -70,3 +70,11 @@
         </dd>
     <?php endif; ?>
 </dl>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <?php if (isset($usuario)): ?>
+        <?php if ($usuario['role'] == 'relator' || $usuario['role'] == 'admin'): ?>
+            <?php echo $this->Html->link('Nova votação', '/Items/index?tr=' . $votacao['Votacao']['tr'] . '&evento_id=' . $votacao['Votacao']['evento_id'], ['class' => 'btn btn-info']); ?>
+        <?php endif; ?>
+    <?php endif; ?>
+</nav>

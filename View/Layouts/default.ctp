@@ -143,7 +143,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                     echo "<span class = 'navbar-brand mb-0 h1'>Visitante</span>";
                 endif;
                 ?>
-            </nav>
+            </nav
 
             <div class="container">
                 <?php echo $this->Flash->render(); ?>

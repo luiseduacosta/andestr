@@ -5,6 +5,29 @@
 <?php // pr($this->data);    ?>
 <?php // die();    ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script> 
+
+<script>
+
+    function copiatr () {
+        var tr = document.getElementById("VotacaoTr").value;
+        if (tr.length == 1) {
+            tr = '0' + tr;
+        }
+        document.getElementById("VotacaoItem").value = tr;
+    }
+
+    $(document).ready(function () {
+
+        $("#VotacaoGrupo").mask("09", {placeholder: "__"});
+        $("#VotacaoTr").mask("09", {placeholder: "__"});
+        $("#VotacaoItem").mask("00.00.99", {placeholder: "__.__.__"});
+        $("#VotacaoVotacao").mask("09/09/09", {placeholder: "__/__/__"});
+
+    });
+
+</script>
+
 <?php if (isset($item)): ?>
     <dl class='row'>
         <dt class='col-2'><?php echo __('Item'); ?></dt>
@@ -97,11 +120,11 @@ endif;
 
     <?php
     if (isset($item)):
-        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'value' => substr($item['Item']['item'], 0, 5)]);
+        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'value' => substr($item['Item']['item'], 0, 5), "onClick" => "copiatr()"]);
     elseif (isset($tr)):
-        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'value' => $tr . '.99']);
+        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'value' => $tr . '.99',  "onClick" => "copiatr()"]);
     else:
-        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'placeholder' => '00.00.00']);
+        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn.nn Digitar: número da TR "." e o número do item. Digite "99" como número do item para indicar inclusão de novo item.', 'class' => 'col-4'], 'placeholder' => '00.00.00', "onClick" => "copiatr()"]);
     endif;
 
     echo $this->Form->input('resultado', [

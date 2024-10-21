@@ -8,15 +8,21 @@ App::uses('AppModel', 'Model');
  */
 class Apoio extends AppModel {
 
+    public $name = "Apoio";
+
+    public $useTable = "apoios";
+
+    public $primaryKey = "id";
+    
     /**
      * Display field
      *
      * @var string
      */
     public $displayField = 'tema';
-    public $actsAs = array('Containable');
+    public $actsAs = ['Containable'];
     public $belongsTo = ['Evento'];
-    public $hasMany = array('Item');
+    public $hasMany = ['Item'];
     public $validate = array(
         'caderno' => array(
             'rule' => array('inList', array('Principal', 'Anexo')),

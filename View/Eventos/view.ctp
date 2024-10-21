@@ -37,7 +37,7 @@
     </dd>
     <dt class='col-3'><?php echo __('Evento'); ?></dt>
     <dd class='col-9'>
-        <?php echo h($evento['Evento']['evento']); ?>
+        <?php echo h($evento['Evento']['nome']); ?>
         &nbsp;
     </dd>
     <dt class='col-3'><?php echo __('Ordem'); ?></dt>

@@ -8,6 +8,12 @@ App::uses('AppModel', 'Model');
  */
 class Votacao extends AppModel {
 
+    public $name = "Votacao";
+
+    public $useTable = "votacoes";
+
+    public $primaryKey = "id";
+    
     /**
      * Display field
      *
@@ -15,7 +21,7 @@ class Votacao extends AppModel {
      */
     public $displayField = 'resultado';
     public $actsAs = array('Containable');
-    public $belongsTo = ['Evento', 'Item'];
+    public $belongsTo = ['Evento', 'Item', 'User'];
     public $validate = array(
         'grupo' => array(
             'rule' => '/^\d{1,2}$/i',
@@ -28,12 +34,6 @@ class Votacao extends AppModel {
             'required' => TRUE,
             'allowEmpty' => FALSE,
             'message' => 'Digite dois carateres numéricos'
-        ),
-        'item' => array(
-            'rule' => '/^\d{2}.\d{2}(.\d{2})?$/i',
-            'required' => TRUE,
-            'allowEmpty' => FALSE,
-            'message' => 'Digite primeiro dois carateres numéricos da TR, "." e a seguir dois carateres númericos do item. Assim: nn.nn.nn'
         ),
         'resultado' => array(
             'rule' => 'notBlank',
@@ -50,7 +50,7 @@ class Votacao extends AppModel {
 
     public function isOwnedBy($votacao, $user) {
         // die($votacao);
-        return $this->field('id', array('id' => $votacao, 'user_id' => $user)) !== false;
+        return $this->field('id', ['id' => $votacao, 'user_id' => $user]) !== false;
     }
 
 }

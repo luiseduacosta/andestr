@@ -39,4 +39,5 @@ RELATÓRIO
 DICA!
 $log = $this->Votacao->getDataSource()->getLog(false, false);
 debug($log);
-  
+
+Colocar a votação para ser formatada através de javascript

@@ -15,7 +15,7 @@
         <thead class="thead-light">
             <tr>
                 <th><?php echo $this->Paginator->sort('id'); ?></th>
-                <th><?php echo $this->Paginator->sort('evento'); ?></th>
+                <th><?php echo $this->Paginator->sort('nome'); ?></th>
                 <th><?php echo $this->Paginator->sort('ordem'); ?></th>
                 <th><?php echo $this->Paginator->sort('data'); ?></th>
                 <th><?php echo $this->Paginator->sort('local'); ?></th>
@@ -25,7 +25,7 @@
             <?php foreach ($eventos as $evento): ?>
                 <tr>
                     <td><?php echo h($evento['Evento']['id']); ?>&nbsp;</td>
-                    <td><?php echo $this->Html->link(h($evento['Evento']['evento']), ['action' => 'view', $evento['Evento']['id']]); ?>&nbsp;</td>
+                    <td><?php echo $this->Html->link(h($evento['Evento']['nome']), ['action' => 'view', $evento['Evento']['id']]); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['ordem']); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['data']); ?>&nbsp;</td>
                     <td><?php echo h($evento['Evento']['local']); ?>&nbsp;</td>

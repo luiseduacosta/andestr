@@ -35,7 +35,7 @@
 
             <dt class="col-sm-3"><?php echo __('Evento'); ?></dt>
             <dd class="col-sm-9">
-                <?php echo h($apoio['Evento']['evento']); ?>
+                <?php echo h($apoio['Evento']['nome']); ?>
                 &nbsp;
             </dd>
 

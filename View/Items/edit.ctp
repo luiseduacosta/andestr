@@ -1,7 +1,7 @@
 <?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
-<?php // pr($resolucaos);      ?>
-<?php // pr($trs);      ?>
-<?php // pr($r['Resolucao']['tr']);      ?>
+<?php // pr($resolucaos); ?>
+<?php // pr($trs); ?>
+<?php // pr($r['Resolucao']['tr']); ?>
 
 <div class="items form">
     <?php if (!empty($resolucaos)): ?>    
@@ -35,7 +35,8 @@
     <fieldset>
         <legend><?php echo __('Editar item'); ?></legend>
         <?php
-        echo $this->Form->input('id ', array('type' => 'hidden'));
+        echo $this->Form->input('id', ['value' => $resolucaos['Item']['id'],'type' => 'hidden']);
+        echo $this->Form->input('apoio_id', ['value' => $resolucaos['Item']['apoio_id'],'type' => 'hidden']);
         echo $this->Form->input('tr', array('label' => "TR", 'value' => $resolucaos['Item']['tr']));
         echo $this->Form->input('item');
         echo $this->Form->input('texto', ['class' => 'ckeditor', 'style' => ['font-size: 16px']]);

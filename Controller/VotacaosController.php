@@ -95,11 +95,15 @@ class VotacaosController extends AppController {
         } else {
             $evento_id = $this->request->query('evento_id');
         }
-        /* Ultimo evento */
-        if (empty($evento_id)):
-            $evento_id = $this->evento();
-        endif;
+        /** Capturo o ultimo evento sem o item_id */
+        if ($item_id) {
+        } else { 
+            if (empty($evento_id)):
+                $evento_id = $this->evento();
+            endif;
+        }
 
+        /** Faço a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
             'order' => ['ordem' => 'asc']
@@ -108,35 +112,41 @@ class VotacaosController extends AppController {
         $this->set('eventos', $eventos);
         $this->set('evento_id', $evento_id);
 
-        /*
-          pr($grupo);
-          pr($item);
-          pr($tr);
-          pr($item_id);
-          pr($evento_id);
-          die();
-         */
-
+        // echo "Evento: " . $evento_id . "<br>";
+        // echo "Grupo: " . $grupo . "<br>";
+        // echo "Item: " . $item . "<br>";
+        // echo "Tr: " .$tr . "<br>";
+        // echo "Item_id: " . $item_id . "<br>";
+    
+        // die();
+        
         $this->Votacao->contain();
-        if ($grupo and $item and $tr and $evento_id) {
+        if ($grupo and $item_id and $tr and $evento_id) {
+            // die("1");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.item' => $item, 'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
+                        'Votacao.grupo' => $grupo, 'Votacao.item_id' => $item_id, 'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
         } elseif ($grupo and $item and $evento_id) {
+            // die("2");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.item' => $item, 'Votacao.evento_id' => $evento_id)));
+                        'Votacao.grupo' => $grupo, 'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
         } elseif ($grupo and $tr and $evento_id) {
+            // die("3");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
                         'Votacao.grupo' => $grupo, 'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
         } elseif ($grupo and $evento_id) {
+            // die("4");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
                         'Votacao.grupo' => $grupo, 'Votacao.evento_id' => $evento_id)));
-        } elseif ($item and $evento_id) {
+        } elseif ($item_id and $evento_id) {
+            // die("5");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.item' => $item, 'Votacao.evento_id' => $evento_id)));
+                        'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
         } elseif ($tr and $evento_id) {
+            // die("6");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
                         'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
         } elseif ($item_id and $evento_id) {
+            // die("7");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
                         'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
         } else {
@@ -177,7 +187,7 @@ class VotacaosController extends AppController {
                 )));
                 // pr($item_id);
                 // die();
-
+ 
                 /**/
                 if (!empty($item_id['Votacao']['id'])):
                     $this->request->data['Votacao']['item_id'] = $item_id['Votacao']['item_id'];
@@ -188,6 +198,15 @@ class VotacaosController extends AppController {
             endif;
             // pr($this->request->data);
             // die();
+
+            /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
+            // pr($this->request->data['Votacao']['tr']);
+            // pr(substr($this->request->data['Votacao']['item'], 0, 2));
+            // die();
+            if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
+                $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
+                return $this->redirect(['action' => 'edit/' . $this->request->data['Votacao']['id']]);
+            }
 
             if ($this->Votacao->save($this->request->data)):
                 $this->Flash->success(__('Votação atualizada.'));
@@ -246,8 +265,7 @@ class VotacaosController extends AppController {
         endforeach;
     }
 
-    /* Id eh o item_id em votação */
-
+    /** Id eh o item_id em votação */
     public function add($id = NULL) {
 
         /* Se o Id vem como parámentro (item_id) então é minoritária, senão é a primeira votacao */
@@ -309,14 +327,14 @@ class VotacaosController extends AppController {
 
         if ($this->request->is('post')) {
 
-            /* Exepcionalmente se a votação é do usuario admin */
+            /** Exepcionalmente se a votação é do usuario admin */
             if ($this->Auth->user('role') == 'admin'):
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
-            /* Teria que limitar ao relator? */
+            /** Teria que limitar ao relator? */
             else:
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
             endif;
-            pr($this->request->data);
+            // pr($this->request->data);
             // die('post');
 
             /* Calculo se eh minoritaria */
@@ -359,8 +377,16 @@ class VotacaosController extends AppController {
                     $this->Flash->error(__("Item já foi votado pelo grupo."));
                     return $this->redirect(['controller' => 'votacaos', 'action' => 'view', $javotado['Votacao']['id']]);
                 endif;
-
             endif;
+
+            /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
+            // pr($this->request->data['Votacao']['tr']);
+            // pr(substr($this->request->data['Votacao']['item'], 0, 2));
+            // die();
+            if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
+                $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
+                return $this->redirect(['action' => 'add/' . $id]);
+            }
 
             /* Function suprime TR na sua totalidade */
             /* Quando selecionado 1 => Sim: cria um registo de supresão para cada item da TR. */
@@ -424,11 +450,12 @@ class VotacaosController extends AppController {
             // die();
             /* Finalmente insiro a votação do item */
             $this->Votacao->create();
-            pr($this->request->data);
+            // pr($this->request->data);
             // die();
             // pr($this->Votacao->validationErrors);
             if ($this->Votacao->save($this->request->data)):
                 // pr($this->minoritaria($this->request->data['Votacao']['votacao']));
+                // die();
                 $flagminoritaria = $this->Session->read('flagminoritaria');
                 echo 'Flag ' . $flagminoritaria;
                 // die('flag');
@@ -443,6 +470,9 @@ class VotacaosController extends AppController {
                     return $this->redirect(array('controller' => 'Votacaos', 'action' => 'view/' . $this->Votacao->getLastInsertID()));
                 endif;
             else:
+                $errors = $this->Votacao->validationErrors;
+                pr($errors);
+                // die();
                 $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
             endif;
         }

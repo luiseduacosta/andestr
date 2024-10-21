@@ -1,8 +1,9 @@
-<?php // pr($items);              ?>
-<?php // pr($tr);                                                         ?>
-<?php // pr($votacao);                                                         ?>
-<?php pr($evento_id); ?>
-<?php // pr($usuariogrupo);               ?>
+<?php // pr($items); ?>
+<?php // pr($tr); ?>
+<?php // pr($votacao); ?>
+<?php // pr($evento_id); ?>
+<?php // pr($eventos); ?>
+<?php // pr($usuariogrupo); ?>
 
 <script>
 
@@ -106,8 +107,8 @@
             <table cellpadding="0" cellspacing="0" class="table table-hover table-striped table-responsive">
                 <thead class="thead-light">
                     <tr>
+                    <th><?php echo $this->Paginator->sort('item', 'Id'); ?></th>
                         <th><?php echo $this->Paginator->sort('id', 'TR'); ?></th>
-                        <th><?php echo $this->Paginator->sort('item', 'Item'); ?></th>
                         <th><?php echo $this->Paginator->sort('texto', 'Texto'); ?></th>
                         <th class="table-secondary"><?php echo __('Acões'); ?></th>
                     </tr>
@@ -117,30 +118,31 @@
                         <?php foreach ($items as $c_item): ?>
                             <?php // pr($c_item); ?>
                             <tr>
+
+                            <td><?php
+                                    if (isset($usuario)):
+                                        if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
+                                            echo $this->Html->link($c_item['Item']['id'], 'view/' . $c_item['Item']['id']);
+                                        elseif ($usuario['role'] == 'relator'):
+                                            echo $this->Html->link($c_item['Item']['id'], 'view/' . $c_item['Item']['id'] . '/grupo:' . $usuariogrupo);
+                                        endif;
+                                    else:
+                                        echo $this->Html->link($c_item['Item']['id'], 'view/' . $c_item['Item']['id']);
+                                    endif;
+                                    ?>&nbsp;</td>
+
                                 <td><?php
                                     if (isset($usuario)):
                                         if ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
-                                            echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2) . '&evento=' . $c_item['Apoio']['evento_id']]);
+                                            echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'apoios', 'action' => 'view?tr=' . $c_item['Item']['tr'] . '&evento=' . $c_item['Apoio']['evento_id']]);
                                         elseif ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2) . '&grupo:' . $usuariogrupo]);
+                                            echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'apoios', 'action' => 'view?tr=' . $c_item['Item']['tr'] . '&evento=' . $c_item['Apoio']['evento_id']]);
                                         endif;
                                     else:
-                                        echo $this->Html->link(substr($c_item['Item']['item'], 0, 2), ['controller' => 'apoios', 'action' => 'view?tr=' . substr($c_item['Item']['item'], 0, 2) . '&evento=' . $c_item['Apoio']['evento_id']]);
+                                        echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'apoios', 'action' => 'view?tr=' . $c_item['Item']['tr'] . '&evento=' . $c_item['Apoio']['evento_id']]);
                                     endif;
                                     ?>&nbsp;</td>
-
-                                <td><?php
-                                    if (isset($usuario)):
-                                        if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
-                                        elseif ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id'] . '/grupo:' . $usuariogrupo);
-                                        endif;
-                                    else:
-                                        echo $this->Html->link($c_item['Item']['item'], 'view/' . $c_item['Item']['id']);
-                                    endif;
-                                    ?>&nbsp;</td>
-
+ 
                                 <td><?php echo $this->Text->truncate($c_item['Item']['texto'], 500, array('ellipsis' => ' ...', 'exact' => false)); ?>&nbsp;</td>
 
                                 <td class="row">
@@ -148,12 +150,12 @@
                                     <ul class="nav">
                                         <?php if (isset($usuario)): ?>
 
-                                            <!-- /* Relator vota */ -->
+                                            <!-- /** Relator vota */ -->
                                             <?php if ($usuario['role'] == 'relator'): ?>
                                                 <!-- se for um item de inclusão, não tem que aparecer o botão de votar -->
                                                 <?php if (substr($c_item['Item']['item'], 3, 2) == '99'): ?>
                                                     <li class="nav-item">
-                                                        <p class = 'btn btn-secondary btn-block btn-sm'>Item incluído por votação</p>
+                                                        <p class = 'btn btn-secondary btn-block btn-sm'>Item incluído</p>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -162,7 +164,7 @@
                                                 <?php endif; ?>
                                                 <?php if (count($c_item['Votacao']) > 0): ?>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5), ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index?evento_id=' . $c_item['Apoio']['evento_id'] . '&tr=' . $c_item['Item']['tr'] . '&item_id=' . $c_item['Item']['id'], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -170,11 +172,11 @@
                                                     </li>
                                                 <?php endif; ?>
 
-                                                <!-- /* Editor não vota */  -->
+                                                <!-- /** Editor não vota */  -->
                                             <?php elseif ($usuario['role'] == 'editor'): ?>
                                                 <?php if (count($c_item['Votacao']) > 0): ?>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5), ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                    <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index?evento_id=' . $c_item['Apoio']['evento_id'] . '&tr=' . $c_item['Item']['tr'] . '&item_id=' . $c_item['Item']['id'], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -182,7 +184,7 @@
                                                     </li>
                                                 <?php endif; ?>
 
-                                                <!-- /* Admin pode votar */ -->
+                                                <!-- /** Admin pode votar */ -->
                                             <?php elseif ($usuario['role'] == 'admin'): ?>
                                                 <?php if (count($c_item['Votacao']) > 0): ?>
                                                     <!-- se for um item de inclusão, não tem que aparecer o botão de votar -->
@@ -196,7 +198,7 @@
                                                         </li>
                                                     <?php endif; ?>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item_id:' . $c_item['Item']['id'], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index?item_id=' . $c_item['Item']['id'] . '&evento_id=' . $c_item['Apoio']['evento_id'], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -213,7 +215,7 @@
                                             <!-- /* Visitante não vota */ -->
                                             <?php if (count($c_item['Votacao']) > 0): ?>
                                                 <li class="nav-item">
-                                                    <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index/item:' . substr($c_item['Item']['item'], 0, 5), ['class' => 'btn btn-secondary']); ?>
+                                                    <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), '/votacaos/index?tr=' . $c_item['Item']['tr'] . $c_item['Apoio']['evento_id'], ['class' => 'btn btn-secondary']); ?>
                                                 </li>
                                             <?php else: ?>
                                                 <li class="nav-item">
@@ -229,7 +231,6 @@
                 </tbody>
             </table>
     </div>
-
 </div>
 <div class="row justify-content-center">
     <p>
@@ -247,3 +248,4 @@
     echo $this->Paginator->next(__('next') . ' >', array('class' => 'page-link'), null, array('class' => 'page-link'));
     ?>
 </div>
+9788564626072

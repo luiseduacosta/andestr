@@ -50,15 +50,11 @@ class ItemsController extends AppController {
             $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : NULL;
         endif;
 
-        // pr($evento_id);
-        // die();
-        
+        /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
-        $eventos = $this->Evento->find('list', [
-            'order' => ['ordem' => 'asc']
-        ]);
+        $eventos = $this->Evento->find('list');
 
-        /* Se evento não veio como parametro então seleciono o último evento */
+        /** Se evento_id não veio como parametro então seleciono o último evento */
         if (empty($evento_id)):
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
@@ -69,12 +65,12 @@ class ItemsController extends AppController {
         if (isset($this->params['named']['tr'])):
 
             $tr = $this->params['named']['tr'];
-            // pr($tr);
-            // die('named tr');
+            pr($tr);
+            die('named tr');
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
-                    'order' => ['item' => 'asc']
+                    'order' => ['tr' => 'asc']
                 ]
             ];
         elseif (isset($this->request->query['tr'])):
@@ -85,20 +81,21 @@ class ItemsController extends AppController {
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
-                    'order' => ['item' => 'asc']
+                    'order' => ['tr' => 'asc']
                 ]
             ];
         else:
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id],
-                    'order' => ['item' => 'asc']
+                    'order' => ['tr' => 'asc']
                 ]
             ];
         endif;
 
         $this->set('items', $this->Paginator->paginate());
 
+        /** Para fazer a lista das TRs na coluna lateral */
         $tresolucao = $this->Apoio->Item->find('all', [
             'conditions' => ['Apoio.evento_id' => $evento_id],
             'fields' => ['tr'],
@@ -232,6 +229,7 @@ class ItemsController extends AppController {
             // A partir do TR busco o Id na tabela Resolucao para prencher o campo resolucao_id
             if ($this->request->data['Item']['tr']) {
 
+                pr($this->request->data);
                 // A partir do TR busco o id na tabela Apoio para prencher o campo apoio_id
                 $this->loadModel('Apoio');
                 $outro_apoio = $this->Apoio->find('first', array(
@@ -256,9 +254,9 @@ class ItemsController extends AppController {
 
         $options = array('conditions' => array('Item.' . $this->Item->primaryKey => $id));
         $resolucaos = $this->Item->find('first', $options);
-        $this->set('resolucaos', $resolucaos);
-
         // pr($resolucaos);
+        // die();
+        $this->set('resolucaos', $resolucaos);
     }
 
     /*

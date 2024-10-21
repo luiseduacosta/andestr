@@ -163,14 +163,14 @@ class ApoiosController extends AppController {
                 $this->Apoio->create();
                 if ($this->Apoio->save($this->request->data)) {
                     $this->Flash->success(__('Texto de apoio inserido.'));
-                    return $this->redirect(array('action' => 'view', $this->Apoio->getLastInsertId()));
+                    return $this->redirect(['action' => 'view', $this->Apoio->getLastInsertId()]);
                 } else {
                     $this->Flash->error(__('Não foi possível inserir o texto de apoio . Tente novamente.'));
                 }
             endif;
         }
         $eventos = $this->Apoio->Evento->find('list',
-                ['fields' => ['evento']]);
+                ['fields' => ['nome']]);
         $this->set('eventos', $eventos);
     }
 
@@ -196,7 +196,7 @@ class ApoiosController extends AppController {
         } else {
             $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
             $this->request->data = $this->Apoio->find('first', $options);
-            $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'evento']));
+            $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'nome']));
         }
     }
 
