@@ -1,5 +1,9 @@
 <?php // pr($apoio); ?>
 
+<?php if (isset($user)) { ?>
+<?= $this->element('menu_editor') ?>
+<?php } ?>
+
 <div class="row">
 
     <div class="col-3">

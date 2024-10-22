@@ -5,7 +5,8 @@ App::uses('AppController', 'Controller');
 /**
  * Items Controller
  */
-class VotacaosController extends AppController {
+class VotacaosController extends AppController
+{
 
     /**
      * Scaffold
@@ -41,7 +42,8 @@ class VotacaosController extends AppController {
       }
      */
 
-    function beforeFilter() {
+    function beforeFilter()
+    {
         parent::beforeFilter();
 
         $this->Auth->allow('add', 'edit', 'delete', 'relatorio');
@@ -58,46 +60,18 @@ class VotacaosController extends AppController {
         $this->set('usuario', $usuario);
     }
 
-    public function index($id = NULL) {
+    public function index($id = NULL)
+    {
 
-        $grupo = NULL;
-        $item = NULL;
-        $tr = NULL;
-        $item_id = NULL;
-        $evento_id = NULL;
+        $grupo = isset($this->request->query['grupo']) ? $this->request->query['grupo'] : null;
+        $item = isset($this->request->query['item']) ? $this->request->query['item'] : null;
+        $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
+        $item_id = isset($this->request->query['item_id']) ? $this->request->query['item_id'] : null;
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
 
-        if (isset($this->params['named']['grupo'])) {
-            $grupo = $this->params['named']['grupo'];
-        } else {
-            $grupo = $this->request->query('grupo');
-        }
-
-        if (isset($this->params['named']['item'])) {
-            $item = $this->params['named']['item'];
-        } else {
-            $item = $this->request->query('item');
-        }
-
-        if (isset($this->params['named']['tr'])) {
-            $tr = $this->params['named']['tr'];
-        } else {
-            $tr = $this->request->query('tr');
-        }
-
-        if (isset($this->params['named']['item_id'])) {
-            $item_id = $this->params['named']['item_id'];
-        } else {
-            $item_id = $this->request->query('item_id');
-        }
-
-        if (isset($this->params['named']['evento_id'])) {
-            $evento_id = $this->params['named']['evento_id'];
-        } else {
-            $evento_id = $this->request->query('evento_id');
-        }
         /** Capturo o ultimo evento sem o item_id */
         if ($item_id) {
-        } else { 
+        } else {
             if (empty($evento_id)):
                 $evento_id = $this->evento();
             endif;
@@ -117,41 +91,59 @@ class VotacaosController extends AppController {
         // echo "Item: " . $item . "<br>";
         // echo "Tr: " .$tr . "<br>";
         // echo "Item_id: " . $item_id . "<br>";
-    
+
         // die();
-        
+
         $this->Votacao->contain();
         if ($grupo and $item_id and $tr and $evento_id) {
             // die("1");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.item_id' => $item_id, 'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.grupo' => $grupo,
+                'Votacao.item_id' => $item_id,
+                'Votacao.tr' => $tr,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($grupo and $item and $evento_id) {
             // die("2");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.grupo' => $grupo,
+                'Votacao.item_id' => $item_id,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($grupo and $tr and $evento_id) {
             // die("3");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.grupo' => $grupo,
+                'Votacao.tr' => $tr,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($grupo and $evento_id) {
             // die("4");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.grupo' => $grupo, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.grupo' => $grupo,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($item_id and $evento_id) {
             // die("5");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.item_id' => $item_id,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($tr and $evento_id) {
             // die("6");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.tr' => $tr, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.tr' => $tr,
+                'Votacao.evento_id' => $evento_id
+            )));
         } elseif ($item_id and $evento_id) {
             // die("7");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', array(
-                        'Votacao.item_id' => $item_id, 'Votacao.evento_id' => $evento_id)));
+                'Votacao.item_id' => $item_id,
+                'Votacao.evento_id' => $evento_id
+            )));
         } else {
             $this->set('votacaos', $this->Paginator->paginate('Votacao', [
-                        'Votacao.evento_id' => $evento_id
+                'Votacao.evento_id' => $evento_id
             ]));
         }
 
@@ -162,7 +154,8 @@ class VotacaosController extends AppController {
         ]));
     }
 
-    public function edit($id = NULL) {
+    public function edit($id = NULL)
+    {
 
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__('Votação inválida'));
@@ -172,7 +165,7 @@ class VotacaosController extends AppController {
 
         if ($this->Auth->user('role') == 'editor'):
             $this->Flash->error(__('Editor não pode atualizar votações.'));
-            return $this->redirect(['action' => 'view/' . $this->request->data['Votacao']['id']]);
+            return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
         endif;
 
         /* Executa a ação */
@@ -183,11 +176,13 @@ class VotacaosController extends AppController {
             /* Ajusto o valor do item_id em função do valor do item */
             if ($this->request->data['Votacao']['id']):
                 $item_id = $this->Votacao->find('first', array(
-                    'conditions' => array('Votacao.id = ' . $this->request->data['Votacao']['id']
-                )));
+                    'conditions' => [
+                        'Votacao.id ' => $this->request->data['Votacao']['id']
+                    ]
+                ));
                 // pr($item_id);
                 // die();
- 
+
                 /**/
                 if (!empty($item_id['Votacao']['id'])):
                     $this->request->data['Votacao']['item_id'] = $item_id['Votacao']['item_id'];
@@ -205,14 +200,14 @@ class VotacaosController extends AppController {
             // die();
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
                 $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
-                return $this->redirect(['action' => 'edit/' . $this->request->data['Votacao']['id']]);
+                return $this->redirect(['action' => 'edit', $this->request->data['Votacao']['id']]);
             }
 
             if ($this->Votacao->save($this->request->data)):
                 $this->Flash->success(__('Votação atualizada.'));
-                return $this->redirect(['action' => 'view/' . $this->request->data['Votacao']['id']]);
+                return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
             else:
-                pr($this->Votacao->validationErrors);
+                // pr($this->Votacao->validationErrors);
                 $this->Flash->error(__('Votação não foi atualizada. Tente novamente.'));
             endif;
         else:
@@ -221,12 +216,14 @@ class VotacaosController extends AppController {
         endif;
     }
 
-    /* Cuidado com esta função que altera  o user_id da tabela Votacao */
+    /** Cuidado com esta função que altera  o user_id da tabela Votacao */
+    public function atualizausuario()
+    {
 
-    public function atualizausuario() {
-
-        $grupos = $this->Votacao->find('all', array(''
-            . 'order' => array('grupo')));
+        $grupos = $this->Votacao->find('all', array(
+            ''
+            . 'order' => array('grupo')
+        ));
 
         foreach ($grupos as $c_grupos):
             // pr($c_grupos['Votacao']['grupo']);
@@ -236,7 +233,9 @@ class VotacaosController extends AppController {
             // echo $busca;
             $usuario = $this->User->find('all', array(
                 'conditions' => array(
-                    'User.username' => $busca)));
+                    'User.username' => $busca
+                )
+            ));
             // pr($usuario);
             // echo ' ' . $i . " => Votação do grupo: " . $c_grupos['Votacao']['grupo'] . '<br>';
 
@@ -254,19 +253,20 @@ class VotacaosController extends AppController {
                 echo "<br>";
 
             endif;
-// $log = $this->Votacao->getDataSource()->getLog(false, false);
-// debug($log);
+            // $log = $this->Votacao->getDataSource()->getLog(false, false);
+            // debug($log);
 
             $sql = 'update votacaos set user_id = ' . $usuario[0]['User']['id'] . ' where id = ' . $c_grupos['Votacao']['id'];
-// echo $sql;
-            // die();            //
-//$this->Votacao->query($sql);
+            // echo $sql;
+            // die(); 
+            //$this->Votacao->query($sql);
 
         endforeach;
     }
 
     /** Id eh o item_id em votação */
-    public function add($id = NULL) {
+    public function add($id = NULL)
+    {
 
         /* Se o Id vem como parámentro (item_id) então é minoritária, senão é a primeira votacao */
         // echo 'id 0 ' . $id . '<br>';
@@ -322,7 +322,7 @@ class VotacaosController extends AppController {
                 $this->Flash->error(__('Sem votação anterior'));
                 echo "Error: Sem votação anterior" . "<br>";
                 exit;
-            // die();
+                // die();
             endif;
         endif;
 
@@ -331,7 +331,7 @@ class VotacaosController extends AppController {
             /** Exepcionalmente se a votação é do usuario admin */
             if ($this->Auth->user('role') == 'admin'):
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
-            /** Teria que limitar ao relator? */
+                /** Teria que limitar ao relator? */
             else:
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
             endif;
@@ -350,7 +350,7 @@ class VotacaosController extends AppController {
                 endif;
                 $flag = $this->Session->read('flagminoritaria');
                 echo "Saída = " . $flag . "<br>";
-            // die();
+                // die();
             else:
                 $this->Flash->error(__('Registre o resultado da votacao. Tente novamente.'));
                 return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', $id]);
@@ -360,7 +360,7 @@ class VotacaosController extends AppController {
             echo $this->request->data['Votacao']['resultado'] . '<br>';
             // die();
             if (($this->request->data['Votacao']['resultado'] == 'inclusão') || ($this->request->data['Votacao']['resultado'] == 'minoritária')):
-            // echo "modifica ou outros resultados" . '<br>';
+                // echo "modifica ou outros resultados" . '<br>';
             else:
                 /* Busca se já foi votado o item pelo grupo e avisa no Flash. Não há impedimento (está certo?) */
                 /* Function */
@@ -440,13 +440,14 @@ class VotacaosController extends AppController {
 
                 /* Altero o valor do item_id com o id do item inserido */
                 $this->request->data['Votacao']['item_id'] = $this->Item->id;
-            };
+            }
+            ;
             // pr($this->minoritaria($this->request->data['Votacao']['votacao']));
             // pr($this->Session->read('flagminoritaria'));
             if ($this->Session->read('flagminoritaria') == 1):
-            // die('flagminoritaria = 1');
+                // die('flagminoritaria = 1');
             else:
-            // die('flagminoritaria = 0');
+                // die('flagminoritaria = 0');
             endif;
             // die();
             /* Finalmente insiro a votação do item */
@@ -479,7 +480,8 @@ class VotacaosController extends AppController {
         }
     }
 
-    public function itemId($dados) {
+    public function itemId($dados)
+    {
 
         if ($dados) {
             /* Votação de inclusao de item novo: inclusao. O campo item_id fica em 0 */
@@ -494,17 +496,19 @@ class VotacaosController extends AppController {
                 $this->loadModel('Item');
                 $this->Item->contain();
                 $outro_item = $this->Item->find('first', array(
-                    'conditions' => array('Item.item = ' . $this->request->data['Votacao']['item']
-                )));
+                    'conditions' => array(
+                        'Item.item = ' . $this->request->data['Votacao']['item']
+                    )
+                ));
                 // echo $this->request->data['Votacao']['item'];
                 // pr($outro_item['Item']['id']);
                 // die();
                 if (!empty($outro_item['Item']['id'])):
-// Votação de aprovação, modificação, supresão, minoritária, remissão, outro. O campo item_id eh capturado da tabela Item
+                    // Votação de aprovação, modificação, supresão, minoritária, remissão, outro. O campo item_id eh capturado da tabela Item
                     $this->request->data['Votacao']['item_id'] = $outro_item['Item']['id'];
-                // pr($this->request->data['Votacao']['item_id']);
-                // die('item_id');
-                else :
+                    // pr($this->request->data['Votacao']['item_id']);
+                    // die('item_id');
+                else:
                     $this->Flash->error(__('O item não existe. Inserir novo item na TR'));
                     return $this->redirect(array('controller' => 'Items', 'action' => 'add'));
                 endif;
@@ -513,60 +517,65 @@ class VotacaosController extends AppController {
         return $this->request->data['Votacao']['item_id'];
     }
 
-    public function aprovaembloco($dados) {
+    public function aprovaembloco($dados)
+    {
 
         if ($this->request->data['Votacao']['tr_aprovada'] == 1):
-// echo $this->request->data['Votacao']['tr_aprovada'];
+            // echo $this->request->data['Votacao']['tr_aprovada'];
 // die();
 
             /* Busco os items na tabela item */
             $this->loadModel('Item');
             $items = $this->Item->find('all', array(
-                'conditions' => array('Item.item LIKE' => substr($this->request->data['Votacao']['item'], 0, 2) . '%')));
-// $log = $this->Votacao->getDataSource()->getLog(false, false);
+                'conditions' => array('Item.item LIKE' => substr($this->request->data['Votacao']['item'], 0, 2) . '%')
+            ));
+            // $log = $this->Votacao->getDataSource()->getLog(false, false);
 // debug($log);
 // pr($items);
 // die();
 // echo count($items);
             foreach ($items as $c_item):
-// echo substr($c_item['Item']['item'], 0, 5);
+                // echo substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item'] = substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item_id'] = $c_item['Item']['id'];
 
-// pr($this->request->data);
+                // pr($this->request->data);
 // die();
 
                 /* Verifico se já foi votado */
                 $javotado = $this->Votacao->find('first', array(
                     'conditions' => array(
                         'Votacao.item' => $this->request->data['Votacao']['item'],
-                        'Votacao.grupo' => $this->request->data['Votacao']['grupo'])));
-// pr($javotado);
+                        'Votacao.grupo' => $this->request->data['Votacao']['grupo']
+                    )
+                ));
+                // pr($javotado);
 // $log = $this->Votacao->getDataSource()->getLog(false, false);
 // debug($log);
 
                 /* Se não foi votado o item então insiro os valores de aprovação */
                 if (count($javotado) == 0):
                     $this->Votacao->create();
-// $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
+                    // $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
                     if ($this->Votacao->save($this->request->data)):
-// pr($this->request->data);
+                        // pr($this->request->data);
 // die();
                         $this->Flash->success(__('Votação inserida.'));
                     else:
                         $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
                     endif;
-// die('Item aprovado não foi inserido?');
+                    // die('Item aprovado não foi inserido?');
                 endif;
 
             endforeach;
-// die();
+            // die();
             return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index/tr:' . substr($this->request->data['Votacao']['item'], 0, 2)));
-// die();
+            // die();
         endif;
     }
 
-    public function minoritaria($dados) {
+    public function minoritaria($dados)
+    {
 
         $verifica = strpos($dados, '/');
         // pr($verifica);
@@ -603,49 +612,51 @@ class VotacaosController extends AppController {
         return $minoritariavotos;
     }
 
-    public function suprimeTR($suprime) {
+    public function suprimeTR($suprime)
+    {
 
         if ($this->request->data['Votacao']['tr_suprimida'] == 1):
-// pr($this->request->data['Votacao']['tr_suprimida']);
+            // pr($this->request->data['Votacao']['tr_suprimida']);
 // die("function");
 
             /* Tem que verificar que selecionou resultado = 'suprimida' */
             if ($this->request->data['Votacao']['resultado'] !== 'suprimida'):
-// pr($this->request->data['Votacao']['resultado']);
+                // pr($this->request->data['Votacao']['resultado']);
                 $this->Flash->error(__('Tem que selecionar "suprimida" também na caixa "Resolução".'));
-                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index/tr:' . substr($this->request->data['Votacao']['item'], 0, 2)));
+                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
             endif;
 
-// pr($this->request->data['Votacao']['item_modificada']);
+            // pr($this->request->data['Votacao']['item_modificada']);
 // die();
             /* Tem que verificar que o campo item_modificada está vazio */
             if (!empty($this->request->data['Votacao']['item_modificada'])):
-// pr($this->request->data['Votacao']['item_modificada']);
+                // pr($this->request->data['Votacao']['item_modificada']);
 // die();
                 $this->Flash->error(__('O campo Item modificado não está vazio. Verifique antes de suprimir a TR'));
-                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index/tr:' . substr($this->request->data['Votacao']['item'], 0, 2)));
+                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
             endif;
 
-// die("Pasou!");
+            // die("Pasou!");
 
             /* Busco os items na tabela Item */
             $this->loadModel('Item');
             $items = $this->Item->find('all', [
-                'conditions' => ['Item.tr' => $this->request->data['Votacao']['tr']
+                'conditions' => [
+                    'Item.tr' => $this->request->data['Votacao']['tr']
                 ]
             ]);
-// $log = $this->Votacao->getDataSource()->getLog(false, false);
+            // $log = $this->Votacao->getDataSource()->getLog(false, false);
 // debug($log);
             foreach ($items as $c_item):
-// echo substr($c_item['Item']['item'], 0, 5);
+                // echo substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item'] = substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item_id'] = $c_item['Item']['id'];
-// pr($this->request->data);
+                // pr($this->request->data);
 // die();
                 $this->Votacao->create();
-// $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
+                // $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
                 if ($this->Votacao->save($this->request->data)):
-// pr($this->request->data);
+                    // pr($this->request->data);
 // die();
                     $this->Flash->success(__('Votação inserida.'));
                 else:
@@ -653,13 +664,14 @@ class VotacaosController extends AppController {
                 endif;
 
             endforeach;
-// die();
-            return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index/tr:' . substr($this->request->data['Votacao']['item'], 0, 2)));
-// die();
+            // die();
+            return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
+            // die();
         endif;
     }
 
-    public function usuario($data) {
+    public function usuario($data)
+    {
 
         $this->request->data['Votacao'] = $data;
 
@@ -671,7 +683,7 @@ class VotacaosController extends AppController {
             $this->loadModel('User');
             $usuarioData = $this->User->find('first', array('conditions' => array('User.username' => $grupo)));
             $this->request->data['Votacao']['user_id'] = $usuarioData['User']['id'];
-// pr($this->request->data['Votacao']['user_id']);
+            // pr($this->request->data['Votacao']['user_id']);
 // die();
 
         endif;
@@ -680,7 +692,8 @@ class VotacaosController extends AppController {
 
     /* Na verdade todos podem ter acesso a esta função */
 
-    public function view($id = null) {
+    public function view($id = null)
+    {
 
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__('Id inválidO'));
@@ -699,7 +712,7 @@ class VotacaosController extends AppController {
             else:
                 // echo "Usuário relator de votação de outros grupos: não autorizado";
                 $this->Flash->error(__('Ação não autorizada.'));
-                return $this->redirect(array('action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']));
+                return $this->redirect(array('action' => 'index', '?' => ['grupo' => $votacao_grupo['Votacao']['grupo']]));
             endif;
         elseif ($this->Auth->user('role') == 'admin'):
             // echo "Admin autorizado";
@@ -708,13 +721,14 @@ class VotacaosController extends AppController {
         else:
             $options = array('conditions' => array('Votacao.' . $this->Votacao->primaryKey => $id));
             $this->set('votacao', $this->Votacao->find('first', $options));
-        // $this->Flash->error(__('Ação não autorizada.'));
-        // return $this->redirect(array('action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']));
+            // $this->Flash->error(__('Ação não autorizada.'));
+            // return $this->redirect(array('action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']));
         endif;
         // die();
     }
 
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
 
         $this->Votacao->id = $id;
 
@@ -732,31 +746,32 @@ class VotacaosController extends AppController {
                 $this->Flash->success(__('Votação foi excluida.'));
                 if ($this->Auth->user('role') === 'relator'):
                     /* Se eh relator vai para grupo */
-                    return $this->redirect(array('action' => 'index/grupo:' . $votacao['Votacao']['grupo']));
+                    return $this->redirect(array('action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]));
 
                 elseif ($this->Auth->user('role') === 'admin'):
                     /* Se eh admin vai para tr */
-                    return $this->redirect(array('action' => 'index/tr:' . $votacao['Votacao']['tr']));
+                    return $this->redirect(array('action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr']]));
                 endif;
             else:
                 $this->Flash->error(__('Votação não foi excluida. Tente novamente.'));
                 if ($this->Auth->user('role') === 'relator'):
                     /* Se eh relator vai para grupo */
-                    return $this->redirect(array('action' => 'index/grupo:' . $votacao['Votacao']['grupo']));
+                    return $this->redirect(array('action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]));
 
                 elseif ($this->Auth->user('role') === 'admin'):
                     /* Se eh admin vai para tr */
-                    return $this->redirect(array('action' => 'index/tr:' . $votacao['Votacao']['tr']));
+                    return $this->redirect(array('action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr']]));
                 endif;
             endif;
-        /* Editor nao podo excluir votacao */
+            /* Editor nao podo excluir votacao */
         elseif ($this->Auth->user('role') === 'editor'):
             $this->Flash->error(__('Ação não autorizada.'));
-            return $this->redirect(array('action' => 'index/grupo:' . $votacao['Votacao']['grupo']));
+            return $this->redirect(array('action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]));
         endif;
     }
 
-    public function relatorio() {
+    public function relatorio()
+    {
 
         $evento_id = isset($this->request->params['named']['evento_id']) ? $this->request->params['named']['evento_id'] : $this->request->query('evento_id');
         if (empty($evento_id)):
@@ -785,19 +800,24 @@ class VotacaosController extends AppController {
 
                 /* Relatorio por grupo ou total */
                 if (!empty($usuario['grupo'])):
-                    $relatorio[$i] = $this->Votacao->find('all', [
-                        'order' => ['Votacao.item, Votacao.grupo  ASC'],
-                        'conditions' => ['Votacao.tr' => $c_dados,
-                            'Votacao.grupo' => $usuario['grupo'],
-                            'Votacao.evento_id' => $evento_id
-                        ],
-                            ]
+                    $relatorio[$i] = $this->Votacao->find(
+                        'all',
+                        [
+                            'order' => ['Votacao.item, Votacao.grupo  ASC'],
+                            'conditions' => [
+                                'Votacao.tr' => $c_dados,
+                                'Votacao.grupo' => $usuario['grupo'],
+                                'Votacao.evento_id' => $evento_id
+                            ],
+                        ]
                     );
                 else:
                     $relatorio[$i] = $this->Votacao->find('all', [
                         'order' => ['Votacao.item, Votacao.grupo  ASC'],
-                        'conditions' => ['Votacao.tr' => $c_dados,
-                            'Votacao.evento_id' => $evento_id],
+                        'conditions' => [
+                            'Votacao.tr' => $c_dados,
+                            'Votacao.evento_id' => $evento_id
+                        ],
                     ]);
                 endif;
 
@@ -989,7 +1009,8 @@ class VotacaosController extends AppController {
         }
     }
 
-    public function evento($id = NULL) {
+    public function evento($id = NULL)
+    {
 
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [

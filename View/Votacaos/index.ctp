@@ -35,7 +35,7 @@
                     <?php
                     if (isset($usuario['role'])):
                         if ($usuario['role'] == 'relator'):
-                            echo $this->Html->link('Votação de novo item ', '/Items/index/' . '/grupo:' . $usuariogrupo, ['class' => ['btn btn-secondary']]);
+                            echo $this->Html->link('Votação de novo item ', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $evento_id, 'grupo' => $usuariogrupo]], ['class' => ['btn btn-secondary']]);
                         elseif ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
                             echo "<h3>Grupos</h3>";
                         endif;

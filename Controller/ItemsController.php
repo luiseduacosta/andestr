@@ -48,38 +48,39 @@ class ItemsController extends AppController
 
     public function index()
     {
+        $apoio_id = isset($this->request->query['apoio_id']) ? $this->request->query['apoio_id'] : null;
+        $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
 
-        $evento_id = isset($this->request->params['named']['evento_id']) ? $this->request->params['named']['evento_id'] : NULL;
-        if (empty($evento_id)):
-            $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : NULL;
-        endif;
+        /** Localizo o evento_id a partir do apoio_id ou diretamente como parâmetro */
+        if ($apoio_id) {
+            $this->loadModel('Apoio');
+            $apoio = $this->Apoio->find(
+                'first',
+                ['conditions' => ['Apoio.id' => $apoio_id]]
+            );
+            if ($apoio) {
+                $evento_id = $apoio['Apoio']['evento_id'];
+            } else {
+                echo "Sem registros em Apoios";
+            }
+        } else {
+            $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
+        }
 
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list');
 
-        /** Se evento_id não veio como parametro então seleciono o último evento */
+        /** Se evento_id não veio como parametro nem pode ser calculado a partir do apoio_id então seleciono o último evento */
         if (empty($evento_id)):
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
         endif;
 
         $this->loadModel('Apoio');
-
-        if (isset($this->params['named']['tr'])):
-
-            $tr = $this->params['named']['tr'];
-            $this->Paginator->settings = [
-                'Item' => [
-                    'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
-                    'order' => ['item' => 'asc']
-                ]
-            ];
-        elseif (isset($this->request->query['tr'])):
-
+        if (isset($this->request->query['tr']) && isset($evento_id)):
             $tr = $this->request->query['tr'];
-            // pr($tr);
-            // die('query tr');
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
@@ -173,7 +174,7 @@ class ItemsController extends AppController
                 // pr($this->request->data);
                 // die();
                 $this->Flash->success(__('The item has been saved.'));
-                return $this->redirect(array('controller' => 'Items', 'action' => 'view/' . $this->Item->getLastInsertId()));
+                return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->Item->getLastInsertId()));
             } else {
                 $this->Flash->error(__('The item could not be saved. Please, try again.'));
             }
@@ -217,6 +218,9 @@ class ItemsController extends AppController
 
         if (isset($this->params['named']['votacao'])):
             $votacao = $this->params['named']['votacao'];
+            if (empty($votacao)) {
+                $votacao = $this->request->query['votacao'];
+            }
             $this->set('votacao', $votacao);
         else:
             $votacao = 0;
