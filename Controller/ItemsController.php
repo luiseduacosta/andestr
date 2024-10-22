@@ -5,7 +5,8 @@ App::uses('AppController', 'Controller');
 /**
  * Items Controller
  */
-class ItemsController extends AppController {
+class ItemsController extends AppController
+{
 
     /**
      * Scaffold
@@ -14,7 +15,8 @@ class ItemsController extends AppController {
      */
     public $components = array('Paginator');
 
-    public function isAuthorized($user) {
+    public function isAuthorized($user)
+    {
 
         if (isset($user['role']) && $user['role'] == 'editor') {
             return true;
@@ -28,7 +30,8 @@ class ItemsController extends AppController {
         return parent::isAuthorized($user);
     }
 
-    function beforeFilter() {
+    function beforeFilter()
+    {
         parent::beforeFilter();
 
         $usuario = $this->Auth->user();
@@ -43,7 +46,8 @@ class ItemsController extends AppController {
         $this->set('usuario', $usuario);
     }
 
-    public function index() {
+    public function index()
+    {
 
         $evento_id = isset($this->request->params['named']['evento_id']) ? $this->request->params['named']['evento_id'] : NULL;
         if (empty($evento_id)):
@@ -65,12 +69,10 @@ class ItemsController extends AppController {
         if (isset($this->params['named']['tr'])):
 
             $tr = $this->params['named']['tr'];
-            pr($tr);
-            die('named tr');
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
-                    'order' => ['tr' => 'asc']
+                    'order' => ['item' => 'asc']
                 ]
             ];
         elseif (isset($this->request->query['tr'])):
@@ -81,14 +83,14 @@ class ItemsController extends AppController {
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id, 'Item.tr' => $tr],
-                    'order' => ['tr' => 'asc']
+                    'order' => ['item' => 'asc']
                 ]
             ];
         else:
             $this->Paginator->settings = [
                 'Item' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id],
-                    'order' => ['tr' => 'asc']
+                    'order' => ['item' => 'asc']
                 ]
             ];
         endif;
@@ -107,7 +109,8 @@ class ItemsController extends AppController {
         $this->set('eventos', $eventos);
     }
 
-    public function add() {
+    public function add()
+    {
 
         $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : $this->request->query('evento');
         // pr($evento);
@@ -136,8 +139,10 @@ class ItemsController extends AppController {
             // A partir do Tr busco o id na tabela Resolucao
             if ($this->request->data['Item']['apoio_id']) {
 
-                $verifica_tr = $this->Item->Apoio->find('first',
-                        array('conditions' => array('Apoio.id' => $this->request->data['Item']['apoio_id'])));
+                $verifica_tr = $this->Item->Apoio->find(
+                    'first',
+                    array('conditions' => array('Apoio.id' => $this->request->data['Item']['apoio_id']))
+                );
                 // pr($verifica_tr);
                 // $log = $this->Item->getDataSource()->getLog(false, false);
                 // debug($log);
@@ -175,9 +180,12 @@ class ItemsController extends AppController {
         }
         // pr($evento);
         // die();
-        $tr = $this->Item->Apoio->find('list', [
-            'fields' => ['numero_texto'],
-            'conditions' => ['Apoio.evento_id' => $evento]]
+        $tr = $this->Item->Apoio->find(
+            'list',
+            [
+                'fields' => ['numero_texto'],
+                'conditions' => ['Apoio.evento_id' => $evento]
+            ]
         );
 
         // $log = $this->Item->Apoio->getDataSource()->getLog(false, false);
@@ -188,15 +196,16 @@ class ItemsController extends AppController {
         if (!isset($tr)) {
             $this->Flash->error(__('Não há textos de resolução cadastrados!'));
             return $this->redirect(['controller' => 'Apoios', 'action' => 'index']);
-            die("Erro: Não há textos de resolução cadastrados!");
+            // die("Erro: Não há textos de resolução cadastrados!");
         }
-        
+
         $this->set('tr', $tr);
         $this->set('eventos', $eventos);
         $this->set('evento', $evento);
     }
 
-    public function view($id = null) {
+    public function view($id = null)
+    {
 
         if (!$this->Item->exists($id)) {
             throw new NotFoundException(__('Invalid resolucao'));
@@ -218,7 +227,8 @@ class ItemsController extends AppController {
         $this->set('item', $this->Item->find('first', $options));
     }
 
-    public function edit($id = null) {
+    public function edit($id = null)
+    {
         // debug($this->request->data);
         // die();
         if (!$this->Item->exists($id)) {
@@ -229,12 +239,15 @@ class ItemsController extends AppController {
             // A partir do TR busco o Id na tabela Resolucao para prencher o campo resolucao_id
             if ($this->request->data['Item']['tr']) {
 
-                pr($this->request->data);
+                // $this->request->data['Item']['texto1'] = $this->request->data['Item']['texto'];
+                // $this->request->data['Item']['texto'] = '';
+                // pr($this->request->data);
+                // die();
                 // A partir do TR busco o id na tabela Apoio para prencher o campo apoio_id
-                $this->loadModel('Apoio');
-                $outro_apoio = $this->Apoio->find('first', array(
-                    'conditions' => array('Apoio.numero_texto = ' . $this->request->data['Item']['tr']
-                )));
+                // $this->loadModel('Apoio');
+                // $outro_apoio = $this->Apoio->find('first', array(
+                //     'conditions' => ['Apoio.numero_texto' => $this->request->data['Item']['tr']]
+                // ));
                 // pr($outro_apoio['Apoio']['id']);
                 // $this->request->data['Item']['apoio_id'] = $outro_apoio['Resolucao']['id'];
                 // pr($this->request->data);
@@ -242,8 +255,8 @@ class ItemsController extends AppController {
             }
 
             if ($this->Item->save($this->request->data)) {
-                $this->Flash->success(__('Item inserido.'));
-                return $this->redirect(array('controller' => 'Items', 'action' => 'view/' . $this->request->data['Item']['id']));
+                $this->Flash->success(__('Item atualizado.'));
+                return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->request->data['Item']['id']));
             } else {
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
@@ -263,7 +276,8 @@ class ItemsController extends AppController {
      * Método que atualiza o campo apoio_id da tabela utilizando o TR (numero_texto)
      */
 
-    public function atualiza() {
+    public function atualiza()
+    {
 
         $items = $this->Item->find('all');
 
@@ -272,36 +286,48 @@ class ItemsController extends AppController {
 
         foreach ($items as $c_item):
 
+            // pr($c_item);
             // pr($c_item['Item']['tr']);
             // echo ltrim(substr($c_item['Item']['item'], 0, 2), 0);
             // die();
 
             $this->loadModel('Apoio');
-            $resultado = $this->Apoio->find('first', array('conditions' => array('Apoio.numero_texto' => ltrim(substr($c_item['Item']['item'], 0, 2)), 0)));
+            // $apoio = $this->Apoio->find('first', ['evento_id'])
+            $resultado = $this->Apoio->find('first', ['conditions' => ['Apoio.id' => $c_item['Item']['apoio_id']]]);
 
             // pr($resultado);
             // echo $resultado['Apoio']['id'];
             // die();
-            $c_item['Item']['apoio_id'] = $resultado['Resolucao']['apoio_id'];
-            $c_item['Item']['tr'] = $resultado['Apoio']['numero_texto'];
-
+            // $c_item['Item']['apoio_id'] = $resultado['Resolucao']['apoio_id'];
+            // $c_item['Item']['tr'] = $resultado['Apoio']['numero_texto'];
+            if (empty($c_item['Item']['item'])) {
+                if ($resultado['Apoio']['numero_texto']) {
+                    $c_item['Item']['item'] = $resultado['Apoio']['numero_texto'] . '.00.00';
+                } else {
+                    echo "Sem número de texto";
+                    die();
+                }
+            }
+            // pr($c_item['Item']['item']);
             $c_item['Item']['apoio_id'] = $resultado['Apoio']['id'];
+            $c_item['Item']['texto1'] = $c_item['Item']['texto'];
             // pr($c_item);
             // die();
 
             if ($this->Item->save($c_item['Item'])) {
 
-                $this->Flash->success(__('The item has been saved.'));
+                $this->Flash->success(__('Item atualizado.'));
             } else {
                 debug($this->Item->validationErrors);
-                die();
-                $this->Flash->error(__('The item could not be saved. Please, try again.'));
+                // die();
+                // $this->Flash->error(__('The item could not be saved. Please, try again.'));
             }
 
         endforeach;
     }
 
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
         $this->Item->id = $id;
         if (!$this->Item->exists()) {
             throw new NotFoundException(__('Invalid item'));
@@ -320,7 +346,8 @@ class ItemsController extends AppController {
         return $this->redirect(array('controller' => 'items', 'action' => 'index'));
     }
 
-    public function seleciona_lista() {
+    public function seleciona_lista()
+    {
 
         $items = $this->Item->find('list', array('fields' => array('id', 'item', 'texto')));
         // pr($items);

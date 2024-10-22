@@ -1,9 +1,10 @@
-<?php // pr($usuario);      ?>
-<?php // pr($item['Item']['texto']);      ?>
+<?php // pr($usuario); ?>
+<?php // pr($item); ?>
+<?php // pr(substr($item['Item']['texto'], 0, 1)); ?>
 <?php // pr($votacao['Votacao']['id']); ?>
-<?php // $this->request->data = $votacao;    ?>
-<?php // pr($this->data);    ?>
-<?php // die();    ?>
+<?php // $this->request->data = $votacao; ?>
+<?php // pr($this->data); ?>
+<?php // die(); ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script> 
 
@@ -94,11 +95,11 @@ else:
 endif;
 
 if (isset($item)):
-    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'placeholder' => 'Digite até dois carateres numéricos', 'value' => substr($item['Item']['item'], 0, 2)));
+    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'value' => $item['Item']['tr']));
 elseif (isset($tr)):
-    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'placeholder' => 'Digite até dois carateres numéricos', 'value' => $tr));
+    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'placeholder' => 'Digite até dois carateres numéricos 2', 'value' => $tr));
 else:
-    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'placeholder' => 'Digite até dois carateres numéricos'));
+    echo $this->Form->input('tr', array('label' => ['text' => 'TR', 'class' => 'col-4'], 'placeholder' => 'Digite até dois carateres numéricos 3'));
 endif;
 ?>
 

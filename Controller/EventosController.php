@@ -10,7 +10,8 @@ App::uses('AppController', 'Controller');
  * @property SessionComponent $Session
  * @property FlashComponent $Flash
  */
-class EventosController extends AppController {
+class EventosController extends AppController
+{
 
     /**
      * Components
@@ -19,7 +20,8 @@ class EventosController extends AppController {
      */
     public $components = array('Paginator', 'Session', 'Flash');
 
-    function beforeFilter() {
+    function beforeFilter()
+    {
         parent::beforeFilter();
 
         $usuario = $this->Auth->user();
@@ -39,10 +41,12 @@ class EventosController extends AppController {
      *
      * @return void
      */
-    public function index() {
-        
-        $this->Evento->contain(['Apoio'=>'Item']);
-        // $this->Evento->recursive = 0;
+    public function index()
+    {
+
+        $this->Paginator->settings = [
+            'order' => ['ordem' => 'asc']
+        ];
         $this->set('eventos', $this->Paginator->paginate());
     }
 
@@ -53,7 +57,8 @@ class EventosController extends AppController {
      * @param string $id
      * @return void
      */
-    public function view($id = null) {
+    public function view($id = null)
+    {
 
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__('Invalid evento'));
@@ -68,7 +73,8 @@ class EventosController extends AppController {
      *
      * @return void
      */
-    public function add() {
+    public function add()
+    {
         if ($this->request->is('post')) {
             $this->Evento->create();
             if ($this->Evento->save($this->request->data)) {
@@ -87,7 +93,8 @@ class EventosController extends AppController {
      * @param string $id
      * @return void
      */
-    public function edit($id = null) {
+    public function edit($id = null)
+    {
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__('Invalid evento'));
         }
@@ -111,7 +118,8 @@ class EventosController extends AppController {
      * @param string $id
      * @return void
      */
-    public function delete($id = null) {
+    public function delete($id = null)
+    {
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__('Invalid evento'));
         }

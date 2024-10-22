@@ -309,6 +309,7 @@ class VotacaosController extends AppController {
             else:
                 $votacao_id = $this->request->query('votacao_id');
             endif;
+
             if ($votacao_id):
                 $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $votacao_id]];
                 $this->Votacao->contain();
@@ -385,7 +386,7 @@ class VotacaosController extends AppController {
             // die();
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
                 $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
-                return $this->redirect(['action' => 'add/' . $id]);
+                return $this->redirect(['action' => 'add', $id]);
             }
 
             /* Function suprime TR na sua totalidade */
@@ -463,11 +464,11 @@ class VotacaosController extends AppController {
                     // die('votacao minoritaria');
                     $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
                     // die('votacao minoritaria ');
-                    return $this->redirect(array('controller' => 'Votacaos', 'action' => 'add/' . 'item_id:' . $this->request->data['Votacao']['item_id'] . '/votacao_id:' . $this->Votacao->getLastInsertID() . '/resultado:minoritária'));
+                    return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id:' => $this->request->data['Votacao']['item_id'], 'votacao_id' => $this->Votacao->getLastInsertID(), 'resultado' => 'minoritária']]);
                 else:
                     $this->Flash->success(__('Votação inserida.'));
                     // die('votacao normal');
-                    return $this->redirect(array('controller' => 'Votacaos', 'action' => 'view/' . $this->Votacao->getLastInsertID()));
+                    return $this->redirect(['controller' => 'Votacaos', 'action' => 'view', $this->Votacao->getLastInsertID()]);
                 endif;
             else:
                 $errors = $this->Votacao->validationErrors;
