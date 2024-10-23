@@ -48,7 +48,9 @@
                     ?>
                     <li class="list-group-item">
                         <?php
-                        echo $this->Html->link(__('Inserir item em TR'), ['action' => 'add'], ['class' => 'list-group-link']);
+                        if (isset($evento_id)):
+                            echo $this->Html->link(__('Inserir item em TR'), ['action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'list-group-link']);
+                        endif;
                         ?>
                     </li>
                     <?php

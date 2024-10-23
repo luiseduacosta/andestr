@@ -113,8 +113,8 @@ class ItemsController extends AppController
     public function add()
     {
 
-        $evento = isset($this->request->params['named']['evento']) ? $this->request->params['named']['evento'] : $this->request->query('evento');
-        // pr($evento);
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
+        // pr($evento_id);
         // die();
 
         $this->loadModel('Evento');
@@ -122,18 +122,40 @@ class ItemsController extends AppController
             'order' => ['id' => 'asc']
         ]);
 
-        if (empty($evento)):
+        if (empty($evento_id)):
             end($eventos); // o ponteiro está no último registro
-            $evento = key($eventos);
+            $evento_id = key($eventos);
         endif;
 
-        if (empty($evento)) {
-            $this->Flash->error(__('Sem inicação de evento'));
+        if (empty($evento_id)) {
+            $this->Flash->error(__('Sem indicação de evento'));
+            return $this->redirect(['controller' => 'items', 'action' => 'index']);
             // echo "Erro";
-            die();
         }
-        // pr($evento);
+        // pr($evento_id);
         // die();
+        /** Localiza se há TRs */
+        $this->loadModel('Apoios');
+        $apoios = $this->Apoios->find('all', [
+            'conditions' => ['Apoios.evento_id' => $evento_id],
+            ['order' => ['numero_texto' => 'desc']]
+        ]);
+        // pr($apoios);
+        if ($apoios) {
+            $ultimo = end($apoios);
+            $ultimo_tr = $ultimo['Apoios']['numero_texto'];
+            $items = $this->Item->find('all', [
+                'conditions' => ['apoio_id' => $ultimo['Apoios']['id']]
+            ]);
+            $ultimo_item = end($items);
+            // pr($ultimo_item['Item']['item']);
+            // die();
+            /** Dividir o item e aumente em + 1 a segunda parte */
+        } else {
+            $ultimo_tr = 0;
+        }
+        /** Envio para o formulário */
+        $this->set('ultimo_tr', $ultimo_tr);
 
         if ($this->request->is('post')) {
             // debug($this->request);
@@ -142,14 +164,12 @@ class ItemsController extends AppController
 
                 $verifica_tr = $this->Item->Apoio->find(
                     'first',
-                    array('conditions' => array('Apoio.id' => $this->request->data['Item']['apoio_id']))
+                    ['conditions' => ['Apoio.id' => $this->request->data['Item']['apoio_id']]]
                 );
                 // pr($verifica_tr);
                 // $log = $this->Item->getDataSource()->getLog(false, false);
                 // debug($log);
-                // echo $verifica_tr['Apoio']['numero_texto'] . " " . substr($this->request->data['Item']['item'], 0, 2);
-                // die;
-                /*
+                /**
                  * Verifica que o item e o Tr estejam coordenados
                  */
                 if ($verifica_tr):
@@ -173,19 +193,19 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 // pr($this->request->data);
                 // die();
-                $this->Flash->success(__('The item has been saved.'));
+                $this->Flash->success(__('Item inserido.'));
                 return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->Item->getLastInsertId()));
             } else {
-                $this->Flash->error(__('The item could not be saved. Please, try again.'));
+                $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
         }
-        // pr($evento);
+        // pr($evento_id);
         // die();
         $tr = $this->Item->Apoio->find(
             'list',
             [
                 'fields' => ['numero_texto'],
-                'conditions' => ['Apoio.evento_id' => $evento]
+                'conditions' => ['Apoio.evento_id' => $evento_id]
             ]
         );
 
@@ -202,7 +222,7 @@ class ItemsController extends AppController
 
         $this->set('tr', $tr);
         $this->set('eventos', $eventos);
-        $this->set('evento', $evento);
+        $this->set('evento_id', $evento_id);
     }
 
     public function view($id = null)
