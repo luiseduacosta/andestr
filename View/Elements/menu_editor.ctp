@@ -15,25 +15,25 @@
                     // pr($usuario);
                     // die();
                     if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                        echo $this->Html->link('Usuários', ['controller' => 'users', 'action' => 'index'], ['class' => 'nav-link']);
+                        echo $this->Html->link('Usuários', ['controller' => 'users', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']);
                     endif;
                 endif;
                 // pr($usuario);
                 ?>
             </li>
             <li class="nav-item">
-                <?php echo $this->Html->link('Textos de apoio', ['controller' => 'Apoios', 'action' => 'index'], ['class' => 'nav-link']); ?>
+                <?php echo $this->Html->link('Textos de apoio', ['controller' => 'Apoios', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
             </li>
             <li class="nav-item">
-                <?php echo $this->Html->link('TRs', ['controller' => 'Items', 'action' => 'index'], ['class' => 'nav-link']); ?>
+                <?php echo $this->Html->link('TRs', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
             </li>
             <li class="nav-item">
                 <?php
                 if (isset($usuario)):
                     if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                        echo $this->Html->link('Votação', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
+                        echo $this->Html->link('Votação', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']);
                     elseif ($usuario['role'] == 'relator'):
-                        echo $this->Html->link('Votação', ['controller' => 'Items', 'action' => 'index', 'grupo' => substr($usuario['username'], 5, 2)], ['class' => 'nav-link']);
+                        echo $this->Html->link('Votação', ['controller' => 'Items', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2), 'evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']);
                     endif;
                 endif;
                 ?>
@@ -42,7 +42,7 @@
                 <?php
                 if (isset($usuario)):
                     if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                        echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
+                        echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']);
                     elseif ($usuario['role'] == 'relator'):
                         if (strlen($usuario['username']) == 6):
                             $usuariogrupo = substr($usuario['username'], 5, 1);
@@ -55,7 +55,7 @@
                 ?>
             </li>
             <li class="nav-item">
-                <?php echo $this->Html->link('Relatórios', ['controller' => 'Votacaos', 'action' => 'relatorio'], ['class' => 'nav-link']); ?>
+                <?php echo $this->Html->link('Relatórios', ['controller' => 'Votacaos', 'action' => 'relatorio', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
             </li>
             <?php if (isset($usuario)): ?>
                 <li class="nav-item">

@@ -70,7 +70,7 @@ class VotacaosController extends AppController
         $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
 
         /** Capturo o ultimo evento sem o item_id */
-        if ($item_id) {
+        if (!$item_id) {
         } else {
             if (empty($evento_id)):
                 $evento_id = $this->evento();
@@ -89,7 +89,7 @@ class VotacaosController extends AppController
         // echo "Evento: " . $evento_id . "<br>";
         // echo "Grupo: " . $grupo . "<br>";
         // echo "Item: " . $item . "<br>";
-        // echo "Tr: " .$tr . "<br>";
+        /// echo "Tr: " .$tr . "<br>";
         // echo "Item_id: " . $item_id . "<br>";
 
         // die();
@@ -617,7 +617,7 @@ class VotacaosController extends AppController
 
         if ($this->request->data['Votacao']['tr_suprimida'] == 1):
             // pr($this->request->data['Votacao']['tr_suprimida']);
-// die("function");
+            // die("function");
 
             /* Tem que verificar que selecionou resultado = 'suprimida' */
             if ($this->request->data['Votacao']['resultado'] !== 'suprimida'):
@@ -627,11 +627,11 @@ class VotacaosController extends AppController
             endif;
 
             // pr($this->request->data['Votacao']['item_modificada']);
-// die();
-            /* Tem que verificar que o campo item_modificada está vazio */
+            // die();
+            /** Tem que verificar que o campo item_modificada está vazio */
             if (!empty($this->request->data['Votacao']['item_modificada'])):
                 // pr($this->request->data['Votacao']['item_modificada']);
-// die();
+                // die();
                 $this->Flash->error(__('O campo Item modificado não está vazio. Verifique antes de suprimir a TR'));
                 return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
             endif;
@@ -646,18 +646,18 @@ class VotacaosController extends AppController
                 ]
             ]);
             // $log = $this->Votacao->getDataSource()->getLog(false, false);
-// debug($log);
+            // debug($log);
             foreach ($items as $c_item):
                 // echo substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item'] = substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item_id'] = $c_item['Item']['id'];
                 // pr($this->request->data);
-// die();
+                // die();
                 $this->Votacao->create();
                 // $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
                 if ($this->Votacao->save($this->request->data)):
                     // pr($this->request->data);
-// die();
+                    // die();
                     $this->Flash->success(__('Votação inserida.'));
                 else:
                     $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
@@ -684,14 +684,13 @@ class VotacaosController extends AppController
             $usuarioData = $this->User->find('first', array('conditions' => array('User.username' => $grupo)));
             $this->request->data['Votacao']['user_id'] = $usuarioData['User']['id'];
             // pr($this->request->data['Votacao']['user_id']);
-// die();
+            // die();
 
         endif;
         return $this->request->data['Votacao']['user_id'];
     }
 
     /* Na verdade todos podem ter acesso a esta função */
-
     public function view($id = null)
     {
 

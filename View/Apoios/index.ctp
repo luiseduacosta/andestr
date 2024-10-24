@@ -1,3 +1,7 @@
+<?php
+// pr($apoio);
+?>
+
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'Apoios', 'action' => 'index?evento_id=']); ?>";
@@ -41,7 +45,7 @@
                     </li>
                 <?php elseif ($usuario['role'] == 'relator'): ?>
                     <li class="nav-item">
-                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2)], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
                     </li>
                 <?php endif; ?>
             <?php else: ?>
@@ -110,9 +114,9 @@
     </p>
     <div class="pagination justify-content-center">
         <?php
-        echo $this->Paginator->prev('< ' . __('previous'), [], null, ['class' => 'prev disabled']);
+        echo $this->Paginator->prev('< ' . __('anterior'), [], null, ['class' => 'prev disabled']);
         echo $this->Paginator->numbers(['separator' => ''], ['class' => 'page-link']);
-        echo $this->Paginator->next(__('next') . ' >', [], null, ['class' => 'next disabled']);
+        echo $this->Paginator->next(__('proximo') . ' >', [], null, ['class' => 'next disabled']);
         ?>
     </div>
 </div>

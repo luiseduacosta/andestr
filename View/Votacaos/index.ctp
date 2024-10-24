@@ -1,4 +1,8 @@
-<?php // pr($usuariogrupo);  ?>
+<?php 
+// pr($votacaos);  
+pr($evento_id);
+pr($eventos);
+?>
 
 <script>
     $(document).ready(function () {
@@ -15,7 +19,7 @@
     <div class="col-auto">
         <?php if (isset($usuario) && $usuario['role'] == 'admin'): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos&nbsp', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'value' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>
         <?php else: ?>
             <p class="text-center text-secondary h2"><?php echo end($eventos); ?></p>

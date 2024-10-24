@@ -152,16 +152,20 @@ class ApoiosController extends AppController
 
         if ($this->request->is('post')) {
 
+            // pr($this->request->data);
+            // die();
             /** Verifica se já está cadastrado */
             $this->Apoio->contain();
             $apoio = $this->Apoio->find(
                 'first',
                 [
-                    'conditions' =>
-                        [
-                            'Apoio.numero_texto' => $this->request->data['Apoio']['numero_texto'],
-                            'Apoio.evento_id' => $this->request->data['Apoio']['evento_id']
-                        ]
+                    'conditions' => [
+                        'and' =>
+                            [
+                                'Apoio.numero_texto' => $this->request->data['Apoio']['numero_texto'],
+                                'Apoio.evento_id' => $this->request->data['Apoio']['evento_id']
+                            ]
+                    ]
                 ]
             );
             if ($apoio):
@@ -178,8 +182,10 @@ class ApoiosController extends AppController
         }
         $eventos = $this->Apoio->Evento->find(
             'list',
-            ['fields' => ['nome'],
-            'order' => ['nome']]
+            [
+                'fields' => ['nome'],
+                'order' => ['nome']
+            ]
         );
         $this->set('eventos', $eventos);
     }
@@ -233,5 +239,4 @@ class ApoiosController extends AppController
         }
         return $this->redirect(array('action' => 'index'));
     }
-
 }

@@ -71,7 +71,7 @@ class ItemsController extends AppController
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
-            'order' => ['nome']
+            'order' => ['ordem']
         ]);
 
         /** Se evento_id não veio como parametro nem pode ser calculado a partir do apoio_id então seleciono o último evento */

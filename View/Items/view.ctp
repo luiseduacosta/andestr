@@ -43,7 +43,7 @@
     <dd class="col-sm-9">
         <?php
         if ($item['Votacao']):
-            echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['item_id' => $item['Item']['id']]]);
+            echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id']]]);
         else:
             echo "Sem votação";
         endif;

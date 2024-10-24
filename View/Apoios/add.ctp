@@ -44,7 +44,7 @@
         <fieldset>
             <legend><?php echo __('Adicionar texto de apoio'); ?></legend>
             <?php
-            if ($evento_id) {
+            if (isset($evento_id)) {
                 echo $this->Form->input('evento_id', ['type' => 'select', 'default' => $evento_id, 'options' => [$eventos]]);
             } else {
                 echo $this->Form->input('evento_id', ['type' => 'select', 'default' => array_key_last($eventos), 'options' => [$eventos]]);
