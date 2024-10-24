@@ -18,7 +18,7 @@
             Texto em votação
         </dt>
         <dd class="col-9">
-            <?php echo $votacao['Item']['texto'] ?>
+            <?= $votacao['Item']['texto'] ?>
         </dd>
 
     <?php endif; ?>

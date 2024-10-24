@@ -772,7 +772,7 @@ class VotacaosController extends AppController
     public function relatorio()
     {
 
-        $evento_id = isset($this->request->params['named']['evento_id']) ? $this->request->params['named']['evento_id'] : $this->request->query('evento_id');
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
         if (empty($evento_id)):
             $evento_id = $this->evento();
         endif;
@@ -826,7 +826,7 @@ class VotacaosController extends AppController
                     else:
                         echo $this->Flash->error(__('TR ' . $c_dados . ' sem votação ou inexistente'));
                     endif;
-                    return $this->redirect(array('controller' => 'Votacaos', 'action' => 'relatorio'));
+                    return $this->redirect(array('controller' => 'Votacaos', 'action' => 'relatorio', '?' => ['evento_id' => $evento_id]));
                 endif;
 
                 $i++;
