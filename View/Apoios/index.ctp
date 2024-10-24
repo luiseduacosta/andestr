@@ -26,33 +26,29 @@
 <div class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav mr-auto">
         <a class="navbar-brand"><?php echo __('Ações'); ?></a>
-        <?php
-        if (isset($usuario)):
-            // pr($usuario);
-            if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                ?>
-                <?php if (isset($evento_id)): ?>
+        <?php if (isset($evento_id)): ?>
+            <?php
+            if (isset($usuario)):
+                // pr($usuario);
+                // die();
+                if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
+                    ?>
                     <li class="nav-item">
                         <?php echo $this->Html->link(__('Novo texto de apoio'), ['action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                     </li>
-                <?php endif; ?>
-                <li class="nav-item">
-                    <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index'], ['class' => 'nav-link']); ?>
-                </li>
-                <?php if ($usuario['role'] == 'relator'): ?>
                     <li class="nav-item">
-                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index/grupo:' . $usuario['grupo']], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+                    </li>
+                <?php elseif ($usuario['role'] == 'relator'): ?>
+                    <li class="nav-item">
+                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2)], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
                     </li>
                 <?php endif; ?>
-            <?php elseif ($usuario['role'] == 'relator'): ?>
+            <?php else: ?>
                 <li class="nav-item">
-                    <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index'], ['class' => 'nav-link']); ?>
+                    <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                 </li>
             <?php endif; ?>
-        <?php else: ?>
-            <li class="nav-item">
-                <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index'], ['class' => 'nav-link']); ?>
-            </li>
         <?php endif; ?>
     </ul>
 </div>

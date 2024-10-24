@@ -2,7 +2,8 @@
 
     <ul class='navbar-nav mr-auto'>
         <a class='navbar-brand'><?php echo __('Ações'); ?></a>
-        <?php if (isset($usuario)): ?>
+
+        <?php if (isset($usuario) && isset($evento)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
                 <li class='nav-item'>
                     <?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $evento['Evento']['id']), ['class' => 'nav-link']); ?>
@@ -12,9 +13,11 @@
                 </li>
             <?php endif ?>
         <?php endif ?>
+
         <li class='nav-item'>
             <?php echo $this->Html->link(__('Eventos'), ['action' => 'index'], ['class' => 'nav-link']); ?>
         </li>
+
         <?php if (isset($usuario)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
                 <li class='nav-item'>
@@ -29,13 +32,20 @@
             </li>
         <?php endif ?>
 
-        <?php if (isset($usuario)): ?>
+        <?php if (isset($usuario) && isset($evento)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
                 <li class='nav-item'>
                     <?php echo $this->Html->link(__('Inserir texto de apoio'), ['controller' => 'apoios', 'action' => 'add', '?' => ['evento_id' => $evento['Evento']['id']]], ['class' => 'nav-link']); ?>
                 </li>
             <?php endif ?>
         <?php endif ?>
+
+        <?php if (isset($evento)): ?>
+            <li class='nav-item'>
+                <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento['Evento']['id']]], ['class' => 'nav-link']); ?>
+            </li>
+        <?php endif ?>
+
     </ul>
 </nav>
 

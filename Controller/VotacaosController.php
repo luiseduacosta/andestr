@@ -778,7 +778,7 @@ class VotacaosController extends AppController
             $evento_id = $this->evento();
         endif;
         $this->loadModel('Evento');
-        $eventos = $this->Evento->find('list', ['order' => 'id']);
+        $eventos = $this->Evento->find('list', ['order' => 'ordem']);
         $this->set('eventos', $eventos);
         $this->set('evento', $evento_id);
 
@@ -1014,7 +1014,7 @@ class VotacaosController extends AppController
 
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
-            'order' => ['id' => 'asc']
+            'order' => ['ordem' => 'asc']
         ]);
         end($eventos);
         return key($eventos);

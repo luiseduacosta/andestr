@@ -1,11 +1,6 @@
 <?php
 // pr($eventos);
 // pr($evento); 
-if (strlen($ultimo_tr) == 1) {
-    $ultimo_tr = '0' . $ultimo_tr + 1;
-} else {
-    $ultimo_tr = $ultimo_tr + 1;
-}
 ?>
 
 <script>
@@ -57,8 +52,9 @@ if (strlen($ultimo_tr) == 1) {
     <fieldset>
         <legend><?php echo "Items da TR "; ?></legend>
         <?php
+        echo $this->Form->input('apoio_id', ['value' => $apoio_id, 'options' => $apoios]);
         echo $this->Form->input('tr', ['label' => 'TR', 'value' => $ultimo_tr]);
-        echo $this->Form->input('item', ['label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'placeholder' => $ultimo_tr . '.00']);
+        echo $this->Form->input('item', ['label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'value' => $ultimo_tr . "." . $item_item, 'placeholder' => '__.__']);
         echo $this->Form->input('texto', ['label' => 'Item do texto de resolução'], ['class' => 'ckeditor']);
         ?>
     </fieldset>
@@ -71,7 +67,8 @@ if (strlen($ultimo_tr) == 1) {
     <ul class='nav'>
         <?php if (isset($evento_id)): ?>
             <li clsss='' nav-link'>
-                <?php echo $this->Html->link(__('Listar TRs'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?></li>
+                <?php echo $this->Html->link(__('Listar TRs'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+            </li>
         <?php endif; ?>
     </ul>
 </div>

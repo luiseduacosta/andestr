@@ -19,7 +19,7 @@ class Apoio extends AppModel {
      *
      * @var string
      */
-    public $displayField = 'tema';
+    public $displayField = 'titulo';
     public $actsAs = ['Containable'];
     public $belongsTo = ['Evento'];
     public $hasMany = ['Item'];

@@ -70,7 +70,9 @@ class ItemsController extends AppController
 
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
-        $eventos = $this->Evento->find('list');
+        $eventos = $this->Evento->find('list', [
+            'order' => ['nome']
+        ]);
 
         /** Se evento_id não veio como parametro nem pode ser calculado a partir do apoio_id então seleciono o último evento */
         if (empty($evento_id)):
@@ -140,22 +142,47 @@ class ItemsController extends AppController
             'conditions' => ['Apoios.evento_id' => $evento_id],
             ['order' => ['numero_texto' => 'desc']]
         ]);
+        $apoioslista = $this->Apoios->find('list');
         // pr($apoios);
         if ($apoios) {
             $ultimo = end($apoios);
             $ultimo_tr = $ultimo['Apoios']['numero_texto'];
+            if (strlen($ultimo_tr) == 1) {
+                $ultimo_tr = '0' . $ultimo_tr;
+            }
             $items = $this->Item->find('all', [
                 'conditions' => ['apoio_id' => $ultimo['Apoios']['id']]
             ]);
             $ultimo_item = end($items);
-            // pr($ultimo_item['Item']['item']);
-            // die();
-            /** Dividir o item e aumente em + 1 a segunda parte */
+            /** Dividir o item e aumente em + 1 para o próximo */
+            if ($ultimo_item) {
+                $ultimoItem = $ultimo_item['Item']['item'];
+                $itemparcela = explode('.', $ultimoItem);
+                $itemparcela_tr = $itemparcela[0] + 1;
+                $itemparcela_item = $itemparcela[1] + 1;
+                if (strlen($itemparcela_tr) == 1) {
+                    $itemparcela_tr = '0' . $itemparcela_tr;
+                } else {
+                    $itemparcela_tr;
+                }
+                if (strlen($itemparcela_item) == 1) {
+                    $itemparcela_item = '0' . $itemparcela_item;
+                } else {
+                    $itemparcela_item;
+                }
+                // pr($itemparcela_tr);
+                // pr($itemparcela_item);
+            }
+
         } else {
-            $ultimo_tr = 0;
+            $itemparcela_tr = '01';
+            $itemparcela_item = '01';
         }
         /** Envio para o formulário */
-        $this->set('ultimo_tr', $ultimo_tr);
+        $this->set('ultimo_tr', isset($ultimo_tr) ? $ultimo_tr : '01');
+        $this->set('item_item', isset($itemparcela_item) ? $itemparcela_item : '01');
+        $this->set('apoio_id', $ultimo['Apoios']['id']);
+        $this->set('apoios', $apoioslista);
 
         if ($this->request->is('post')) {
             // debug($this->request);
@@ -358,7 +385,7 @@ class ItemsController extends AppController
         }
 
         // Capturo o valor do campo resolucao_id para ir para a TR do item
-        $id_resolucao = $this->Item->findById($id);
+        $resolucao = $this->Item->findById($id);
 
         $this->request->allowMethod('post', 'delete');
 
@@ -367,7 +394,7 @@ class ItemsController extends AppController
         } else {
             $this->Flash->error(__('The item could not be deleted. Please, try again.'));
         }
-        return $this->redirect(array('controller' => 'items', 'action' => 'index'));
+        return $this->redirect(array('controller' => 'items', 'action' => 'view', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]));
     }
 
     public function seleciona_lista()
