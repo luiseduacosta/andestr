@@ -219,10 +219,9 @@ class VotacaosController extends AppController
     public function atualizausuario()
     {
 
-        $grupos = $this->Votacao->find('all', array(
-            ''
-            . 'order' => array('grupo')
-        ));
+        $grupos = $this->Votacao->find('all', [
+            'order' => ['grupo']
+        ]);
 
         foreach ($grupos as $c_grupos):
             // pr($c_grupos['Votacao']['grupo']);
@@ -230,11 +229,11 @@ class VotacaosController extends AppController
             $this->loadModel('User');
             $busca = 'grupo' . $c_grupos['Votacao']['grupo'];
             // echo $busca;
-            $usuario = $this->User->find('all', array(
-                'conditions' => array(
+            $usuario = $this->User->find('all', [
+                'conditions' => [
                     'User.username' => $busca
-                )
-            ));
+                ]
+            ]);
             // pr($usuario);
             // echo ' ' . $i . " => Votação do grupo: " . $c_grupos['Votacao']['grupo'] . '<br>';
 
@@ -266,15 +265,10 @@ class VotacaosController extends AppController
     /** Id eh o item_id em votação */
     public function add($id = NULL)
     {
-
         /* Se o Id vem como parámentro (item_id) então é minoritária, senão é a primeira votacao */
         // echo 'id 0 ' . $id . '<br>';
         if (is_null($id)) {
-            if (isset($this->params['named']['item_id'])):
-                $id = $this->params['named']['item_id'];
-            else:
-                $id = $this->request->query('item_id');
-            endif;
+            $id = $this->request->query['item_id'];
         } else {
             $this->Session->write('flagminoritaria', 0);
         }
@@ -295,18 +289,14 @@ class VotacaosController extends AppController
         $this->set('usuario', $this->Auth->user());
 
         // Se o parametro resultado está presente eh porque eh uma votacao minoritaria
-        if (isset($this->params['named']['resultado'])):
-            $resultado = $this->params['named']['resultado'];
-        else:
-            $resultado = $this->request->query('resultado');
+        if (isset($this->request->query['resultado'])):
+            $resultado = $this->request->query['resultado'];
         endif;
 
         if ($resultado == 'minoritária'):
             // Se eh uma votacao minoritaria obtenho a votacao realizada para recuperar os resultados
-            if (isset($this->params['named']['votacao_id'])):
-                $votacao_id = $this->params['named']['votacao_id'];
-            else:
-                $votacao_id = $this->request->query('votacao_id');
+            if (isset($this->request->query['votacao_id'])):
+                $votacao_id = $this->request->query['votacao_id'];
             endif;
 
             if ($votacao_id):
@@ -342,13 +332,13 @@ class VotacaosController extends AppController
                 // die();
                 // $this->Session->delete('flagminoritaria');
                 $flag = $this->Session->read('flagminoritaria');
-                echo "Entrada = " . $flag . "<br>";
+                // echo "Entrada = " . $flag . "<br>";
                 $minoritaria = $this->minoritaria($this->request->data['Votacao']['votacao']);
                 if ($minoritaria == 1):
                     // $this->Flash->success(__('Votação minoritária.'));
                 endif;
                 $flag = $this->Session->read('flagminoritaria');
-                echo "Saída = " . $flag . "<br>";
+                // echo "Saída = " . $flag . "<br>";
                 // die();
             else:
                 $this->Flash->error(__('Registre o resultado da votacao. Tente novamente.'));
@@ -394,7 +384,6 @@ class VotacaosController extends AppController
                 // pr($this->request->data['Votacao']['tr_suprimida']);
                 // die();
                 $this->suprimeTR($this->request->data['Votacao']['tr_suprimida']);
-
             endif;
 
             /* Function aprovaembloco */
@@ -521,25 +510,17 @@ class VotacaosController extends AppController
 
         if ($this->request->data['Votacao']['tr_aprovada'] == 1):
             // echo $this->request->data['Votacao']['tr_aprovada'];
-// die();
 
             /* Busco os items na tabela item */
             $this->loadModel('Item');
             $items = $this->Item->find('all', array(
                 'conditions' => array('Item.item LIKE' => substr($this->request->data['Votacao']['item'], 0, 2) . '%')
             ));
-            // $log = $this->Votacao->getDataSource()->getLog(false, false);
-// debug($log);
-// pr($items);
-// die();
-// echo count($items);
+
             foreach ($items as $c_item):
                 // echo substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item'] = substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item_id'] = $c_item['Item']['id'];
-
-                // pr($this->request->data);
-// die();
 
                 /* Verifico se já foi votado */
                 $javotado = $this->Votacao->find('first', array(
@@ -548,9 +529,6 @@ class VotacaosController extends AppController
                         'Votacao.grupo' => $this->request->data['Votacao']['grupo']
                     )
                 ));
-                // pr($javotado);
-// $log = $this->Votacao->getDataSource()->getLog(false, false);
-// debug($log);
 
                 /* Se não foi votado o item então insiro os valores de aprovação */
                 if (count($javotado) == 0):
@@ -558,7 +536,6 @@ class VotacaosController extends AppController
                     // $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
                     if ($this->Votacao->save($this->request->data)):
                         // pr($this->request->data);
-// die();
                         $this->Flash->success(__('Votação inserida.'));
                     else:
                         $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));

@@ -103,10 +103,7 @@ class ItemsController extends AppController
 
     public function add()
     {
-
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-        // pr($evento_id);
-        // die();
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
 
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
@@ -118,6 +115,7 @@ class ItemsController extends AppController
             $evento_id = key($eventos);
         endif;
 
+        /** Não acontece nunca? */
         if (empty($evento_id)) {
             $this->Flash->error(__('Sem indicação de evento'));
             return $this->redirect(['controller' => 'items', 'action' => 'index']);
@@ -133,6 +131,7 @@ class ItemsController extends AppController
         ]);
         $apoioslista = $this->Apoios->find('list');
         // pr($apoios);
+        /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
             $ultimo = end($apoios);
             $ultimo_tr = $ultimo['Apoios']['numero_texto'];
@@ -268,24 +267,6 @@ class ItemsController extends AppController
         }
         if ($this->request->is(array('post', 'put'))) {
 
-            // A partir do TR busco o Id na tabela Resolucao para prencher o campo resolucao_id
-            if ($this->request->data['Item']['tr']) {
-
-                // $this->request->data['Item']['texto1'] = $this->request->data['Item']['texto'];
-                // $this->request->data['Item']['texto'] = '';
-                // pr($this->request->data);
-                // die();
-                // A partir do TR busco o id na tabela Apoio para prencher o campo apoio_id
-                // $this->loadModel('Apoio');
-                // $outro_apoio = $this->Apoio->find('first', array(
-                //     'conditions' => ['Apoio.numero_texto' => $this->request->data['Item']['tr']]
-                // ));
-                // pr($outro_apoio['Apoio']['id']);
-                // $this->request->data['Item']['apoio_id'] = $outro_apoio['Resolucao']['id'];
-                // pr($this->request->data);
-                // die();
-            }
-
             if ($this->Item->save($this->request->data)) {
                 $this->Flash->success(__('Item atualizado.'));
                 return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->request->data['Item']['id']));
@@ -362,7 +343,7 @@ class ItemsController extends AppController
     {
         $this->Item->id = $id;
         if (!$this->Item->exists()) {
-            throw new NotFoundException(__('Invalid item'));
+            throw new NotFoundException(__('Item inválido'));
         }
 
         // Capturo o valor do campo resolucao_id para ir para a TR do item
@@ -371,11 +352,11 @@ class ItemsController extends AppController
         $this->request->allowMethod('post', 'delete');
 
         if ($this->Item->delete()) {
-            $this->Flash->success(__('The item has been deleted.'));
+            $this->Flash->success(__('Item excluído.'));
         } else {
-            $this->Flash->error(__('The item could not be deleted. Please, try again.'));
+            $this->Flash->error(__('Tente novamente.'));
         }
-        return $this->redirect(array('controller' => 'items', 'action' => 'view', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]));
+        return $this->redirect(['controller' => 'items', 'action' => 'view', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
     }
 
     public function seleciona_lista()

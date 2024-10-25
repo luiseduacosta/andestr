@@ -97,25 +97,6 @@ class ApoiosController extends AppController
      */
     public function view($id = null)
     {
-
-        // $tr = $this->request->query('tr');
-        // $evento_id = $this->request->query('evento_id');
-
-        // if (isset($tr) && !empty($tr)) {
-        //    $idquery = $this->Apoio->find(
-        //        'first',
-        //        [
-        //            'conditions' => ['numero_texto' => $tr, 'evento_id' => $evento_id],
-        //            'fields' => ['id']
-        //        ]
-        //    );
-        //    // pr($idquery);
-        //    if ($idquery) {
-        //        $id = $idquery['Apoio']['id'];
-        //        // pr($id);
-        //    }
-        // }
-
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
@@ -147,8 +128,22 @@ class ApoiosController extends AppController
      */
     public function add()
     {
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
+
+        $eventos = $this->Apoio->Evento->find(
+            'list',
+            [
+                'fields' => ['nome'],
+                'order' => ['ordem']
+            ]
+        );
+
+        if (empty($evento_id)) {
+            $evento_id = end($eventos);
+        }
+
         if ($evento_id) {
+            /** Envio para o formulário */
             $this->set('evento_id', $evento_id);
         }
 
@@ -182,13 +177,6 @@ class ApoiosController extends AppController
                 }
             endif;
         }
-        $eventos = $this->Apoio->Evento->find(
-            'list',
-            [
-                'fields' => ['nome'],
-                'order' => ['nome']
-            ]
-        );
         $this->set('eventos', $eventos);
     }
 

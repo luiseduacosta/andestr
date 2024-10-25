@@ -123,7 +123,7 @@ class EventosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Invalid evento'));
+            throw new NotFoundException(__('Evento inválido'));
         }
         $this->request->allowMethod('post', 'delete');
         if ($this->Evento->delete($id)) {
