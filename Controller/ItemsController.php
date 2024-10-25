@@ -260,21 +260,13 @@ class ItemsController extends AppController
         }
 
         if ($this->Auth->user('id')):
-            $grupo = $this->autenticausuario();
+            $categoria = $this->autenticausuario();
         endif;
 
-        if (isset($this->params['named']['votacao'])):
-            $votacao = $this->params['named']['votacao'];
-            if (empty($votacao)) {
-                $votacao = $this->request->query['votacao'];
-            }
-            $this->set('votacao', $votacao);
-        else:
-            $votacao = 0;
-            $this->set('votacao', $votacao);
-        endif;
+        $votacao = isset($this->request->query['votacao']) ? $this->request->query['votacao'] : 0;
+        $this->set('votacao', $votacao);
 
-        $options = array('conditions' => array('Item.' . $this->Item->primaryKey => $id));
+        $options = array('conditions' => ['Item.' . $this->Item->primaryKey => $id]);
         $this->set('item', $this->Item->find('first', $options));
     }
 

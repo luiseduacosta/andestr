@@ -20,7 +20,11 @@
 
         <?php if (isset($usuario) && $usuario['role'] == 'admin'): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
+            <?php if (isset($evento_id)): ?>
+                <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
+            <?php else: ?>
+                <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'class' => 'form-control']); ?>
+            <?php endif; ?>
             <?php echo $this->Form->end(); ?>
         <?php else: ?>
             <h1 style="text-align: center;"><?php echo end($eventos); ?></h1>
@@ -114,6 +118,6 @@
 
 
         <?php endforeach; ?>
-        <?php // pr($grupos);  ?>
+    <?php // pr($grupos);  ?>
     <?php endif; ?>
 <?php endif; ?>

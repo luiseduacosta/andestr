@@ -50,7 +50,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
             ;
         </style>
     </head>
-    <body class="bg-light">
+    <body class="bg-ligth">
         <div class="container">
             <h1 class='h2 bg-danger text-light p-3'>Andes-SN: plataforma para os grupos mistos dos Conads e Congressos</h1>
             <nav class='navbar navbar-expand-lg navbar-light bg-light'>

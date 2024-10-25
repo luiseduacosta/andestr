@@ -778,13 +778,17 @@ class VotacaosController extends AppController
         endif;
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', ['order' => 'ordem']);
+        // pr($eventos);
+        // pr($evento_id);
+        // die();
         $this->set('eventos', $eventos);
-        $this->set('evento', $evento_id);
+        $this->set('evento_id', $evento_id);
 
         $quantidade = NULL;
         $tr = NULL;
-        $usuario = $this->autenticausuario();
-        // pr($usuario);
+        $categoria = $this->autenticausuario();
+        // $usuario = $this->Auth->user();
+        // pr($categoria);
         // die('relatorio');
 
         if ($this->request->data) {
@@ -798,14 +802,14 @@ class VotacaosController extends AppController
                 // pr($c_dados);
 
                 /* Relatorio por grupo ou total */
-                if (!empty($usuario['grupo'])):
+                if (!empty($categoria['grupo'])):
                     $relatorio[$i] = $this->Votacao->find(
                         'all',
                         [
                             'order' => ['Votacao.item, Votacao.grupo  ASC'],
                             'conditions' => [
                                 'Votacao.tr' => $c_dados,
-                                'Votacao.grupo' => $usuario['grupo'],
+                                'Votacao.grupo' => $categoria['grupo'],
                                 'Votacao.evento_id' => $evento_id
                             ],
                         ]
@@ -821,8 +825,8 @@ class VotacaosController extends AppController
                 endif;
 
                 if (count($relatorio[$i]) == 0):
-                    if (isset($usuario['grupo'])):
-                        echo $this->Flash->error(__('TR ' . $c_dados . ' sem votação neste grupo ' . $usuario['grupo'] . ' ou inexistente'));
+                    if (isset($categoria['grupo'])):
+                        echo $this->Flash->error(__('TR ' . $c_dados . ' sem votação neste grupo ' . $categoria['grupo'] . ' ou inexistente'));
                     else:
                         echo $this->Flash->error(__('TR ' . $c_dados . ' sem votação ou inexistente'));
                     endif;
