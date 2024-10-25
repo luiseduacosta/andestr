@@ -22,9 +22,9 @@ class Item extends AppModel {
     public $displayField = 'item';
     public $actsAs = array('Containable');    
     // public $belongsTo = array('Resolucao');
-    public $belongsTo = array('Apoio');
+    public $belongsTo = ['Apoio'];
     
-    public $hasMany = array('Votacao');
+    public $hasMany = ['Votacao'];
 
     public $validate = array(
         'tr' => array(

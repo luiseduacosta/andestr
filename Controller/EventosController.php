@@ -63,6 +63,8 @@ class EventosController extends AppController
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__('Invalid evento'));
         }
+        /** Gravo o evento selecionado */
+        $this->Session->write('evento_id', $id);
         $this->Evento->contain(['Apoio']);
         $options = array('conditions' => array('Evento.' . $this->Evento->primaryKey => $id));
         $this->set('evento', $this->Evento->find('first', $options));

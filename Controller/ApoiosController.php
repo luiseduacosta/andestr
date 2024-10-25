@@ -18,7 +18,7 @@ class ApoiosController extends AppController
      *
      * @var array
      */
-    public $components = array('Paginator');
+    public $components = array('Paginator', 'Session');
 
     public function isAuthorized($user)
     {
@@ -59,20 +59,22 @@ class ApoiosController extends AppController
     public function index()
     {
 
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
             'order' => ['ordem' => 'asc']
         ]);
 
-        /* Se evento não veio como parametro então seleciono o último evento */
+        /* Se evento não veio como parametro nem como cookie então seleciono o último evento */
         if (empty($evento_id)):
-            end($eventos); // o ponteiro está no último registro
-            $evento_id = key($eventos);
+            if (empty($evento_id)) {
+                end($eventos); // o ponteiro está no último registro
+                $evento_id = key($eventos);
+            }
         endif;
-
         if (isset($evento_id)):
+            /** Gravo um cookie com o evento_id */
+            $this->Session->write('evento_id', $evento_id);
             $this->Paginator->settings = [
                 'Apoio' => [
                     'conditions' => ['Apoio.evento_id' => $evento_id],
@@ -96,23 +98,23 @@ class ApoiosController extends AppController
     public function view($id = null)
     {
 
-        $tr = $this->request->query('tr');
-        $evento = $this->request->query('evento');
+        // $tr = $this->request->query('tr');
+        // $evento_id = $this->request->query('evento_id');
 
-        if (isset($tr) && !empty($tr)) {
-            $idquery = $this->Apoio->find(
-                'first',
-                [
-                    'conditions' => ['numero_texto' => $tr, 'evento_id' => $evento],
-                    'fields' => ['id']
-                ]
-            );
-            // pr($idquery);
-            if ($idquery) {
-                $id = $idquery['Apoio']['id'];
-                // pr($id);
-            }
-        }
+        // if (isset($tr) && !empty($tr)) {
+        //    $idquery = $this->Apoio->find(
+        //        'first',
+        //        [
+        //            'conditions' => ['numero_texto' => $tr, 'evento_id' => $evento_id],
+        //            'fields' => ['id']
+        //        ]
+        //    );
+        //    // pr($idquery);
+        //    if ($idquery) {
+        //        $id = $idquery['Apoio']['id'];
+        //        // pr($id);
+        //    }
+        // }
 
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));

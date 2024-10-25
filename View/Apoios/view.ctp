@@ -2,10 +2,6 @@
 // pr($apoio);
 ?>
 
-<?php if (isset($usuario) && isset($apoio)): ?>
-    <?= $this->element('menu_editor') ?>
-<?php endif; ?>
-
 <div class="row">
 
     <div class="col-3">

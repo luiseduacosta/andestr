@@ -67,21 +67,20 @@ class VotacaosController extends AppController
         $item = isset($this->request->query['item']) ? $this->request->query['item'] : null;
         $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
         $item_id = isset($this->request->query['item_id']) ? $this->request->query['item_id'] : null;
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-
-        /** Capturo o ultimo evento sem o item_id */
-        if (!$item_id) {
-        } else {
-            if (empty($evento_id)):
-                $evento_id = $this->evento();
-            endif;
-        }
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
 
         /** Faço a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
             'order' => ['ordem' => 'asc']
         ]);
+        if (empty($evento_id)):
+            $evento_id = end($eventos);
+        endif;
+
+        if ($evento_id) {
+            $this->Session->write('evento_id', $evento_id);
+        }
 
         $this->set('eventos', $eventos);
         $this->set('evento_id', $evento_id);
@@ -772,12 +771,15 @@ class VotacaosController extends AppController
     public function relatorio()
     {
 
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-        if (empty($evento_id)):
-            $evento_id = $this->evento();
-        endif;
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', ['order' => 'ordem']);
+        if (empty($evento_id)):
+            $evento_id = end($eventos);
+        endif;
+        if ($evento_id) {
+            $this->Session->write('evento_id', $evento_id);
+        }
         // pr($eventos);
         // pr($evento_id);
         // die();

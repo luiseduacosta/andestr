@@ -12,7 +12,7 @@ class UsersController extends AppController {
      *
      * @var array
      */
-    public $components = array('Paginator');
+    public $components = array('Paginator', 'Session');
 
     public function beforeFilter() {
         parent::beforeFilter();
@@ -127,6 +127,7 @@ class UsersController extends AppController {
 
     public function logout() {
 
+        $this->Session->delete('evento_id');
         return $this->redirect($this->Auth->logout());
     }
 

@@ -13,7 +13,7 @@ class ItemsController extends AppController
      *
      * @var mixed
      */
-    public $components = array('Paginator');
+    public $components = array('Paginator', 'Session');
 
     public function isAuthorized($user)
     {
@@ -50,23 +50,7 @@ class ItemsController extends AppController
     {
         $apoio_id = isset($this->request->query['apoio_id']) ? $this->request->query['apoio_id'] : null;
         $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-
-        /** Localizo o evento_id a partir do apoio_id ou diretamente como parâmetro */
-        if ($apoio_id) {
-            $this->loadModel('Apoio');
-            $apoio = $this->Apoio->find(
-                'first',
-                ['conditions' => ['Apoio.id' => $apoio_id]]
-            );
-            if ($apoio) {
-                $evento_id = $apoio['Apoio']['evento_id'];
-            } else {
-                echo "Sem registros em Apoios";
-            }
-        } else {
-            $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : null;
-        }
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
 
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
@@ -79,6 +63,11 @@ class ItemsController extends AppController
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
         endif;
+
+        /** Gravo o cookei com o evento_id */
+        if ($evento_id) {
+            $this->Session->write('evento_id', $evento_id);
+        }
 
         $this->loadModel('Apoio');
         if (isset($this->request->query['tr']) && isset($evento_id)):
