@@ -104,7 +104,7 @@ endif;
 ?>
 
 <fieldset class='border rounded-3 p-3'>
-    <legend class="float-none w-auto px-3">Supresão da TR na sua totalidade</legend>
+    <legend class="float-none w-auto px-3 bg-danger">Supresão da TR na sua totalidade</legend>
 
     <?php
     echo $this->Form->input('tr_suprimida', [
@@ -117,7 +117,7 @@ endif;
 </fieldset>
 
 <fieldset id='votacao' class='border rounded-3 p-3'>
-    <legend id='legendavotacao' class="float-none w-auto px-3">Votação de cada item da TR</legend>
+    <legend id='legendavotacao' class="float-none w-auto px-3 bg-info">Votação de cada item da TR</legend>
 
     <?php
     if (isset($item)):
@@ -164,7 +164,7 @@ endif;
 </fieldset>
 
 <fieldset id='aprovacaototal' class='border rounded-3 p-3'>
-    <legend class="float-none w-auto px-3">Aprovação da TR na sua totalidade</legend>
+    <legend class="float-none w-auto px-3 bg-success">Aprovação da TR na sua totalidade</legend>
 
     <?php
     echo $this->Form->input('tr_aprovada', [

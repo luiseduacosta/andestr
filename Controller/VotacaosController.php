@@ -270,10 +270,10 @@ class VotacaosController extends AppController
         $resultado = isset($this->request->query['resultado']) ? $this->request->query['resultado'] : null;
 
         if ($votacao_id) {
-            pr($evento_id);
-            pr($item_id);
-            pr($votacao_id);
-            pr($resultado);
+            // pr($evento_id);
+            // pr($item_id);
+            // pr($votacao_id);
+            // pr($resultado);
             // die();
         }
 

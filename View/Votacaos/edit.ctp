@@ -1,7 +1,7 @@
 <?php // pr($usuario); ?>
 <?php // pr($this->request->data); ?>
 <?php // die(); ?>
-<?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
+<?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
 <?php // pr($this->data);                  ?>
 
 <?php
@@ -22,10 +22,10 @@ echo $this->Form->create('Votacao', [
 <fieldset>
     <legend><?php echo __('Editar Votação'); ?></legend>
     <?php
-    echo $this->Form->input('id', array('type' => 'hidden'));
+    echo $this->Form->input('id', ['type' => 'hidden']);
     if (isset($usuario)):
         if ($usuario['role'] == 'relator'):
-            echo $this->Form->input('grupo', ['value' => $usuario['grupo'], 'type' => 'text', 'readonly']);
+            echo $this->Form->input('grupo', ['value' => substr($usuario['username'], 5, 2), 'type' => 'text', 'readonly']);
             echo $this->Form->input('tr', ['label' => ['text' => "TR", 'class' => 'col-4'], 'maxlength' => 2, 'readonly']);
 
         elseif ($usuario['role'] == 'admin'):

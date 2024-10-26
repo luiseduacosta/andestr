@@ -100,6 +100,8 @@ class ApoiosController extends AppController
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
+        $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null; 
+        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
         $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
         $this->set('apoio', $this->Apoio->find('first', $options));
     }

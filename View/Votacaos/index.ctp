@@ -136,9 +136,9 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['action' => 'index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['action' => 'index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
                                     else:
                                         echo $c_votacaos['Votacao']['grupo'];
@@ -150,9 +150,9 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['action' => 'index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['action' => 'index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
                                     else:
                                         echo $c_votacaos['Votacao']['tr'];
@@ -186,11 +186,11 @@
                                         if ($usuario['role'] == 'relator'):
                                             echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['action' => 'view', $c_votacaos['Votacao']['id']]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['view', $c_votacaos['Votacao']['id']]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['action' => 'view', $c_votacaos['Votacao']['id']]);
                                         endif;
                                     else:
                                         if ($c_votacaos['Votacao']['resultado'] == 'modificada' || $c_votacaos['Votacao']['resultado'] == 'inclusão'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['view', $c_votacaos['Votacao']['id']]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['action' => 'view', $c_votacaos['Votacao']['id']]);
                                         else:
                                             echo $c_votacaos['Votacao']['resultado'];
                                         endif;
@@ -219,5 +219,4 @@
         ));
         ?>
     </div>
-
 </div>
