@@ -4,6 +4,7 @@
 <?php // pr($evento_id); ?>
 <?php // pr($eventos); ?>
 <?php // pr($usuariogrupo); ?>
+<?php // pr($usuario); ?>
 
 <script>
 
@@ -27,7 +28,7 @@
 <div class="row justify-content-center">
     <div class="col-auto">
 
-        <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
+        <?php if (isset($usuario)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
             <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>
@@ -81,7 +82,6 @@
             ?>
 
             <?php foreach ($tr as $c_tr): ?>
-
                 <?php if (isset($usuario)): ?>
                     <?php if ($usuario['role'] == 'relator'): ?>
                         <li class="list-group-item">
@@ -170,7 +170,7 @@
                                                         <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', '?' => ['item_id' => $c_item['Item']['id'], 'grupo' => $usuariogrupo]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php endif; ?>
-                                                <?php if (count($c_item['Votacao']) > 0): ?>
+                                                <?php if (sizeof($c_item['Votacao']) > 0): ?>
                                                     <li class="nav-item">
                                                         <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $c_item['Apoio']['evento_id'], 'tr' => $c_item['Item']['tr'], 'item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>

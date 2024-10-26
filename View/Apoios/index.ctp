@@ -17,7 +17,7 @@
 <div class="row justify-content-center">
     <div class="col-auto">
 
-        <?php if (isset($usuario) && $usuario['role'] == 'admin'): ?>
+        <?php if (isset($usuario)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
             <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>

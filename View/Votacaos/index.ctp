@@ -1,4 +1,4 @@
-<?php 
+<?php
 // pr($votacaos);  
 // pr($usuario);
 // pr($evento_id);
@@ -39,8 +39,8 @@
                     <!-- verificar como se faz isto  -->
                     <?php
                     if (isset($usuario['role'])):
-                        if ($usuario['role'] == 'relator'):
-                            echo $this->Html->link('Votação de novo item ', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $evento_id, 'grupo' => $usuariogrupo]], ['class' => ['btn btn-secondary']]);
+                        if ($usuario['role'] == 'relator' || $usuario['role'] == 'admin'):
+                            echo $this->Html->link('Votação de novo item ', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $evento_id, 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null]], ['class' => ['btn btn-secondary']]);
                         elseif ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
                             echo "<h3>Grupos</h3>";
                         endif;
@@ -59,7 +59,7 @@
                         if ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
                             foreach ($grupos as $c_grupo):
                                 echo "<p>";
-                                echo $this->Html->link('Grupo ' . $c_grupo['Votacao']['grupo'], 'index?grupo=' . $c_grupo['Votacao']['grupo'] . '&evento_id=' . $evento_id, ['class' => 'btn btn-secondary']);
+                                echo $this->Html->link('Grupo ' . $c_grupo['Votacao']['grupo'], ['index', '?' => ['grupo' => $c_grupo['Votacao']['grupo'], 'evento_id' => $evento_id]], ['class' => 'btn btn-secondary']);
                                 echo '</p>';
                             endforeach;
                         endif;
@@ -136,9 +136,9 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], 'index?grupo=' . $c_votacaos['Votacao']['grupo'] . '&evento_id=' . $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], 'index?grupo=' . $c_votacaos['Votacao']['grupo'] . '&evento_id=' . $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['grupo'], ['index', '?' => ['grupo' => $c_votacaos['Votacao']['grupo'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
                                     else:
                                         echo $c_votacaos['Votacao']['grupo'];
@@ -150,9 +150,9 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], 'index?tr=' . $c_votacaos['Votacao']['tr'] . '&grupo=' . $usuariogrupo .'&evento_id='. $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], 'index?tr=' . $c_votacaos['Votacao']['tr'] .'&evento_id='. $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
                                     else:
                                         echo $c_votacaos['Votacao']['tr'];
@@ -170,9 +170,9 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['item'], 'index?item_id=' . $c_votacaos['Votacao']['item_id'] . '&grupo=' . $usuariogrupo . '&evento_id='. $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['item'], ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['item'], 'index?item_id=' . $c_votacaos['Votacao']['item_id'] . '&evento_id='. $c_votacaos['Votacao']['evento_id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['item'], ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
                                     else:
                                         echo $c_votacaos['Votacao']['item'];
@@ -184,13 +184,13 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], 'view/' . $c_votacaos['Votacao']['id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['action' => 'view', $c_votacaos['Votacao']['id']]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], 'view/' . $c_votacaos['Votacao']['id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['view', $c_votacaos['Votacao']['id']]);
                                         endif;
                                     else:
                                         if ($c_votacaos['Votacao']['resultado'] == 'modificada' || $c_votacaos['Votacao']['resultado'] == 'inclusão'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], 'view/' . $c_votacaos['Votacao']['id']);
+                                            echo $this->Html->link($c_votacaos['Votacao']['resultado'], ['view', $c_votacaos['Votacao']['id']]);
                                         else:
                                             echo $c_votacaos['Votacao']['resultado'];
                                         endif;

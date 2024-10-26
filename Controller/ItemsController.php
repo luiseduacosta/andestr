@@ -51,7 +51,8 @@ class ItemsController extends AppController
         $apoio_id = isset($this->request->query['apoio_id']) ? $this->request->query['apoio_id'] : null;
         $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
         $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
-
+        $grupo = isset($this->request->query['grupo']) ? $this->request->query['grupo'] : null;
+        
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
@@ -96,6 +97,7 @@ class ItemsController extends AppController
             'group' => ['tr']
         ]);
 
+        $this->set('grupo', isset($grupo) ? $grupo : null);
         $this->set('tr', $tresolucao);
         $this->set('evento_id', $evento_id);
         $this->set('eventos', $eventos);
