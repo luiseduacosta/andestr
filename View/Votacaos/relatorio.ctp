@@ -103,7 +103,7 @@
                     <?php echo ". Observações: " . $tr_relatorio['Votacao']['observacoes']; ?>
                 <?php endif; ?>
                 <?php if ($tr_relatorio['Votacao']['item_modificada']): ?>
-                    <?php echo '<ul><i>' . strip_tags($tr_relatorio['Votacao']['item_modificada']) . "</i>"; ?>
+                    <?php echo '<ul><p><span style = "font-family: Lucida Console, Courier New, monospace;">' . $tr_relatorio['Votacao']['item_modificada'] . "</span></p>"; ?>
                     <?php echo "</ul>"; ?>
                     <?php echo "<br>"; ?>
                 <?php endif; ?>

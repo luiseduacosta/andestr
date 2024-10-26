@@ -8,7 +8,7 @@
         <?php if (isset($usuario)): ?>
             <?php // pr($usuario); ?>
             <?php if ($usuario['role'] == 'relator'): ?>
-                <li class="nav-item"><?php echo $this->Html->link(__('Listar Items'), ['action' => 'index', '?' => ['evento_id' => $item['Apoio']['evneto_id'], 'apoio_id' => $item['Item']['apoio_id'], 'tr' => $item['Item']['tr']]], ['class' => "nav-link"]); ?></li>
+                <li class="nav-item"><?php echo $this->Html->link(__('Listar Items'), ['action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'apoio_id' => $item['Item']['apoio_id'], 'tr' => $item['Item']['tr']]], ['class' => "nav-link"]); ?></li>
             <?php elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
                 <li class="nav-item"><?php echo $this->Html->link(__('Textos de Apoio'), ['controller' => 'Apoios', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id']]], ['class' => "nav-link"]); ?> </li>
                 <li class="nav-item"><?php echo $this->Html->link(__('Novo Apoio'), ['controller' => 'Apoios', 'action' => 'add', '?' => ['evento_id' => $item['Apoio']['evento_id']]], ['class' => "nav-link"]); ?> </li>

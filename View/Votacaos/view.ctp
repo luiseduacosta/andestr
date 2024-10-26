@@ -61,8 +61,14 @@
         ?>
     </dd>
 
-    <?php if ($votacao['Votacao']['resultado'] == 'modificada' || $votacao['Votacao']['resultado'] == 'inclusão'): ?>
-        <dt class="col-3">Modificação ou inclusão</dt>
+    <?php if ($votacao['Votacao']['resultado'] == 'modificada' || $votacao['Votacao']['resultado'] == 'inclusão' || $votacao['Votacao']['resultado'] == 'minoritária'): ?>
+        <?php if ($votacao['Votacao']['resultado'] == 'modificada'): ?>
+            <dt class="col-3">Modificação</dt>
+        <?php elseif ($votacao['Votacao']['resultado'] == 'inclusão'): ?>
+            <dt class="col-3">Inclusão</dt>
+        <?php elseif ($votacao['Votacao']['resultado'] == 'minoritária'): ?>
+            <dt class="col-3">Minoritária</dt>
+        <?php endif ?>
         <dd class="col-9">
             <?php
             echo $votacao['Votacao']['item_modificada'];
