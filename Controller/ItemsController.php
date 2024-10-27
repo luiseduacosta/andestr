@@ -52,7 +52,7 @@ class ItemsController extends AppController
         $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
         $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
         $grupo = isset($this->request->query['grupo']) ? $this->request->query['grupo'] : null;
-        
+
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
@@ -287,60 +287,6 @@ class ItemsController extends AppController
         $this->set('resolucaos', $resolucaos);
     }
 
-    /*
-     * Método que atualiza o campo apoio_id da tabela utilizando o TR (numero_texto)
-     */
-
-    public function atualiza()
-    {
-
-        $items = $this->Item->find('all');
-
-        // pr($items);
-        // die();
-
-        foreach ($items as $c_item):
-
-            // pr($c_item);
-            // pr($c_item['Item']['tr']);
-            // echo ltrim(substr($c_item['Item']['item'], 0, 2), 0);
-            // die();
-
-            $this->loadModel('Apoio');
-            // $apoio = $this->Apoio->find('first', ['evento_id'])
-            $resultado = $this->Apoio->find('first', ['conditions' => ['Apoio.id' => $c_item['Item']['apoio_id']]]);
-
-            // pr($resultado);
-            // echo $resultado['Apoio']['id'];
-            // die();
-            // $c_item['Item']['apoio_id'] = $resultado['Resolucao']['apoio_id'];
-            // $c_item['Item']['tr'] = $resultado['Apoio']['numero_texto'];
-            if (empty($c_item['Item']['item'])) {
-                if ($resultado['Apoio']['numero_texto']) {
-                    $c_item['Item']['item'] = $resultado['Apoio']['numero_texto'] . '.00.00';
-                } else {
-                    echo "Sem número de texto";
-                    die();
-                }
-            }
-            // pr($c_item['Item']['item']);
-            $c_item['Item']['apoio_id'] = $resultado['Apoio']['id'];
-            $c_item['Item']['texto1'] = $c_item['Item']['texto'];
-            // pr($c_item);
-            // die();
-
-            if ($this->Item->save($c_item['Item'])) {
-
-                $this->Flash->success(__('Item atualizado.'));
-            } else {
-                debug($this->Item->validationErrors);
-                // die();
-                // $this->Flash->error(__('The item could not be saved. Please, try again.'));
-            }
-
-        endforeach;
-    }
-
     public function delete($id = null)
     {
         $this->Item->id = $id;
@@ -361,10 +307,102 @@ class ItemsController extends AppController
         return $this->redirect(['controller' => 'items', 'action' => 'view', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
     }
 
+    /*
+     * Método que corrige a numeração do campo item
+     */
+    public function atualiza()
+    {
+        $this->Item->contain();
+        $items = $this->Item->find('all');
+
+        $i = 1;
+        foreach ($items as $c_item):
+
+            /** Corrige a numeração dos items */
+            if (substr($c_item['Item']['item'], 3, 2) == '00') {
+                // pr($c_item['Item']['item']);
+                $tr = substr($c_item['Item']['item'], 0, 2);
+                if ($i == 1) {
+                    $resolucao = $tr;
+                }
+                if ($tr == $resolucao) {
+                    if (strlen($i) == 1) {
+                        $i = '0' . $i;
+                    }
+                    $item = $tr . "." . $i;
+                    // pr($c_item['Item']['id']);
+                    $c_item['Item']['item'] = $item;
+                    $i++;
+                } else {
+                    $i = 1;
+                    if (strlen($i) == 1) {
+                        $i = '0' . $i;
+                    }
+                    $item = $tr . "." . $i;
+                    $c_item['Item']['item'] = $item;
+                    // pr($c_item['Item']['item']);
+                    $resolucao = $tr;
+                    $i++;
+                }
+                // pr($resolucao);
+                // pr($tr);
+                // pr($c_item);
+                // pr($i);
+                if ($this->Item->save($c_item['Item'])) {
+                    $this->Flash->success(__('Item atualizado.'));
+                } else {
+                    debug($this->Item->validationErrors);
+                    die();
+                    $this->Flash->error(__('Tente novamente.'));
+                }
+            }
+
+            /** Corrige o item em função do tamanho maior */
+            if (strlen($c_item['Item']['item']) > 5) {
+                // pr($c_item['Item']['item']);
+                $tr = substr($c_item['Item']['item'], 0, 2);
+                if ($i == 1) {
+                    $resolucao = $tr;
+                }
+                if ($tr == $resolucao) {
+                    if (strlen($i) == 1) {
+                        $i = '0' . $i;
+                    }
+                    $item = $tr . "." . $i;
+                    // pr($c_item['Item']['id']);
+                    $c_item['Item']['item'] = $item;
+                    $i++;
+                } else {
+                    $i = 1;
+                    if (strlen($i) == 1) {
+                        $i = '0' . $i;
+                    }
+                    $item = $tr . "." . $i;
+                    $c_item['Item']['item'] = $item;
+                    // pr($c_item['Item']['item']);
+                    $resolucao = $tr;
+                    $i++;
+                }
+                // pr($resolucao);
+                // pr($tr);
+                // pr($c_item);
+                // pr($i);
+                if ($this->Item->save($c_item['Item'])) {
+                    $this->Flash->success(__('Item atualizado.'));
+                } else {
+                    debug($this->Item->validationErrors);
+                    die();
+                    $this->Flash->error(__('Tente novamente.'));
+                }
+            }
+
+        endforeach;
+    }
+
     public function seleciona_lista()
     {
 
-        $items = $this->Item->find('list', array('fields' => array('id', 'item', 'texto')));
+        $items = $this->Item->find('list', ['fields' => ['id', 'item', 'texto']]);
         // pr($items);
         // die();
         $this->set('items', $items);
