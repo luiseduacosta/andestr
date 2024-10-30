@@ -154,48 +154,43 @@ class VotacaosController extends AppController
 
     public function edit($id = NULL)
     {
-
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__('Votação inválida'));
         }
-
-        // $this->set('usuario', $this->autenticausuario());
 
         if ($this->Auth->user('role') == 'editor'):
             $this->Flash->error(__('Editor não pode atualizar votações.'));
             return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
         endif;
 
-        /* Executa a ação */
+        /** Executa a ação */
         if ($this->request->is(array('post', 'put'))):
             // pr($this->request->data);
             // die('post');
 
-            /* Ajusto o valor do item_id em função do valor do item */
+            /** Ajusto o valor do item_id em função do valor do item */
             if ($this->request->data['Votacao']['id']):
-                $item_id = $this->Votacao->find('first', array(
+                $item_id = $this->Votacao->find('first', [
                     'conditions' => [
                         'Votacao.id ' => $this->request->data['Votacao']['id']
                     ]
-                ));
+                ]);
                 // pr($item_id);
                 // die();
-
-                /**/
                 if (!empty($item_id['Votacao']['id'])):
                     $this->request->data['Votacao']['item_id'] = $item_id['Votacao']['item_id'];
                 else:
-                    $this->request->data['Votacao']['item_id'] = 0;
+                    $this->Flash->error(__('Votação sem item_id'));
+                    return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
                 endif;
-
             endif;
+
+            /** O tr tem que ter dois dígitos */
+            $this->request->data['Votacao']['tr'] = strlen($this->request->data['Votacao']['tr']) == 1 ? '0' . $this->request->data['Votacao']['tr'] : $this->request->data['Votacao']['tr'];
             // pr($this->request->data);
             // die();
 
             /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
-            // pr($this->request->data['Votacao']['tr']);
-            // pr(substr($this->request->data['Votacao']['item'], 0, 2));
-            // die();
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
                 $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
                 return $this->redirect(['action' => 'edit', $this->request->data['Votacao']['id']]);
@@ -205,13 +200,12 @@ class VotacaosController extends AppController
                 $this->Flash->success(__('Votação atualizada.'));
                 return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
             else:
-                // pr($this->Votacao->validationErrors);
+                pr($this->Votacao->validationErrors);
                 $this->Flash->error(__('Votação não foi atualizada. Tente novamente.'));
             endif;
-        else:
-            $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
-            $this->request->data = $this->Votacao->find('first', $options);
         endif;
+        $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
+        $this->request->data = $this->Votacao->find('first', $options);
     }
 
     /** Cuidado com esta função que altera  o user_id da tabela Votacao */
@@ -337,8 +331,24 @@ class VotacaosController extends AppController
             else:
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
             endif;
-            // pr($this->request->data);
-            // die('post');
+
+            /** O item_modificado somente se o resultado foi modificada */
+            if ($this->request->data['Votacao']['resultado'] != 'modificada') {
+                $this->request->data['Votacao']['item_modificada'] = null;
+            }
+
+            /** Trasfero o valor de item_incluida e item_minoritaria para item_modificada somente se está vazia */
+            if (empty($this->request->data['Votacao']['item_modificada'])) {
+                if ($this->request->data['Votacao']['item_incluida']) {
+                    $this->request->data['Votacao']['item_modificada'] = $this->request->data['Votacao']['item_incluida'];
+                }
+
+                if ($this->request->data['Votacao']['item_minoritaria']) {
+                    $this->request->data['Votacao']['item_modificada'] = $this->request->data['Votacao']['item_minoritaria'];
+                }
+                unset($this->request->data['Votacao']['item_incluida']);
+                unset($this->request->data['Votacao']['item_minoritaria']);
+            }
 
             /* Calculo se eh minoritaria */
             if (isset($this->request->data['Votacao']['votacao'])):
@@ -385,6 +395,7 @@ class VotacaosController extends AppController
 
             /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
             // pr($this->request->data['Votacao']['tr']);
+            // pr($this->request->data['Votacao']['item']);
             // pr(substr($this->request->data['Votacao']['item'], 0, 2));
             // die();
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
@@ -452,8 +463,6 @@ class VotacaosController extends AppController
             ;
 
             // die();
-            // pr($this->minoritaria($this->request->data['Votacao']['votacao']));
-            // pr($this->Session->read('flagminoritaria'));
             if ($this->Session->read('flagminoritaria') == 1):
                 // die('flagminoritaria = 1');
             else:
@@ -462,8 +471,6 @@ class VotacaosController extends AppController
             // die();
             /* Finalmente insiro a votação do item */
             $this->Votacao->create();
-            // pr($this->request->data);
-            // pr($this->Session->read('flagminoritaria'));            
             // die();
             // pr($this->Votacao->validationErrors);
             if ($this->Votacao->save($this->request->data)):
@@ -498,7 +505,7 @@ class VotacaosController extends AppController
             /* Votação de inclusao de item novo: inclusao. O campo item_id fica em 0 */
             $items = explode(".", $dados);
 
-            /* Atribui 0 ao item_id e TR.99 ao item */
+            /* Atribui 0 ao item_id e 99 ao item */
             if ($this->request->data['Votacao']['resultado'] == 'inclusão'):
                 $this->request->data['Votacao']['item_id'] = 0;
                 $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['tr'] . '.99';

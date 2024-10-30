@@ -30,10 +30,10 @@ class Votacao extends AppModel {
             'message' => 'Digite o número do grupo (1 ou 2 carateres numéricos).'
         ),
         'tr' => array(
-            'rule' => '/^\d{2}$/i',
+            'rule' => '/^\d{1,2}$/i',
             'required' => TRUE,
             'allowEmpty' => FALSE,
-            'message' => 'Digite dois carateres numéricos'
+            'message' => 'Digite um ou dois carateres numéricos'
         ),
         'resultado' => array(
             'rule' => 'notBlank',
