@@ -16,9 +16,9 @@
         // document.getElementById('EventoEventoId');
         // console.log(document.getElementById('EventoEventoId'));
         document.querySelector("#EventoEventoId").addEventListener('change', function () {
-            console.log('Valor: ', this.value);
+            // console.log('Valor: ', this.value);
             var evento_id = this.value;
-            console.log(url + '?evento_id=' + evento_id);
+            // console.log(url + '?evento_id=' + evento_id);
             // alert(evento_id); */
             window.location.assign(url + '?evento_id=' + evento_id);
         })
@@ -28,7 +28,7 @@
 <div class="row justify-content-center">
     <div class="col-auto">
 
-        <?php if (isset($usuario)): ?>
+        <?php if (isset($evento_id)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
             <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>

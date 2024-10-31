@@ -16,14 +16,13 @@
 
 <div class="row justify-content-center">
     <div class="col-auto">
-
-        <?php if (isset($usuario)): ?>
+        <?php if (isset($evento_id)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
             <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
-            <?php echo $this->Form->end(); ?>
         <?php else: ?>
-            <p class="text-center text-secondary h2"><?php echo end($eventos); ?></p>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
         <?php endif; ?>
+        <?php echo $this->Form->end(); ?>
     </div>
 </div>
 

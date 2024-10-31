@@ -2,7 +2,7 @@
 <?php // pr($relatorio);                              ?>
 <?php // pr($situacao);                              ?>
 <?php // pr($quantidade);                              ?>
-
+<?php // pr($evento_id); ?>
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'votacaos', 'action' => 'relatorio?evento_id=']); ?>";
@@ -18,21 +18,17 @@
 <div class="row justify-content-center">
     <div class="col-auto">
 
-        <?php if (isset($usuario)): ?>
-            <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php if (isset($evento_id)): ?>
-                <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
-            <?php else: ?>
-                <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'class' => 'form-control']); ?>
-            <?php endif; ?>
-            <?php echo $this->Form->end(); ?>
+        <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
+        <?php if (isset($evento_id)): ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
         <?php else: ?>
-            <h1 style="text-align: center;"><?php echo end($eventos); ?></h1>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
         <?php endif; ?>
+        <?php echo $this->Form->end(); ?>
     </div>
 </div>
 
-<?php if (!(isset($relatorio))): ?>
+<?php if (!isset($relatorio)): ?>
     <?php isset($usuario['grupo']) ? $titulo = 'Relatório do grupo: ' . $usuario['grupo'] : $titulo = 'Relatório geral'; ?>
 
     <legend><?php echo $titulo; ?></legend>
