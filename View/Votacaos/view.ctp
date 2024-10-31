@@ -75,6 +75,8 @@
             ?>
         </dd>
     <?php endif; ?>
+    <dt class="col-3">Observações</dt>
+    <dd class="col-9"><?php echo $votacao['Votacao']['observacoes']; ?></dd>
 </dl>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">

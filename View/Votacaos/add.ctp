@@ -310,23 +310,25 @@ endif;
         var supresao = document.getElementById("VotacaoTrSuprimida").value;
         // alert(supresao);
         if (supresao === '1') {
-            // alert(document.getElementById('#VotacaoItem').value);
-            // document.getElementById("votacao").style.display = "none";
-            document.getElementById("legendavotacao").innerHTML = "<p class='h2'>Supresão da TR na sua totalidade</p>";
+            document.getElementById("legendavotacao").innerHTML = "<p class='h2'>Supresão de todos os items da TR</p>";
             document.getElementById("aprovacaototal").style.display = "none";
-            document.getElementById("VotacaoItem").value = <?= $item['Item']['tr'] ?>;
-            document.getElementById("itemmodificada").style.display = "none";
+            document.getElementById("VotacaoItem").value = "<?= $item['Item']['tr'] ?>";
             document.getElementById("VotacaoResultado").value = "suprimida";
+            document.getElementById("itemmodificada").style.display = "none";
+            document.getElementById("itemincluida").style.display = "none";
+            document.getElementById("itemminoritaria").style.display = "none";
 
         } else if (supresao === '0') {
-            // alert(supresao);
-            // document.getElementById("votacao").style.display = 'block';
             document.getElementById("legendavotacao").innerHTML = "<p class='h2'>Votação de cada item da TR</p>";
             document.getElementById("aprovacaototal").style.display = 'block';
-            document.getElementById("VotacaoItem").value = <?= $item['Item']['item'] ?>;
+            document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>";
             document.getElementById("VotacaoResultado").value = "";
-            document.getElementById("itemmodificada").style.display = "block";
+            document.getElementById("itemmodificada").style.display = "none";
+            document.getElementById("itemincluida").style.display = "none";
+            document.getElementById("itemminoritaria").style.display = "none";
+
         }
+
     }
 
     function aprovatr() {
@@ -342,6 +344,9 @@ endif;
             document.getElementById("aprovacaototal").style.display = "block";
             document.getElementById("VotacaoResultado").value = "aprovada";
             document.getElementById("itemmodificada").style.display = "none";
+            document.getElementById("itemincluida").style.display = "none";
+            document.getElementById("itemminoritaria").style.display = "none";
+
         } else if (aprovada === '0') {
             // alert(aprovada);
             // document.getElementById("votacao").style.display = 'block';
@@ -350,8 +355,9 @@ endif;
             document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>";
             document.getElementById("aprovacaototal").style.display = "block";
             document.getElementById("VotacaoResultado").value = "";
-            document.getElementById("itemmodificada").style.display = "block";
-
+            document.getElementById("itemmodificada").style.display = "none";
+            document.getElementById("itemincluida").style.display = "none";
+            document.getElementById("itemminoritaria").style.display = "none";
         }
 
     }
@@ -378,7 +384,7 @@ endif;
             document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>"
 
         } else if (resultado == 'minoritária') {
-            document.getElementById("itemincluida").style.display = "none";            
+            document.getElementById("itemincluida").style.display = "none";
             document.getElementById("itemminoritaria").style.display = "block";
             document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>"
 
