@@ -158,18 +158,18 @@ class VotacaosController extends AppController
             throw new NotFoundException(__('Votação inválida'));
         }
 
-        if ($this->Auth->user('role') == 'editor'):
+        if ($this->Auth->user('role') == 'editor') {
             $this->Flash->error(__('Editor não pode atualizar votações.'));
             return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
-        endif;
+        }
 
         /** Executa a ação */
-        if ($this->request->is(array('post', 'put'))):
+        if ($this->request->is(array('post', 'put'))) {
             // pr($this->request->data);
             // die('post');
 
             /** Ajusto o valor do item_id em função do valor do item */
-            if ($this->request->data['Votacao']['id']):
+            if ($this->request->data['Votacao']['id']) {
                 $item_id = $this->Votacao->find('first', [
                     'conditions' => [
                         'Votacao.id ' => $this->request->data['Votacao']['id']
@@ -177,18 +177,33 @@ class VotacaosController extends AppController
                 ]);
                 // pr($item_id);
                 // die();
-                if (!empty($item_id['Votacao']['id'])):
+                if (!empty($item_id['Votacao']['id'])) {
                     $this->request->data['Votacao']['item_id'] = $item_id['Votacao']['item_id'];
-                else:
+                } else {
                     $this->Flash->error(__('Votação sem item_id'));
                     return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
-                endif;
-            endif;
+                }
+            }
 
             /** O tr tem que ter dois dígitos */
             $this->request->data['Votacao']['tr'] = strlen($this->request->data['Votacao']['tr']) == 1 ? '0' . $this->request->data['Votacao']['tr'] : $this->request->data['Votacao']['tr'];
-            // pr($this->request->data);
-            // die();
+
+            /** Se é uma inclusão atualiza o texto do item */
+            if ($this->request->data['Votacao']['resultado'] == 'inclusão') {
+
+                if ($this->request->data['Votacao']['item_id']) {
+                    $this->loadModel('Item');
+                    $item = $this->Item->find('first', [
+                        'conditions' => ['Item.id' => $this->request->data['Votacao']['item_id']]
+                    ]);
+                    $item['Item']['texto'] = $this->request->data['Votacao']['item_modificada'];
+                    if ($this->Item->save($item)) {
+                        $this->Flash->success(__('Item atualizada'));
+                    }
+                } else {
+                    $this->Flash->error(__('Inclusão não inserida na tabela Items'));
+                }
+            }
 
             /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
@@ -203,7 +218,7 @@ class VotacaosController extends AppController
                 pr($this->Votacao->validationErrors);
                 $this->Flash->error(__('Votação não foi atualizada. Tente novamente.'));
             endif;
-        endif;
+        }
         $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
         $this->request->data = $this->Votacao->find('first', $options);
     }

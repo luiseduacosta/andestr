@@ -44,13 +44,13 @@ echo $this->Form->create('Votacao', [
 
     <?php
     echo $this->Form->input('item', ['maxlength' => 8]);
-
+    echo $this->Form->input('item_id', ['type' => 'hidden']);
+ 
     echo $this->Form->input('resultado', [
         'type' => 'select',
         'options' => ['aprovada' => 'Aprovado', 'modificada' => 'Modificado', 'suprimida' => 'Suprimido', 'inclusão' => 'Inclusão de novo item', 'minoritária' => 'Proposta minoritária (1/3)', 'outra' => 'Outra votação em observações']
     ]);
     echo $this->Form->input('votacao', ['label' => ['text' => 'Resultado de votação: favoráveis / contrários / abstenções', 'class' => 'col-4']]);
-    // echo $this->Html->link("Verificador de diferenças entre textos", "https://editor.mergely.com/");
     echo $this->Form->input('item_modificada', ['label' => ['text' => 'Digitar o texto modificado, a inclusão do novo item ou o texto minoritário.', 'class' => 'col-4'], 'class' => 'ckeditor']);
     ?>
 
