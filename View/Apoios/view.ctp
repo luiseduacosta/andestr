@@ -1,4 +1,4 @@
-<?php // pr($apoio);        ?>
+<?php // pr($apoio); ?>
 
 <div class="row">
 
@@ -13,7 +13,8 @@
                     <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Listar Todos'), ['action' => 'index'], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
                     <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Novo Texto de Apoio'), ['action' => 'add'], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
                     <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Eventos'), ['controller' => 'Eventos', 'action' => 'index'], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
-                <?php else: ?>
+                    <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Inserir TR'), ['controller' => 'Items', 'action' => 'add?evento=' . $apoio['Apoio']['evento_id']], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
+                    <?php else: ?>
                     <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Eventos'), ['controller' => 'Eventos', 'action' => 'index'], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
                     <li class='list-group-item list-group-item-action'><?php echo $this->Html->link(__('Listar Todos Apoios'), ['action' => 'index'], ['class' => 'list-group-item list-group-item-action text-truncate']); ?> </li>
 
@@ -38,7 +39,7 @@
                 &nbsp;
             </dd>
 
-            <dt class="col-sm-3"><?php echo __('Caderno'); ?></dt> 
+            <dt class="col-sm-3"><?php echo __('Caderno'); ?></dt>
             <dd class="col-sm-9">
                 <?php echo h($apoio['Apoio']['caderno']); ?>
                 &nbsp;

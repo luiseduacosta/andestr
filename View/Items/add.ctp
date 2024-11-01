@@ -1,3 +1,9 @@
+<?php 
+// pr($eventos);
+// pr($evento); 
+// pr($tr);
+?>
+
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'Items', 'action' => 'add/evento:']); ?>";
@@ -47,12 +53,13 @@
     <fieldset>
         <legend><?php echo "Items da TR "; ?></legend>
         <?php
-        echo $this->Form->input('apoio_id', array('label' => 'TR', 'type' => 'select', 'options' => $tr));
-        echo $this->Form->input('item', array('label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'placeholder' => '00.00'));
-        echo $this->Form->input('texto', array('label' => 'Item do texto de resolução', 'class' => 'ckeditor'));
+        echo $this->Form->input('apoio_id', ['label' => 'TR', 'type' => 'select', 'default' => array_key_last($tr), 'options' => $tr]);
+        echo $this->Form->input('item', ['label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'placeholder' => '00.00']);
+        echo $this->Form->input('texto', ['label' => 'Item do texto de resolução', 'class' => 'ckeditor']);
         ?>
     </fieldset>
-    <?php echo $this->Form->end(__('Submit')); ?>
+    <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
+    <?= $this->Form->end(); ?>
 </div>
 
 <div class="row-fluid">
