@@ -2,28 +2,50 @@
 
     <ul class='navbar-nav mr-auto'>
         <a class='navbar-brand'><?php echo __('Ações'); ?></a>
-        <?php if (isset($usuario)): ?>
+
+        <?php if (isset($usuario) && isset($evento)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-                <li class='nav-item'><?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $evento['Evento']['id']), ['class' => 'nav-link']); ?> </li>
-                <li class='nav-item'><?php echo $this->Form->postLink(__(' Excluir'), array('action' => 'delete', $evento['Evento']['id']), ['confirm' => __('Are you sure you want to delete # %s?', $evento['Evento']['id']), 'class' => 'nav-link']); ?> </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Editar'), array('action' => 'edit', $evento['Evento']['id']), ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Form->postLink(__(' Excluir'), array('action' => 'delete', $evento['Evento']['id']), ['confirm' => __('Are you sure you want to delete # %s?', $evento['Evento']['id']), 'class' => 'nav-link']); ?>
+                </li>
             <?php endif ?>
         <?php endif ?>
 
-        <li class='nav-item'><?php echo $this->Html->link(__('Eventos'), array('action' => 'index'), ['class' => 'nav-link']); ?> </li>
+        <li class='nav-item'>
+            <?php echo $this->Html->link(__('Eventos'), ['action' => 'index'], ['class' => 'nav-link']); ?>
+        </li>
 
         <?php if (isset($usuario)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-                <li class='nav-item'><?php echo $this->Html->link(__('Novo evento'), array('action' => 'add'), ['class' => 'nav-link']); ?> </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
+                </li>
             <?php endif ?>
         <?php endif ?>
 
-        <li class='nav-item'><?php echo $this->Html->link(__('Textos de apoio'), array('controller' => 'apoios', 'action' => 'index'), ['class' => 'nav-link']); ?> </li>
+        <?php if (isset($evento)): ?>
+            <li class='nav-item'>
+                <?php echo $this->Html->link(__('Textos de apoio'), ['controller' => 'apoios', 'action' => 'index', '?' => ['evento_id' => $evento['Evento']['id']]], ['class' => 'nav-link']); ?>
+            </li>
+        <?php endif ?>
 
-        <?php if (isset($usuario)): ?>
+        <?php if (isset($usuario) && isset($evento)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-                <li class='nav-item'><?php echo $this->Html->link(__('Inserir texto de apoio'), array('controller' => 'apoios', 'action' => 'add'), ['class' => 'nav-link']); ?> </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Inserir texto de apoio'), ['controller' => 'apoios', 'action' => 'add', '?' => ['evento_id' => $evento['Evento']['id']]], ['class' => 'nav-link']); ?>
+                </li>
             <?php endif ?>
         <?php endif ?>
+
+        <?php if (isset($evento)): ?>
+            <li class='nav-item'>
+                <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento['Evento']['id']]], ['class' => 'nav-link']); ?>
+            </li>
+        <?php endif ?>
+
     </ul>
 </nav>
 
@@ -37,7 +59,7 @@
     </dd>
     <dt class='col-3'><?php echo __('Evento'); ?></dt>
     <dd class='col-9'>
-        <?php echo h($evento['Evento']['evento']); ?>
+        <?php echo h($evento['Evento']['nome']); ?>
         &nbsp;
     </dd>
     <dt class='col-3'><?php echo __('Ordem'); ?></dt>
@@ -60,7 +82,7 @@
 <div class="related">
     <h2 class='h2'><?php echo __('Textos para o evento'); ?></h3>
         <?php if (!empty($evento['Apoio'])): ?>
-            <table cellpadding = "0" cellspacing = "0" class="table table-hover table-striped table-responsive">
+            <table cellpadding="0" cellspacing="0" class="table table-hover table-striped table-responsive">
                 <thead class='thead-light'>
                     <tr>
                         <th><?php echo __('Id'); ?></th>
@@ -79,7 +101,8 @@
                             <td><?php echo $apoio['numero_texto']; ?></td>
                             <td><?php echo $apoio['tema']; ?></td>
                             <td><?php echo $apoio['gt']; ?></td>
-                            <td><?php echo $this->Html->link($apoio['titulo'], ['controller' => 'apoios', 'action' => 'view', $apoio['id']]); ?></td>
+                            <td><?php echo $this->Html->link($apoio['titulo'], ['controller' => 'apoios', 'action' => 'view', $apoio['id']]); ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

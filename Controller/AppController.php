@@ -73,6 +73,7 @@ class AppController extends Controller {
         // debug($this->Auth->user());
         // die();
         $this->set('usuario', $this->Auth->user());
+
     }
 
     public function autenticausuario() {
@@ -83,7 +84,7 @@ class AppController extends Controller {
                 'conditions' => ['User.id' => $this->Auth->user('id')]
             ]);
             // pr($usuario);
-            if (!empty($usuario)):
+            if (isset($usuario)):
                 if ($usuario['User']['role'] == 'editor' || $usuario['User']['role'] == 'admin'):
                     $grupo = NULL;
                     $papel = $usuario['User']['role'];
@@ -91,13 +92,16 @@ class AppController extends Controller {
                     $grupo = substr($usuario['User']['username'], 5, 2);
                     $papel = $usuario['User']['role'];
                 endif;
-                $usuario = ['grupo' => $grupo, 'role' => $papel];
+                $usuario = ['grupo' => $grupo, 'papel' => $papel];
+                // pr($usuario);
             endif;
         // pr($usuario);
         // die();
         // $this->set('usuario', $usuario);
-        // return $usuario;
+        return $usuario;
         endif;
+        // pr($grupo);
+    // return $grupo;
     }
 
 }

@@ -1,7 +1,7 @@
 <?php // pr($usuario); ?>
 <?php // pr($this->request->data); ?>
 <?php // die(); ?>
-<?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
+<?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
 <?php // pr($this->data);                  ?>
 
 <?php
@@ -19,13 +19,14 @@ echo $this->Form->create('Votacao', [
     ]
 ]);
 ?>
+
 <fieldset>
     <legend><?php echo __('Editar Votação'); ?></legend>
     <?php
-    echo $this->Form->input('id', array('type' => 'hidden'));
+    echo $this->Form->input('id', ['type' => 'hidden']);
     if (isset($usuario)):
         if ($usuario['role'] == 'relator'):
-            echo $this->Form->input('grupo', ['value' => $usuario['grupo'], 'type' => 'text', 'readonly']);
+            echo $this->Form->input('grupo', ['value' => substr($usuario['username'], 5, 2), 'type' => 'text', 'readonly']);
             echo $this->Form->input('tr', ['label' => ['text' => "TR", 'class' => 'col-4'], 'maxlength' => 2, 'readonly']);
 
         elseif ($usuario['role'] == 'admin'):
@@ -38,38 +39,30 @@ echo $this->Form->create('Votacao', [
 </fieldset>
 
 <fieldset>
-    <legend>Supresão da TR na sua totalidade</legend>
 
-    <?php
-    echo $this->Form->input('tr_suprimida', array(
-        'label' => ['text' => 'Suprimir TR', 'class' => 'col-4'],
-        'type' => 'select',
-        'options' => array('0' => 'Não', '1' => 'Sim')));
-    ?>
-
-    <legend>Votação de cada item da TR</legend>
+    <legend>Item da TR</legend>
 
     <?php
     echo $this->Form->input('item', ['maxlength' => 8]);
+    echo $this->Form->input('item_id', ['type' => 'hidden']);
 
     echo $this->Form->input('resultado', [
         'type' => 'select',
-        'options' => ['aprovada' => 'Aprovado', 'modificada' => 'Modificado', 'suprimida' => 'Suprimido', 'inclusão' => 'Inclusão de novo item', 'minoritária' => 'Proposta minoritária (1/3)', 'outra' => 'Outra votação em observações']
+        'options' => [
+            'aprovada' => 'Aprovada sem modificações',
+            'modificada' => 'Aprovada com modificações',
+            'suprimida' => 'Suprimida',
+            'inclusão' => 'Inclusão de novo item',
+            'minoritária' => 'Proposta minoritária (1/3)',
+            'remitida' => 'Remitida para outro tema e/ou TR. Especificar em observações',
+            'outra' => 'Outra votação. Especificar em observações'
+        ]
     ]);
     echo $this->Form->input('votacao', ['label' => ['text' => 'Resultado de votação: favoráveis / contrários / abstenções', 'class' => 'col-4']]);
-    // echo $this->Html->link("Verificador de diferenças entre textos", "https://editor.mergely.com/");
     echo $this->Form->input('item_modificada', ['label' => ['text' => 'Digitar o texto modificado, a inclusão do novo item ou o texto minoritário.', 'class' => 'col-4'], 'class' => 'ckeditor']);
     ?>
 
-    <legend>Aprovação da TR na sua totalidade</legend>
-
     <?php
-    echo $this->Form->input('tr_aprovada', array(
-        'label' => ['text' => 'Votação da TR como um todo. É para aprovar os items que não foram destacados. Selecionar "Aprovada" na caixa de seleção "Resolução" anterior. Colocar a votação no campo "Resultado da votação" deste formulário.', 'class' => 'col-4'],
-        'type' => 'select',
-        'options' => array('0' => 'Não', '1' => 'Sim')
-    ));
-
     echo $this->Form->input('observacoes', ['label' => ['text' => 'Observações', 'class' => 'col-4'], 'class' => 'ckeditor']);
     ?>
 </fieldset>

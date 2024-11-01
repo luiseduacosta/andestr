@@ -1,4 +1,4 @@
-<?php // pr($votacao)                  ?>
+<?php // pr($votacao) ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <?php if (isset($usuario)): ?>
@@ -18,7 +18,7 @@
             Texto em votação
         </dt>
         <dd class="col-9">
-            <?php echo $votacao['Item']['texto'] ?>
+            <?= $votacao['Item']['texto'] ?>
         </dd>
 
     <?php endif; ?>
@@ -61,12 +61,28 @@
         ?>
     </dd>
 
-    <?php if ($votacao['Votacao']['resultado'] == 'modificada' || $votacao['Votacao']['resultado'] == 'inclusão'): ?>
-        <dt class="col-3">Modificação ou inclusão</dt>
+    <?php if ($votacao['Votacao']['resultado'] == 'modificada' || $votacao['Votacao']['resultado'] == 'inclusão' || $votacao['Votacao']['resultado'] == 'minoritária'): ?>
+        <?php if ($votacao['Votacao']['resultado'] == 'modificada'): ?>
+            <dt class="col-3">Modificação</dt>
+        <?php elseif ($votacao['Votacao']['resultado'] == 'inclusão'): ?>
+            <dt class="col-3">Inclusão</dt>
+        <?php elseif ($votacao['Votacao']['resultado'] == 'minoritária'): ?>
+            <dt class="col-3">Minoritária</dt>
+        <?php endif ?>
         <dd class="col-9">
             <?php
             echo $votacao['Votacao']['item_modificada'];
             ?>
         </dd>
     <?php endif; ?>
+    <dt class="col-3">Observações</dt>
+    <dd class="col-9"><?php echo $votacao['Votacao']['observacoes']; ?></dd>
 </dl>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <?php if (isset($usuario)): ?>
+        <?php if ($usuario['role'] == 'relator' || $usuario['role'] == 'admin'): ?>
+            <?php echo $this->Html->link('Nova votação', '/Items/index?tr=' . $votacao['Votacao']['tr'] . '&evento_id=' . $votacao['Votacao']['evento_id'], ['class' => 'btn btn-info']); ?>
+        <?php endif; ?>
+    <?php endif; ?>
+</nav>

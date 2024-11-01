@@ -8,6 +8,12 @@ App::uses('AppModel', 'Model');
  */
 class Item extends AppModel {
 
+    public $name = "Item";
+
+    public $useTable = "items";
+
+    public $primaryKey = "id";
+    
     /**
      * Display field
      *
@@ -16,8 +22,10 @@ class Item extends AppModel {
     public $displayField = 'item';
     public $actsAs = array('Containable');    
     // public $belongsTo = array('Resolucao');
-    public $belongsTo = array('Apoio');
-    public $hasMany = array('Votacao');
+    public $belongsTo = ['Apoio'];
+    
+    public $hasMany = ['Votacao'];
+
     public $validate = array(
         'tr' => array(
             'rule' => 'numeric',

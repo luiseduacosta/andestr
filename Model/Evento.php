@@ -9,12 +9,18 @@ App::uses('AppModel', 'Model');
  */
 class Evento extends AppModel {
 
+    public $name = "Evento";
+
+    public $useTable = "eventos";
+
+    public $primaryKey = "id";
+    
     /**
      * Display field
      *
      * @var string
      */
-    public $displayField = 'evento';
+    public $displayField = 'nome';
     public $actsAs = array('Containable');
 
     // The Associations below have been created with all possible keys, those that are not needed can be removed

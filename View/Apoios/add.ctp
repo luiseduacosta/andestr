@@ -5,12 +5,20 @@
     <div class="col-2">
         <h3 class="h3"><?php echo __('Acões'); ?></h3>
         <ul class="list-group">
-            <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Listar Apoios'), array('action' => 'index')); ?></li>
+            <?php if (isset($evento_id)): ?>
+                <li class="list-group-item list-group-item-action">
+                    <?php echo $this->Html->link(__('Listar Apoios'), ['action' => 'index', '?' => ['evento_id' => $evento_id]]); ?>
+                </li>
+            <?php endif; ?>
             <?php
             if (isset($usuario)):
                 if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                     ?>
-                    <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Nova TR'), array('controller' => 'Items', 'action' => 'add')); ?> </li>
+                    <?php if (isset($evento_id)): ?>
+                        <li class="list-group-item list-group-item-action">
+                            <?php echo $this->Html->link(__('Nova TR'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $evento_id]]); ?>
+                        </li>
+                    <?php endif; ?>
                     <?php
                 endif;
             endif;
@@ -37,36 +45,45 @@
         <fieldset>
             <legend><?php echo __('Adicionar texto de apoio'); ?></legend>
             <?php
-            echo $this->Form->input('evento_id', ['type' => 'select', 'default' => array_key_last($eventos), 'options' => [$eventos]]);
+            if (isset($evento_id)) {
+                echo $this->Form->input('evento_id', ['type' => 'select', 'default' => $evento_id, 'options' => [$eventos]]);
+            } else {
+                echo $this->Form->input('evento_id', ['type' => 'select', 'default' => array_key_last($eventos), 'options' => [$eventos]]);
+            }
             echo $this->Form->input('caderno', array('type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']));
             echo $this->Form->input('numero_texto', ['required']);
             echo $this->Form->input('autor', array('class' => 'ckeditor'));
             echo $this->Form->input('titulo');
-            echo $this->Form->input('tema', array('type' => 'select',
+            echo $this->Form->input('tema', array(
+                'type' => 'select',
                 'empty' => 'Selecione',
-                'options' => array('I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV')));
-            echo $this->Form->input('gt', array('label' => ['text' => 'Setor ou grupo de trabalho', 'class' => 'col-3'],
-                'empty' => 'Selecione',
-                'options' => array(
-                    'Federais' => 'Federais',
-                    'Estaduais' => 'Estaduais',
-                    'GTCQERGDS' => 'GTCQERGDS',
-                    'GTCA' => 'GTCA',
-                    'GTC' => 'GTC',
-                    'GTCT' => 'GTCT',
-                    'GT Fundações' => 'GT Fundações',
-                    'GTHMD' => 'GTHMD',
-                    'GTPAUA' => 'GTPAUA',
-                    'GTPE' => 'GTPE',
-                    'GTPFS' => 'GTPFS',
-                    'GTSSA' => 'GTSSA',
-                    'GT Verbas' => 'GT Verbas',
-                    'Comissão da Verdade' => 'Comissão da Verdade',
-                    'Tesouraria' => 'Tesouraria',
-                    'Secretaria' => 'Secretaria',
-                    'Outras' => 'Outras'
-                )
+                'options' => array('I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV')
+            ));
+            echo $this->Form->input(
+                'gt',
+                array(
+                    'label' => ['text' => 'Setor ou grupo de trabalho', 'class' => 'col-3'],
+                    'empty' => 'Selecione',
+                    'options' => array(
+                        'Federais' => 'Federais',
+                        'Estaduais' => 'Estaduais',
+                        'GTCQERGDS' => 'GTCQERGDS',
+                        'GTCA' => 'GTCA',
+                        'GTC' => 'GTC',
+                        'GTCT' => 'GTCT',
+                        'GT Fundações' => 'GT Fundações',
+                        'GTHMD' => 'GTHMD',
+                        'GTPAUA' => 'GTPAUA',
+                        'GTPE' => 'GTPE',
+                        'GTPFS' => 'GTPFS',
+                        'GTSSA' => 'GTSSA',
+                        'GT Verbas' => 'GT Verbas',
+                        'Comissão da Verdade' => 'Comissão da Verdade',
+                        'Tesouraria' => 'Tesouraria',
+                        'Secretaria' => 'Secretaria',
+                        'Outras' => 'Outras'
                     )
+                )
             );
             echo $this->Form->input('texto', array('class' => 'ckeditor'));
             ?>
