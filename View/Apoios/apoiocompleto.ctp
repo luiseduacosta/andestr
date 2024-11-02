@@ -55,16 +55,16 @@
     <h3><?php echo __('Ações'); ?></h3>
     <ul>
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
-            <li><?php echo $this->Html->link(__('Editar este texto'), array('action' => 'edit', $apoio['Apoio']['id'])); ?> </li>
-            <li><?php echo $this->Form->postLink(__('Excluir este texto'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $apoio['Apoio']['id']))); ?> </li>
+            <li><?php echo $this->Html->link(__('Editar este texto'), ['action' => 'edit', $apoio['Apoio']['id']]); ?> </li>
+            <li><?php echo $this->Form->postLink(__('Excluir este texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $apoio['Apoio']['id'])]); ?> </li>
         <?php endif; ?>
-        <li><?php echo $this->Html->link(__('Textos de apoio'), array('action' => 'index')); ?> </li>
+        <li><?php echo $this->Html->link(__('Textos de apoio'), ['action' => 'index']); ?> </li>
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
-            <li><?php echo $this->Html->link(__('Novo texto de apoio'), array('action' => 'add')); ?> </li>
+            <li><?php echo $this->Html->link(__('Novo texto de apoio'), ['action' => 'add']); ?> </li>
         <?php endif; ?>
-        <li><?php echo $this->Html->link(__('Resoluções'), array('controller' => 'items', 'action' => 'index')); ?> </li>
+        <li><?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index']); ?> </li>
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
-            <li><?php echo $this->Html->link(__('Inserir resoluçao'), array('controller' => 'items', 'action' => 'add')); ?> </li>
+            <li><?php echo $this->Html->link(__('Inserir resoluçao'), ['controller' => 'items', 'action' => 'add']); ?> </li>
         <?php endif; ?>
     </ul>
 </div>

@@ -13,7 +13,7 @@ class ItemsController extends AppController
      *
      * @var mixed
      */
-    public $components = array('Paginator', 'Session');
+    public $components = ['Paginator', 'Session'];
 
     public function isAuthorized($user)
     {
@@ -193,13 +193,13 @@ class ItemsController extends AppController
                     if ($verifica_tr['Apoio']['numero_texto'] != substr($this->request->data['Item']['item'], 0, 2)):
                         // echo $verifica_tr['Apoio']['numero_texto'] . " " . substr($this->request->data['Item']['item'], 0, 2);
                         $this->Flash->error(__('Os dois primeiros números do item devem corresponder com o TR'));
-                        return $this->redirect(array('controller' => 'items', 'action' => 'add'));
+                        return $this->redirect(['controller' => 'items', 'action' => 'add']);
                     else:
                         $this->request->data['Item']['tr'] = $verifica_tr['Apoio']['numero_texto'];
                     endif;
                 else:
                     $this->Flash->error(__('O Texto de Apoio do item não existe. Insira uma nova TR começando pelo texto de apoio'));
-                    return $this->redirect(array('controller' => 'apoios', 'action' => 'add'));
+                    return $this->redirect(['controller' => 'apoios', 'action' => 'add']);
                 endif;
             }
 
@@ -211,7 +211,7 @@ class ItemsController extends AppController
                 // pr($this->request->data);
                 // die();
                 $this->Flash->success(__('Item inserido.'));
-                return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->Item->getLastInsertId()));
+                return $this->redirect(['controller' => 'Items', 'action' => 'view', $this->Item->getLastInsertId()]);
             } else {
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
@@ -256,7 +256,7 @@ class ItemsController extends AppController
         $votacao = isset($this->request->query['votacao']) ? $this->request->query['votacao'] : 0;
         $this->set('votacao', $votacao);
 
-        $options = array('conditions' => ['Item.' . $this->Item->primaryKey => $id]);
+        $options = ['conditions' => ['Item.' . $this->Item->primaryKey => $id]];
         $this->set('item', $this->Item->find('first', $options));
     }
 
@@ -267,20 +267,20 @@ class ItemsController extends AppController
         if (!$this->Item->exists($id)) {
             throw new NotFoundException(__('Item inválido'));
         }
-        if ($this->request->is(array('post', 'put'))) {
+        if ($this->request->is(['post', 'put'])) {
 
             if ($this->Item->save($this->request->data)) {
                 $this->Flash->success(__('Item atualizado.'));
-                return $this->redirect(array('controller' => 'Items', 'action' => 'view', $this->request->data['Item']['id']));
+                return $this->redirect(['controller' => 'Items', 'action' => 'view', $this->request->data['Item']['id']]);
             } else {
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
         } else {
-            $options = array('conditions' => array('Item.' . $this->Item->primaryKey => $id));
+            $options = ['conditions' => ['Item.' . $this->Item->primaryKey => $id]];
             $this->request->data = $this->Item->find('first', $options);
         }
 
-        $options = array('conditions' => array('Item.' . $this->Item->primaryKey => $id));
+        $options = ['conditions' => ['Item.' . $this->Item->primaryKey => $id]];
         $resolucaos = $this->Item->find('first', $options);
         // pr($resolucaos);
         // die();

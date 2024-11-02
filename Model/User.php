@@ -30,7 +30,7 @@ class User extends AppModel
             'counterQuery' => ''
         ]
     ];
-    public $validate = array(
+    public $validate = [
         'username' => [
             'required' => [
                 'rule' => 'notBlank',
@@ -43,14 +43,14 @@ class User extends AppModel
                 'message' => 'O password é obrigatório'
             ]
         ],
-        'role' => array(
+        'role' => [
             'valid' => [
                 'rule' => ['inList', ['relator', 'editor', 'admin']],
                 'message' => 'Insira um papel válido ',
                 'allowEmpty' => false
             ]
-        )
-    );
+        ]
+    ];
 
     public function beforeSave($options = array())
     {

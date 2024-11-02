@@ -24,7 +24,7 @@ class Apoio extends AppModel
     public $actsAs = ['Containable'];
     public $belongsTo = ['Evento'];
     public $hasMany = ['Item'];
-    public $validate = array(
+    public $validate = [
         'caderno' => [
             'rule' => ['inList', ['Principal', 'Anexo']],
             'message' => 'Digite Principal ou Anexo.'
@@ -58,5 +58,5 @@ class Apoio extends AppModel
             'required' => FALSE,
             'allowEmpty' => TRUE,
         ]
-    );
+    ];
 }

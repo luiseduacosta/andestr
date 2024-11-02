@@ -1,10 +1,10 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav">
-        <li class="nav-item active"><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('User.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('User.id')), 'class' => 'btn btn-danger')); ?></li>
-        <li class="nav-item"><?php echo $this->Html->link(__('List Users'), array('action' => 'index'), ['class' => 'btn btn-light']); ?></li>
-        <li class="nav-item"><?php echo $this->Html->link(__('List Votacaos'), array('controller' => 'votacaos', 'action' => 'index'), ['class' => 'btn btn-light']); ?> </li>
-        <li class="nav-item"><?php echo $this->Html->link(__('New Votacao'), array('controller' => 'votacaos', 'action' => 'add'), ['class' => 'btn btn-light']); ?> </li>
+        <li class="nav-item active"><?php echo $this->Form->postLink(__('Excluir'), array('action' => 'delete', $this->Form->value('User.id')), array('confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('User.id')), 'class' => 'btn btn-danger')); ?></li>
+        <li class="nav-item"><?php echo $this->Html->link(__('Listar Users'), array('action' => 'index'), ['class' => 'btn btn-light']); ?></li>
+        <li class="nav-item"><?php echo $this->Html->link(__('Listar Votações'), array('controller' => 'votacaos', 'action' => 'index'), ['class' => 'btn btn-light']); ?> </li>
+        <li class="nav-item"><?php echo $this->Html->link(__('Nova Votação'), array('controller' => 'votacaos', 'action' => 'add'), ['class' => 'btn btn-light']); ?> </li>
     </ul>
 </nav>
 

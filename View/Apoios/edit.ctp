@@ -1,4 +1,4 @@
-<?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
+<?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
 
 <div class="row">
 
@@ -8,10 +8,10 @@
 
             <?php if (isset($usuario)): ?>
                 <?php if (($usuario['role'] == 'editor') || ($usuario['role'] == 'admin')): ?>
-                    <li class="list-group-item list-group-item-action"><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Apoio.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Apoio.id')))); ?></li>
+                    <li class="list-group-item list-group-item-action"><?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $this->Form->value('Apoio.id')], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('Apoio.id'))]); ?></li>
                 <?php endif; ?>
             <?php endif; ?>
-            <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Lista Apoios'), array('action' => 'index')); ?></li>
+            <li class="list-group-item list-group-item-action"><?php echo $this->Html->link(__('Lista Apoios'), ['action' => 'index']); ?></li>
 
         </ul>
     </div>

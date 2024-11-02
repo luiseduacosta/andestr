@@ -16,12 +16,12 @@
 	<h3><?php echo __('Ações'); ?></h3>
 	<ul>
 
-		<li><?php echo $this->Form->postLink(__('Excluir'), array('action' => 'delete', $this->Form->value('Evento.id')), array('confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Evento.id')))); ?>
+		<li><?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Evento.id')], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('Evento.id'))]); ?>
 		</li>
-		<li><?php echo $this->Html->link(__('Listar'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('Listar textos de apoio'), array('controller' => 'apoios', 'action' => 'index')); ?>
+		<li><?php echo $this->Html->link(__('Listar'), ['action' => 'index']); ?></li>
+		<li><?php echo $this->Html->link(__('Listar textos de apoio'), ['controller' => 'apoios', 'action' => 'index']); ?>
 		</li>
-		<li><?php echo $this->Html->link(__('Novo texto de apoio'), array('controller' => 'apoios', 'action' => 'add')); ?>
+		<li><?php echo $this->Html->link(__('Novo texto de apoio'), ['controller' => 'apoios', 'action' => 'add']); ?>
 		</li>
 	</ul>
 </div>

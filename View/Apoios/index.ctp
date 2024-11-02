@@ -85,18 +85,18 @@
                     </td>
                     <td><?php echo h($apoio['Apoio']['gt']); ?>&nbsp;</td>
                     <td><?php echo strip_tags($apoio['Apoio']['titulo']); ?>&nbsp;</td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 200, array('ellipsis' => ' ...', 'exact' => false)); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 200, array('ellipsis' => ' ...', 'exact' => false)); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
                     <td class="actions">
-                        <?php echo $this->Html->link(__('Ver'), array('action' => 'view', $apoio['Apoio']['id'])); ?>
+                        <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $apoio['Apoio']['id']]); ?>
                         <?php
                         if (isset($usuario)):
                             if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                                 ?>
-                                <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $apoio['Apoio']['id'])); ?>
-                                <?php echo $this->Form->postLink(__('Excluir'), array('action' => 'delete', $apoio['Apoio']['id']), array('confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id']))); ?>
+                                <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $apoio['Apoio']['id']]); ?>
+                                <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id'])]); ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     </td>

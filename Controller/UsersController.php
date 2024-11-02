@@ -5,14 +5,14 @@ App::uses('AppController', 'Controller');
 
 class UsersController extends AppController {
 
-    public $helpers = array('Html', 'Form', 'Text');
+    public $helpers = ['Html', 'Form', 'Text'];
 
     /**
      * Components
      *
      * @var array
      */
-    public $components = array('Paginator', 'Session');
+    public $components = ['Paginator', 'Session'];
 
     public function beforeFilter() {
         parent::beforeFilter();
@@ -49,7 +49,7 @@ class UsersController extends AppController {
         if (!$this->User->exists()) {
             throw new NotFoundException(__('Usuário inválido'));
         }
-        $options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+        $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
         $this->set('user', $this->User->find('first', $options));
     }
 
@@ -62,7 +62,7 @@ class UsersController extends AppController {
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(
-                    __('Não foi possível inserir o usuário. Tente novamente.')
+                    __('Não foi possível inserir o novo usuário. Tente novamente.')
             );
         }
     }
@@ -80,19 +80,19 @@ class UsersController extends AppController {
             if ($this->request->is(['post', 'put'])) {
                 if ($this->User->save($this->request->data)) {
                     $this->Flash->success(__('Usuário atualizado'));
-                    return $this->redirect(array('action' => 'index'));
+                    return $this->redirect(['action' => 'index']);
                 }
                 $this->Flash->error(
-                        __('Não foi possível salvar o registro do usuário. Tente novamente.')
+                        __('Não foi possível atualizar o registro do usuário. Tente novamente.')
                 );
             } else {
-                $options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+                $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
                 $this->request->data = $this->User->find('first', $options);
                 unset($this->request->data['User']['password']);
             }
         else:
             $this->Flash->error(__('Usuário não autorizado'));
-            return $this->redirect(array('action' => 'login'));
+            return $this->redirect(['action' => 'login']);
         endif;
     }
 
@@ -108,11 +108,11 @@ class UsersController extends AppController {
 
         if ($this->User->delete()) {
             $this->Flash->success(__('Usuário excluído'));
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(['action' => 'index']);
         } else {
             $this->Flash->error(__('Não foi possível excluir o usuário'));
         }
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(['action' => 'index']);
     }
 
     public function login() {

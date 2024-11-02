@@ -90,7 +90,7 @@
             <dt class="col-sm-3"><?php echo __('Autor(es)'); ?></dt>
             <dd class="col-sm-9">
                 <?php
-                echo $this->Text->truncate($apoio['Apoio']['autor'], 200, array('ellipsis' => ' ...', 'exact' => false));
+                echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]);
                 ?>
                 &nbsp;
             </dd>
@@ -98,7 +98,7 @@
             <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
             <dd class="col-sm-9">
                 <?php
-                echo $this->Text->truncate($apoio['Apoio']['texto'], 200, array('ellipsis' => $this->Html->link(' ...', 'apoiocompleto/' . $apoio['Apoio']['id']), 'exact' => false));
+                echo $this->Text->truncate($apoio['Apoio']['texto'], 200, ['ellipsis' => $this->Html->link(' ...', 'apoiocompleto/' . $apoio['Apoio']['id']), 'exact' => false]);
                 ?>
                 &nbsp;
             </dd>

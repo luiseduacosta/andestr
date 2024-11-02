@@ -13,34 +13,8 @@ class VotacaosController extends AppController
      *
      * @var mixed
      */
-    public $components = array('Paginator', 'Session');
-    public $helpers = array('Html', 'Form', 'Text');
-
-    /*
-      public function isAuthorized($user) {
-
-      if (isset($user['role']) && $user['role'] === 'relator') {
-      return true;
-      }
-
-      // All registered users can add posts
-      if ($this->action === 'add') {
-      return true;
-      }
-
-      // The owner of a post can edit and delete it
-      if (in_array($this->action, array('add', 'edit', 'delete'))) {
-      $votacaoId = $this->request->params['pass'][0];
-      // echo $votacaoId;
-      // die();
-      if ($this->Votacao->isOwnedBy($votacaoId, $user['id'])) {
-      return true;
-      }
-      }
-      // pr($user);
-      return parent::isAuthorized($user);
-      }
-     */
+    public $components = ['Paginator', 'Session'];
+    public $helpers = ['Html', 'Form', 'Text'];
 
     function beforeFilter()
     {
@@ -164,7 +138,7 @@ class VotacaosController extends AppController
         }
 
         /** Executa a ação */
-        if ($this->request->is(array('post', 'put'))) {
+        if ($this->request->is(['post', 'put'])) {
             // pr($this->request->data);
             // die('post');
 
@@ -659,7 +633,7 @@ class VotacaosController extends AppController
             if ($this->request->data['Votacao']['resultado'] !== 'suprimida'):
                 // pr($this->request->data['Votacao']['resultado']);
                 $this->Flash->error(__('Tem que selecionar "suprimida" também na caixa "Resolução".'));
-                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
+                return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]]);
             endif;
 
             // pr($this->request->data['Votacao']['item_modificada']);
@@ -669,7 +643,7 @@ class VotacaosController extends AppController
                 // pr($this->request->data['Votacao']['item_modificada']);
                 // die();
                 $this->Flash->error(__('O campo Item modificado não está vazio. Verifique antes de suprimir a TR'));
-                return $this->redirect(array('controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]));
+                return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]]);
             endif;
 
             /** Busco os items na tabela Item do evento_id */
@@ -722,7 +696,7 @@ class VotacaosController extends AppController
             $grupo = "grupo" . $grupoId;
 
             $this->loadModel('User');
-            $usuarioData = $this->User->find('first', array('conditions' => array('User.username' => $grupo)));
+            $usuarioData = $this->User->find('first', ['conditions' => ['User.username' => $grupo]]);
             $this->request->data['Votacao']['user_id'] = $usuarioData['User']['id'];
             // pr($this->request->data['Votacao']['user_id']);
             // die();
@@ -752,7 +726,7 @@ class VotacaosController extends AppController
             else:
                 // echo "Usuário relator de votação de outros grupos: não autorizado";
                 $this->Flash->error(__('Ação não autorizada.'));
-                return $this->redirect(array('action' => 'index', '?' => ['grupo' => $votacao_grupo['Votacao']['grupo']]));
+                return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao_grupo['Votacao']['grupo']]]);
             endif;
         elseif ($this->Auth->user('role') == 'admin'):
             // echo "Admin autorizado";
@@ -762,7 +736,7 @@ class VotacaosController extends AppController
             $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
             $this->set('votacao', $this->Votacao->find('first', $options));
             // $this->Flash->error(__('Ação não autorizada.'));
-            // return $this->redirect(array('action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']));
+            // return $this->redirect(['action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']]);
         endif;
         // die();
     }
@@ -874,7 +848,7 @@ class VotacaosController extends AppController
                     else:
                         echo $this->Flash->error(__('TR ' . $c_dados . ' sem votação ou inexistente'));
                     endif;
-                    return $this->redirect(array('controller' => 'Votacaos', 'action' => 'relatorio', '?' => ['evento_id' => $evento_id]));
+                    return $this->redirect(['controller' => 'Votacaos', 'action' => 'relatorio', '?' => ['evento_id' => $evento_id]]);
                 endif;
 
                 $i++;

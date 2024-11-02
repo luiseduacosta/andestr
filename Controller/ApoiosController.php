@@ -11,14 +11,14 @@ App::uses('AppController', 'Controller');
 class ApoiosController extends AppController
 {
 
-    public $helpers = array('Html', 'Form', 'Text');
+    public $helpers = ['Html', 'Form', 'Text'];
 
     /**
      * Components
      *
      * @var array
      */
-    public $components = array('Paginator', 'Session');
+    public $components = ['Paginator', 'Session'];
 
     public function isAuthorized($user)
     {
@@ -102,7 +102,7 @@ class ApoiosController extends AppController
         }
         $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
         $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
-        $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
+        $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
         $this->set('apoio', $this->Apoio->find('first', $options));
     }
 
@@ -119,7 +119,7 @@ class ApoiosController extends AppController
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
-        $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
+        $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
         $this->set('apoio', $this->Apoio->find('first', $options));
     }
 
@@ -195,15 +195,15 @@ class ApoiosController extends AppController
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Invalid apoio'));
         }
-        if ($this->request->is(array('post', 'put'))) {
+        if ($this->request->is(['post', 'put'])) {
             if ($this->Apoio->save($this->request->data)) {
                 $this->Flash->success(__('Registro atualizado.'));
-                return $this->redirect(array('action' => 'view', $id));
+                return $this->redirect(['action' => 'view', $id]);
             } else {
                 $this->Flash->error(__('Não foi possível atualizar. Tente novamente.'));
             }
         } else {
-            $options = array('conditions' => array('Apoio.' . $this->Apoio->primaryKey => $id));
+            $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
             $this->request->data = $this->Apoio->find('first', $options);
             $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'nome']));
         }
@@ -229,7 +229,7 @@ class ApoiosController extends AppController
         } else {
             $this->Flash->error(__('The apoio could not be deleted. Please, try again.'));
         }
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(['action' => 'index']);
     }
 
     public function collation()
