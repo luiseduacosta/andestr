@@ -1065,7 +1065,7 @@ class VotacaosController extends AppController
             $votacaonova['Votacao']['item_modificada1'] = str_replace(["\r", "\n"], '', $votacao['Votacao']['item_modificada']);
             $votacaonova['Votacao']['data'] = $votacao['Votacao']['data'];
             $votacaonova['Votacao']['observacoes'] = $votacao['Votacao']['observacoes'];
-            $votacaonova['Votacao']['observacoes1'] = $votacao['Votacao']['observacoes'];
+            // $votacaonova['Votacao']['observacoes1'] = $votacao['Votacao']['observacoes'];
             // pr($apoionovo['Apoio']['texto1']);
 
             if ($this->Votacao->save($votacaonova)) {

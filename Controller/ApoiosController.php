@@ -100,8 +100,8 @@ class ApoiosController extends AppController
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
-        $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
-        $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
+        // $tr = isset($this->request->query['tr']) ? $this->request->query['tr'] : null;
+        // $evento_id = isset($this->request->query['evento_id']) ? $this->request->query['evento_id'] : $this->Session->read('evento_id');
         $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
         $this->set('apoio', $this->Apoio->find('first', $options));
     }
@@ -170,6 +170,8 @@ class ApoiosController extends AppController
             if ($apoio):
                 $this->Flash->error(__('Já há um texto de apio com essa numeração no evento. Verifique e tente novamente.'));
             else:
+                /** Elimina os r e n do texto original */
+                $this->request->data['Apoio']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Apoio']['texto']);
                 $this->Apoio->create();
                 if ($this->Apoio->save($this->request->data)) {
                     $this->Flash->success(__('Texto de apoio inserido.'));
@@ -196,6 +198,8 @@ class ApoiosController extends AppController
             throw new NotFoundException(__('Invalid apoio'));
         }
         if ($this->request->is(['post', 'put'])) {
+            $this->request->data['Apoio']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Apoio']['texto']);
+            $this->request->data['Apoio']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Apoio']['texto']);
             if ($this->Apoio->save($this->request->data)) {
                 $this->Flash->success(__('Registro atualizado.'));
                 return $this->redirect(['action' => 'view', $id]);
@@ -235,31 +239,39 @@ class ApoiosController extends AppController
     public function collation()
     {
 
+        $this->autoRender = false;
         $apoios = $this->Apoio->find('all');
 
         foreach ($apoios as $apoio) {
 
-            // pr($apoio['Apoio']['titulo']);
-            $apoionovo['Apoio']['id'] = $apoio['Apoio']['id']; 
-            $apoionovo['Apoio']['nomedoevento'] = $apoio['Apoio']['nomedoevento']; 
-            $apoionovo['Apoio']['evento_id'] = $apoio['Apoio']['evento_id']; 
-            $apoionovo['Apoio']['caderno'] = $apoio['Apoio']['caderno']; 
-            $apoionovo['Apoio']['numero_texto'] = $apoio['Apoio']['numero_texto']; 
-            $apoionovo['Apoio']['tema'] = $apoio['Apoio']['tema']; 
-            $apoionovo['Apoio']['gt'] = $apoio['Apoio']['gt'];             
-            $apoionovo['Apoio']['gt1'] = $apoio['Apoio']['gt']; 
-            $apoionovo['Apoio']['titulo'] = isset($apoio['Apoio']['titulo']) ? $apoio['Apoio']['titulo'] : '';  
-            $apoionovo['Apoio']['titulo1'] = isset($apoio['Apoio']['titulo']) ? $apoio['Apoio']['titulo'] : ''; 
-            $apoionovo['Apoio']['autor'] = $apoio['Apoio']['autor']; 
-            $apoionovo['Apoio']['autor1'] = $apoio['Apoio']['autor']; 
-            $apoionovo['Apoio']['texto'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['texto']); 
-            $apoionovo['Apoio']['texto1'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['texto']); 
-            // pr($apoionovo['Apoio']['texto1']);
+            // pr($apoio['Apoio']['id']);
+            // pr($apoio['Apoio']['gt']);
+            $apoionovo['Apoio']['id'] = $apoio['Apoio']['id'];
+            $apoionovo['Apoio']['nomedoevento'] = $apoio['Apoio']['nomedoevento'];
+            $apoionovo['Apoio']['evento_id'] = $apoio['Apoio']['evento_id'];
+            $apoionovo['Apoio']['caderno'] = $apoio['Apoio']['caderno'];
+            $apoionovo['Apoio']['numero_texto'] = $apoio['Apoio']['numero_texto'];
+            $apoionovo['Apoio']['tema'] = $apoio['Apoio']['tema'];
+            $apoionovo['Apoio']['gt'] = $apoio['Apoio']['gt'];
+            $apoionovo['Apoio']['gt1'] = $apoio['Apoio']['gt'];
+            $apoionovo['Apoio']['titulo'] = isset($apoio['Apoio']['titulo']) ? $apoio['Apoio']['titulo'] : '';
+            $apoionovo['Apoio']['titulo1'] = isset($apoio['Apoio']['titulo']) ? $apoio['Apoio']['titulo'] : '';
+            $apoionovo['Apoio']['autor'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['autor']);
+            $apoionovo['Apoio']['autor1'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['autor']);
+            $apoionovo['Apoio']['texto'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['texto']);
+            $apoionovo['Apoio']['texto1'] = str_replace(["\r", "\n"], '', $apoio['Apoio']['texto']);
+            // pr($apoionovo['Apoio']['gt']);
 
-            if ($this->Apoio->save($apoionovo)) {
-                $this->Flash->success(__('Texto de apoio atualizado.'));
+            if ($this->Apoio->save($apoionovo, ['validate' => false])) {
+                // $this->Flash->success(__('Texto de apoio atualizado.'));
             } else {
+                $log = $this->Apoio->getDataSource()->getLog(false, false);
+                // debug($log);
+                $errors = $this->Apoio->invalidFields();
+                // pr($errors);
+                // pr($this->Apoio->validationErrors);
                 $this->Flash->error(__('Não foi possível atualizar o texto de apoio ' . $apoio['Apoio']['id'] . '. Tente novamente.'));
+                // die();
             }
         }
     }

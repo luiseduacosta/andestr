@@ -57,6 +57,7 @@ class Apoio extends AppModel
             ],
             'required' => FALSE,
             'allowEmpty' => TRUE,
+            'message' => 'Selecione a Comissão ou o GT.'
         ]
     ];
 }
