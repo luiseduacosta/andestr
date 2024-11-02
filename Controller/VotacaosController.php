@@ -1066,4 +1066,40 @@ class VotacaosController extends AppController
         end($eventos);
         return key($eventos);
     }
+
+    public function collation()
+    {
+        $this->autoRender = false;
+        $votacoes = $this->Votacao->find('all');
+
+        foreach ($votacoes as $votacao) {
+
+            // pr($item['Item']['texto']);
+            $votacaonova['Votacao']['id'] = $votacao['Votacao']['id'];
+            $votacaonova['Votacao']['user_id'] = $votacao['Votacao']['user_id'];
+            $votacaonova['Votacao']['evento_id'] = $votacao['Votacao']['evento_id'];
+            $votacaonova['Votacao']['grupo'] = $votacao['Votacao']['grupo'];
+            $votacaonova['Votacao']['tr'] = $votacao['Votacao']['tr'];
+            $votacaonova['Votacao']['tr_suprimida'] = $votacao['Votacao']['tr_suprimida'];
+            $votacaonova['Votacao']['tr_aprovada'] = $votacao['Votacao']['tr_aprovada'];
+            $votacaonova['Votacao']['item_id'] = $votacao['Votacao']['item_id'];
+            $votacaonova['Votacao']['item'] = $votacao['Votacao']['item'];
+            $votacaonova['Votacao']['resultado'] = $votacao['Votacao']['resultado'];
+            $votacaonova['Votacao']['resultado1'] = $votacao['Votacao']['resultado'];
+            $votacaonova['Votacao']['votacao'] = $votacao['Votacao']['votacao'];
+            $votacaonova['Votacao']['item_modificada'] = str_replace(["\r", "\n"], '', $votacao['Votacao']['item_modificada']);
+            $votacaonova['Votacao']['item_modificada1'] = str_replace(["\r", "\n"], '', $votacao['Votacao']['item_modificada']);
+            $votacaonova['Votacao']['data'] = $votacao['Votacao']['data'];
+            $votacaonova['Votacao']['observacoes'] = $votacao['Votacao']['observacoes'];
+            $votacaonova['Votacao']['observacoes1'] = $votacao['Votacao']['observacoes'];
+            // pr($apoionovo['Apoio']['texto1']);
+
+            if ($this->Votacao->save($votacaonova)) {
+                $this->Flash->success(__('Votação atualizada.'));
+            } else {
+                $this->Flash->error(__('Não foi possível atualizar a votação ' . $votacao['Votacao']['id'] . '. Tente novamente.'));
+            }
+        }
+    }
+
 }

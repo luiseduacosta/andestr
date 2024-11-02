@@ -408,4 +408,28 @@ class ItemsController extends AppController
         $this->set('items', $items);
     }
 
+    public function collation()
+    {
+
+        $items = $this->Item->find('all');
+
+        foreach ($items as $item) {
+
+            // pr($item['Item']['texto']);
+            $itemnovo['Item']['id'] = $item['Item']['id']; 
+            $itemnovo['Item']['apoio_id'] = $item['Item']['apoio_id']; 
+            $itemnovo['Item']['tr'] = $item['Item']['tr']; 
+            $itemnovo['Item']['item'] = $item['Item']['item']; 
+            $itemnovo['Item']['texto'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
+            $itemnovo['Item']['texto1'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
+            // pr($apoionovo['Apoio']['texto1']);
+
+            if ($this->Item->save($itemnovo)) {
+                $this->Flash->success(__('Item atualizado.'));
+            } else {
+                $this->Flash->error(__('Não foi possível atualizar o item ' . $item['Item']['id'] . '. Tente novamente.'));
+            }
+        }
+    }
+
 }

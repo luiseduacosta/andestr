@@ -14,7 +14,7 @@ class User extends AppModel
 {
 
     public $displayField = 'username';
-    public $actsAs = array('Containable');
+    public $actsAs = ['Containable'];
     public $hasMany = [
         'Votacao' => [
             'className' => 'Votacao',
@@ -31,24 +31,24 @@ class User extends AppModel
         ]
     ];
     public $validate = array(
-        'username' => array(
-            'required' => array(
+        'username' => [
+            'required' => [
                 'rule' => 'notBlank',
                 'message' => 'O nome do usuário é necessário'
-            )
-        ),
-        'password' => array(
-            'required' => array(
+            ]
+        ],
+        'password' => [
+            'required' => [
                 'rule' => 'notBlank',
                 'message' => 'O password é obrigatório'
-            )
-        ),
+            ]
+        ],
         'role' => array(
-            'valid' => array(
-                'rule' => array('inList', array('relator', 'editor', 'admin')),
+            'valid' => [
+                'rule' => ['inList', ['relator', 'editor', 'admin']],
                 'message' => 'Insira um papel válido ',
                 'allowEmpty' => false
-            )
+            ]
         )
     );
 

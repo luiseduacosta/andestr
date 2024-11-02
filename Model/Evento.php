@@ -21,7 +21,7 @@ class Evento extends AppModel {
      * @var string
      */
     public $displayField = 'nome';
-    public $actsAs = array('Containable');
+    public $actsAs = ['Containable'];
 
     // The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -30,8 +30,8 @@ class Evento extends AppModel {
      *
      * @var array
      */
-    public $hasMany = array(
-        'Apoio' => array(
+    public $hasMany = [
+        'Apoio' => [
             'className' => 'Apoio',
             'foreignKey' => 'evento_id',
             'dependent' => false,
@@ -43,8 +43,8 @@ class Evento extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
-        'Votacao' => array(
+        ],
+        'Votacao' => [
             'className' => 'Votacao',
             'foreignKey' => 'evento_id',
             'dependent' => false,
@@ -56,7 +56,7 @@ class Evento extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
+        ],
         
-    );
+    ];
 }

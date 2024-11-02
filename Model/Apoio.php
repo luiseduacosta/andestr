@@ -6,14 +6,15 @@ App::uses('AppModel', 'Model');
  * Apoio Model
  *
  */
-class Apoio extends AppModel {
+class Apoio extends AppModel
+{
 
     public $name = "Apoio";
 
     public $useTable = "apoios";
 
     public $primaryKey = "id";
-    
+
     /**
      * Display field
      *
@@ -24,15 +25,17 @@ class Apoio extends AppModel {
     public $belongsTo = ['Evento'];
     public $hasMany = ['Item'];
     public $validate = array(
-        'caderno' => array(
-            'rule' => array('inList', array('Principal', 'Anexo')),
+        'caderno' => [
+            'rule' => ['inList', ['Principal', 'Anexo']],
             'message' => 'Digite Principal ou Anexo.'
-        ),
-        'tema' => array(
-            'rule' => array('inList', array('I', 'II', 'III', 'IV'))
-        ),
-        'gt' => array(
-            'rule' => array('inList', array(
+        ],
+        'tema' => [
+            'rule' => ['inList', ['I', 'II', 'III', 'IV']]
+        ],
+        'gt' => [
+            'rule' => [
+                'inList',
+                [
                     'Federais',
                     'Estaduais',
                     'GTCQERGDS',
@@ -49,10 +52,11 @@ class Apoio extends AppModel {
                     'Comissão da Verdade',
                     'Tesouraria',
                     'Secretaria',
-                    'Outras')),
+                    'Outras'
+                ]
+            ],
             'required' => FALSE,
             'allowEmpty' => TRUE,
-        )
+        ]
     );
-
 }
