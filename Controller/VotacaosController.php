@@ -1041,6 +1041,7 @@ class VotacaosController extends AppController
         return key($eventos);
     }
 
+    /** Resolve a colation dos campos da tabela. Precisa crir campos auxiliares que serão excluídos depois */
     public function collation()
     {
         $this->autoRender = false;
@@ -1072,6 +1073,57 @@ class VotacaosController extends AppController
                 $this->Flash->success(__('Votação atualizada.'));
             } else {
                 $this->Flash->error(__('Não foi possível atualizar a votação ' . $votacao['Votacao']['id'] . '. Tente novamente.'));
+            }
+        }
+    }
+
+    /** Insere o item_modificado da votação de 'inclusão' na tabela Item */
+    public function insercao()
+    {
+        $this->Votacao->contain(['Item']);
+        $insercao = $this->Votacao->find('all', [
+            'conditions' => ['resultado' => 'inclusão']
+        ]);
+        // pr($insercao);
+
+        $this->loadModel('Item');
+        $items = $this->Item->find('all');
+        foreach ($items as $item) {
+            // pr(substr($item['Item']['item'], 2, 3));
+            if (substr($item['Item']['item'], 2, 3) == '.99') {
+                $this->Item->delete($item['Item']['id']);
+            }
+        }
+
+        foreach ($insercao as $inserir) {
+            // pr($inserir['Votacao']['tr']);
+            $this->loadModel('Apoio');
+            $apoio = $this->Apoio->find('first', [
+                'and' => [
+                    'Apoio.evento_id' => $inserir['Votacao']['evento_id'],
+                    'Apoio.numero_texto' => $inserir['Votacao']['tr']
+                ]
+            ]);
+            // pr($apoio);
+            $inserirItem['Item']['apoio_id'] = $apoio['Apoio']['id'];
+            $inserirItem['Item']['tr'] = $inserir['Votacao']['tr'];
+            $inserirItem['Item']['item'] = $inserir['Votacao']['item'];
+            $inserirItem['Item']['texto'] = str_replace(["\r", "\n"], '', $inserir['Votacao']['item_modificada']);
+            // pr($inserirItem);
+
+            $this->loadModel('Item');
+            $this->Item->create();
+            if ($this->Item->save($inserirItem)) {
+                $this->Flash->success(__('Item insserido'));
+                $inserir['Votacao']['item_id'] = $this->Item->getLastInsertID();
+                if ($this->Votacao->save($inserir['Votacao'])) {
+                    $this->Flash->success(__("Votação atualizada"));
+                } else {
+                    $this->Flash->error(__('Votação não atualizada'));
+                }
+            } else {
+                echo "error" . "<br>";
+                $this->Flash->error(__('Tentar novamente'));
             }
         }
     }

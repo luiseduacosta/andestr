@@ -304,7 +304,7 @@ class ItemsController extends AppController
         } else {
             $this->Flash->error(__('Tente novamente.'));
         }
-        return $this->redirect(['controller' => 'items', 'action' => 'view', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
+        return $this->redirect(['controller' => 'items', 'action' => 'index', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
     }
 
     /*
@@ -392,7 +392,7 @@ class ItemsController extends AppController
                 } else {
                     debug($this->Item->validationErrors);
                     die();
-                    $this->Flash->error(__('Tente novamente.'));
+                    // $this->Flash->error(__('Tente novamente.'));
                 }
             }
 
