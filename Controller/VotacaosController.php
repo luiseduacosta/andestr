@@ -185,6 +185,17 @@ class VotacaosController extends AppController
                 return $this->redirect(['action' => 'edit', $this->request->data['Votacao']['id']]);
             }
 
+            /** Verifica votação por si for minoritária */
+            if (isset($this->request->data['Votacao']['votacao'])) {
+                $votos = explode('/', $this->request->data['Votacao']['votacao']);
+            }
+            $totalvotos = $votos[0] + $votos[1] + $votos[2];
+            $tercovotos = $totalvotos / 3;
+            if ($votos[1] >= $tercovotos) {
+                // echo "Minoritária" . "<br>";
+                $this->Flash->error(__('Há uma votação minoritaŕia. Não esqueça de registrar essa votação minoritária em observações ou num novo item minoritário.'));
+            }
+
             if ($this->Votacao->save($this->request->data)):
                 $this->Flash->success(__('Votação atualizada.'));
                 return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
@@ -267,8 +278,7 @@ class VotacaosController extends AppController
         } else {
             $this->Session->write('flagminoritaria', 0);
         }
-        // echo 'id 1 ' . $id . '<br>';
-        // die();
+
         /** Envio o item para o add da view*/
         if ($id) {
             $this->loadModel('Item');
@@ -279,8 +289,6 @@ class VotacaosController extends AppController
             $this->Flash->error(__('Selecione o item a ser votado.'));
             return $this->redirect(['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]]);
         }
-        // echo 'id 2 ' . $id . '<br>';
-        // die();
 
         $this->set('usuario', $this->Auth->user());
 
@@ -344,13 +352,13 @@ class VotacaosController extends AppController
                 // die();
                 // $this->Session->delete('flagminoritaria');
                 $flag = $this->Session->read('flagminoritaria');
-                echo "Entrada = " . $flag . "<br>";
+                // echo "Entrada = " . $flag . "<br>";
                 $minoritaria = $this->minoritaria($this->request->data['Votacao']['votacao']);
                 if ($minoritaria == 1):
                     // $this->Flash->success(__('Votação minoritária.'));
                 endif;
                 $flag = $this->Session->read('flagminoritaria');
-                echo "Saída = " . $flag . "<br>";
+                // echo "Saída = " . $flag . "<br>";
                 // die();
             else:
                 $this->Flash->error(__('Registre o resultado da votacao. Tente novamente.'));
