@@ -391,10 +391,6 @@ class VotacaosController extends AppController
             endif;
 
             /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
-            // pr($this->request->data['Votacao']['tr']);
-            // pr($this->request->data['Votacao']['item']);
-            // pr(substr($this->request->data['Votacao']['item'], 0, 2));
-            // die();
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
                 $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
                 return $this->redirect(['action' => 'add', $id]);
@@ -457,15 +453,12 @@ class VotacaosController extends AppController
                 /* Altero o valor do item_id com o id do item inserido */
                 $this->request->data['Votacao']['item_id'] = $this->Item->id;
             }
-            ;
 
-            // die();
-            if ($this->Session->read('flagminoritaria') == 1):
-                // die('flagminoritaria = 1');
-            else:
-                // die('flagminoritaria = 0');
-            endif;
-            // die();
+            if ($this->rquest->data['Votacao']['resultado'] == "remitida") {
+                echo "Registrar na tabela Items." . "<br>";
+                $this->Flash->error(__('Item remitido.'));
+            }
+
             /* Finalmente insiro a votação do item */
             $this->Votacao->create();
             // die();
@@ -488,7 +481,7 @@ class VotacaosController extends AppController
                 endif;
             else:
                 $errors = $this->Votacao->validationErrors;
-                pr($errors);
+                // pr($errors);
                 // die();
                 $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
             endif;
