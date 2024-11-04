@@ -334,7 +334,7 @@ class VotacaosController extends AppController
                 $this->request->data['Votacao']['item_modificada'] = null;
             }
 
-            /** Trasfero o valor de item_incluida e item_minoritaria para item_modificada somente se está vazia */
+            /** Trasfero o valor de item_incluida e item_minoritaria para item_modificada somente se está vazia e excluo item_incluida e item_minoritaria */
             if (empty($this->request->data['Votacao']['item_modificada'])) {
                 if ($this->request->data['Votacao']['item_incluida']) {
                     $this->request->data['Votacao']['item_modificada'] = $this->request->data['Votacao']['item_incluida'];
@@ -435,15 +435,11 @@ class VotacaosController extends AppController
                             ]
                     ]
                 ]);
-                // pr($item_id);
-                // die('item_id');
 
                 $item['Item']['apoio_id'] = $item_id['Item']['apoio_id'];
                 $item['Item']['tr'] = $this->request->data['Votacao']['tr'];
                 $item['Item']['item'] = $this->request->data['Votacao']['item'];
                 $item['Item']['texto'] = $this->request->data['Votacao']['item_modificada'];
-                // pr($item);
-                // die();
 
                 $this->Item->create();
                 if ($this->Item->save($item)):
@@ -454,37 +450,50 @@ class VotacaosController extends AppController
                 $this->request->data['Votacao']['item_id'] = $this->Item->id;
             }
 
-            if ($this->rquest->data['Votacao']['resultado'] == "remitida") {
-                echo "Registrar na tabela Items." . "<br>";
-                $this->Flash->error(__('Item remitido.'));
+            /** Verifica que a votação seja inserida utilizando como separador dos votos uma barra inclinada */
+            $verificaponto = strpos(($this->request->data['Votacao']['votacao']), ".");
+            if ($verificaponto) {
+                echo "Separar 1 os valores com uma barra inclinada: '/'" . "<br>";
+                $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
+            }
+            $verificabarra = strpos(($this->request->data['Votacao']['votacao']), "/");
+            if (empty($verificabarra)) {
+                echo "Separar 2 os valores com uma barra inclinada: '/'" . "<br>";
+                $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
+            }
+
+            /** Quando a TR é votada como remitida ou como outra tem que ter um texto em observações explicando */
+            if ($this->request->data['Votacao']['resultado'] == 'remitida' || $this->request->data['Votacao']['resultado'] == 'outra') {
+                if (empty($this->request->data['Votacao']['observacoes'])) {
+                    $this->Flash->error(__("Especifique no campo 'Observações' o resultado da deliberação do item 'remitido' ou votado como 'outra'."));
+                    return $this->redirect(['controller' => 'Items', 'action' => 'view', $item_id]);
+                }
             }
 
             /* Finalmente insiro a votação do item */
             $this->Votacao->create();
-            // die();
-            // pr($this->Votacao->validationErrors);
-            if ($this->Votacao->save($this->request->data)):
+            if ($this->Votacao->save($this->request->data)) {
                 // pr($this->minoritaria($this->request->data['Votacao']['votacao']));
                 // die();
                 $flagminoritaria = $this->Session->read('flagminoritaria');
                 // echo 'Flag ' . $flagminoritaria;
                 // die('flag');
-                if ($flagminoritaria == '1'):
+                if ($flagminoritaria == '1') {
                     // die('votacao minoritaria');
                     $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $this->request->data['Votacao']['item_id'], 'votacao_id' => $this->Votacao->getLastInsertID(), 'resultado' => 'minoritária']]);
                     // die('votacao minoritaria ');
-                else:
+                } else {
                     $this->Flash->success(__('Votação inserida.'));
                     // die('votacao normal');
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'view', $this->Votacao->getLastInsertID()]);
-                endif;
-            else:
+                }
+            } else {
                 $errors = $this->Votacao->validationErrors;
                 // pr($errors);
                 // die();
                 $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
-            endif;
+            }
         }
     }
 
@@ -587,65 +596,44 @@ class VotacaosController extends AppController
     public function minoritaria($dados)
     {
 
-        $verifica = strpos($dados, '/');
-        // pr($verifica);
-        // die();
-        if ($verifica === false):
-            $votos = explode('-', $dados);
-        else:
-            $votos = explode('/', $dados);
-        endif;
-        // pr($votos);
-        // die();
+        $votos = explode('/', $dados);
+
         $totalvotos = $votos[0] + $votos[1] + $votos[2];
         $tercovotos = $totalvotos / 3;
-        // echo $totalvotos . ' Terço => ' . $tercovotos . ' Votos do segundo resultado => ' . $votos[1];
-        // die();
+
         $minoritariavotos = NULL;
-        if ($votos[1] >= $tercovotos):
-            // echo "Minoritária" . "<br>";
-            // die();
-            /* Se o cookie existe então apago para saber que não tem que salvar novamente */
-            // echo $this->Session->read('flagminoritaria') . "<br>";
-            // echo 'Flag: ' . $flagmarioritaria;
-            if ($this->Session->read('flagminoritaria') == 1):
+        if ($votos[1] >= $tercovotos) {
+            if ($this->Session->read('flagminoritaria') == 1) {
                 $this->Session->write('flagminoritaria', 0);
                 $minoritariavotos = 0;
-            elseif ($this->Session->read('flagminoritaria') == 0):
+            } elseif ($this->Session->read('flagminoritaria') == 0) {
                 $this->Session->write('flagminoritaria', 1);
                 $minoritariavotos = 1;
-            endif;
-        else:
+            }
+        } else {
             $this->Session->write('flagminoritaria', 0);
-        endif;
-        // pr($minoritariavotos);
-        // die('function minoritaria');
+        }
+
         return $minoritariavotos;
     }
 
     public function suprimeTR($suprime)
     {
 
-        if ($this->request->data['Votacao']['tr_suprimida'] == 1):
-            // pr($this->request->data['Votacao']['tr_suprimida']);
-            // die("function suprimeTR");
+        if ($this->request->data['Votacao']['tr_suprimida'] == 1) {
 
             /* Tem que verificar que selecionou resultado = 'suprimida' */
-            if ($this->request->data['Votacao']['resultado'] !== 'suprimida'):
+            if ($this->request->data['Votacao']['resultado'] !== 'suprimida') {
                 // pr($this->request->data['Votacao']['resultado']);
                 $this->Flash->error(__('Tem que selecionar "suprimida" também na caixa "Resolução".'));
                 return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]]);
-            endif;
+            }
 
-            // pr($this->request->data['Votacao']['item_modificada']);
-            // die();
             /** Tem que verificar que o campo item_modificada está vazio */
-            if (!empty($this->request->data['Votacao']['item_modificada'])):
-                // pr($this->request->data['Votacao']['item_modificada']);
-                // die();
+            if (!empty($this->request->data['Votacao']['item_modificada'])) {
                 $this->Flash->error(__('O campo Item modificado não está vazio. Verifique antes de suprimir a TR'));
                 return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]]);
-            endif;
+            }
 
             /** Busco os items na tabela Item do evento_id */
             $evento_id = $this->Session->read('evento_id');
@@ -659,31 +647,23 @@ class VotacaosController extends AppController
                     ]
                 ]
             ]);
-            // $log = $this->Votacao->getDataSource()->getLog(false, false);
-            // debug($log);
-            // pr($items);
-            // die();
-            foreach ($items as $c_item):
+            foreach ($items as $c_item) {
                 // echo substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item'] = substr($c_item['Item']['item'], 0, 5);
                 $this->request->data['Votacao']['item_id'] = $c_item['Item']['id'];
-                // pr($this->request->data);
-                // die();
+
                 $this->Votacao->create();
-                // $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['numero_item'];
-                if ($this->Votacao->save($this->request->data)):
+                if ($this->Votacao->save($this->request->data)) {
                     // pr($this->request->data);
                     // die();
                     $this->Flash->success(__('Votação inserida.'));
-                else:
+                } else {
                     $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
-                endif;
+                }
 
-            endforeach;
-            // die();
+            }
             return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['tr' => substr($this->request->data['Votacao']['item'], 0, 2)]]);
-            // die();
-        endif;
+        }
     }
 
     public function usuario($data)
@@ -691,7 +671,7 @@ class VotacaosController extends AppController
 
         $this->request->data['Votacao'] = $data;
 
-        if ($this->Auth->user('role') === 'admin'):
+        if ($this->Auth->user('role') === 'admin') {
 
             $grupoId = $this->request->data['Votacao']['Votacao']['grupo'];
             $grupo = "grupo" . $grupoId;
@@ -702,7 +682,7 @@ class VotacaosController extends AppController
             // pr($this->request->data['Votacao']['user_id']);
             // die();
 
-        endif;
+        }
         return $this->request->data['Votacao']['user_id'];
     }
 
@@ -713,76 +693,70 @@ class VotacaosController extends AppController
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__('Id inválidO'));
         }
-        // $this->set('usuario', $this->autenticausuario());
 
         /* Verifica se o usuário pode executar esta ação */
         $votacao_grupo = $this->Votacao->findById($id, ['fields' => 'Votacao.grupo']);
         // pr($votacao_grupo['Votacao']['grupo']);
         // die();
-        if ($this->Auth->user('role') == 'relator'):
-            if (substr($this->Auth->user('username'), 5, 2) == $votacao_grupo['Votacao']['grupo']):
+        if ($this->Auth->user('role') == 'relator') {
+            if (substr($this->Auth->user('username'), 5, 2) == $votacao_grupo['Votacao']['grupo']) {
                 // echo "Usuario relator do mesmo grupo da votação autorizado";
                 $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
                 $this->set('votacao', $this->Votacao->find('first', $options));
-            else:
+            } else {
                 // echo "Usuário relator de votação de outros grupos: não autorizado";
                 $this->Flash->error(__('Ação não autorizada.'));
                 return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao_grupo['Votacao']['grupo']]]);
-            endif;
-        elseif ($this->Auth->user('role') == 'admin'):
+            }
+        } elseif ($this->Auth->user('role') == 'admin') {
             // echo "Admin autorizado";
             $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
             $this->set('votacao', $this->Votacao->find('first', $options));
-        else:
+        } else {
             $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $id]];
             $this->set('votacao', $this->Votacao->find('first', $options));
-            // $this->Flash->error(__('Ação não autorizada.'));
-            // return $this->redirect(['action' => 'index/grupo:' . $votacao_grupo['Votacao']['grupo']]);
-        endif;
+        }
         // die();
     }
 
     public function delete($id = null)
     {
 
-        $this->Votacao->id = $id;
-
-        $votacao = $this->Votacao->findById($id);
-        // pr($votacao["Votacao"]['tr']);
-        // die();
-
         if (!$this->Votacao->exists()) {
             throw new NotFoundException(__('Invalid número'));
         }
 
+        $this->Votacao->id = $id;
+
+        $votacao = $this->Votacao->findById($id);
+
         /* Relator e administrador podem excluir votações */
-        if ($this->Auth->user('role') === 'relator' || $this->Auth->user('role') === 'admin'):
-            if ($this->Votacao->delete()):
+        if ($this->Auth->user('role') === 'relator' || $this->Auth->user('role') === 'admin') {
+            if ($this->Votacao->delete()) {
                 $this->Flash->success(__('Votação foi excluida.'));
-                if ($this->Auth->user('role') === 'relator'):
+                if ($this->Auth->user('role') === 'relator') {
                     /* Se eh relator vai para grupo */
                     return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]]);
-
-                elseif ($this->Auth->user('role') === 'admin'):
+                } elseif ($this->Auth->user('role') === 'admin') {
                     /* Se eh admin vai para tr */
                     return $this->redirect(['action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr']]]);
-                endif;
-            else:
+                }
+            } else {
                 $this->Flash->error(__('Votação não foi excluida. Tente novamente.'));
-                if ($this->Auth->user('role') === 'relator'):
+                if ($this->Auth->user('role') === 'relator') {
                     /* Se eh relator vai para grupo */
                     return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]]);
 
-                elseif ($this->Auth->user('role') === 'admin'):
+                } elseif ($this->Auth->user('role') === 'admin') {
                     /* Se eh admin vai para tr */
                     return $this->redirect(['action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr']]]);
-                endif;
-            endif;
+                }
+            }
             /* Editor nao podo excluir votacao */
-        elseif ($this->Auth->user('role') === 'editor'):
+        } elseif ($this->Auth->user('role') === 'editor') {
             $this->Flash->error(__('Ação não autorizada.'));
             return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]]);
-        endif;
+        }
     }
 
     public function relatorio()

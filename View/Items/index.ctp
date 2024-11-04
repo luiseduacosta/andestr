@@ -202,7 +202,7 @@
                                                         </li>
                                                     <?php else: ?>
                                                         <li class="nav-item">
-                                                            <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', $c_item['Item']['id']], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                            <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', '?' => ['item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                         </li>
                                                     <?php endif; ?>
                                                     <li class="nav-item">
@@ -213,7 +213,7 @@
                                                         <p class='btn btn-muted btn-block btn-sm'>Sem votação</p>
                                                     </li>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', $c_item['Item']['id']], ['class' => 'btn btn-secondary btn-sm']); ?>
+                                                        <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', '?' => ['item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-sm']); ?>
                                                     </li>
                                                 <?php endif; ?>
 
