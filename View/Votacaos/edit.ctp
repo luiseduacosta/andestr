@@ -1,8 +1,58 @@
 <?php // pr($usuario); ?>
 <?php // pr($this->request->data); ?>
 <?php // die(); ?>
-<?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
+<?php // echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
 <?php // pr($this->data);                  ?>
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Strikethrough,
+        Font,
+        Paragraph
+    } from 'ckeditor5';
+
+    let modificada;
+    if (typeof modificada !== 'undefined') {
+        modificada.destroy();
+    }
+
+    ClassicEditor
+        .create(document.querySelector('#VotacaoItemModificada'), {
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+            ]
+        })
+        .then(editor => {
+            modificada = editor;
+            console.log('Olá editor VotacaoItemModificada was initialized', modificada);
+            modificada.gettData("");
+        });
+
+    let observacoes;
+    if (typeof observacoes !== 'undefined') {
+        observacoes.destroy();
+    }
+
+    ClassicEditor
+        .create(document.querySelector('#VotacaoObservacoes'), {
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+            toolbar: [
+                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+            ]
+        })
+        .then(editor => {
+            observacoes = editor;
+            console.log('Olá editor VotacaoObservacoes was initialized', observacoes);
+            observacoes.setData("");
+        });
+</script>
 
 <?php
 echo $this->Form->create('Votacao', [

@@ -30,7 +30,7 @@
 
         <?php if (isset($evento_id)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
+            <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>
         <?php else: ?>
             <p class="text-center text-secondary h2"><?php echo end($eventos); ?></p>
@@ -172,7 +172,7 @@
                                                 <?php endif; ?>
                                                 <?php if (sizeof($c_item['Votacao']) > 0): ?>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $c_item['Apoio']['evento_id'], 'tr' => $c_item['Item']['tr'], 'item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $c_item['Apoio']['evento_id'], 'item' => $c_item['Item']['item'], 'grupo' => substr($usuario['username'], 5, 2)]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -202,11 +202,11 @@
                                                         </li>
                                                     <?php else: ?>
                                                         <li class="nav-item">
-                                                            <?php echo $this->Html->link(__('Votação ou inclusão'), ['controller' => 'votacaos', 'action' => 'add', '?' => ['item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                            <?php echo $this->Html->link(__('Votar ou incluir'), ['controller' => 'votacaos', 'action' => 'add', '?' => ['item_id' => $c_item['Item']['id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                         </li>
                                                     <?php endif; ?>
                                                     <li class="nav-item">
-                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['item_id' => $c_item['Item']['id'], 'evento_id' => $c_item['Apoio']['evento_id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
+                                                        <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['item' => $c_item['Item']['item'], 'evento_id' => $c_item['Apoio']['evento_id']]], ['class' => 'btn btn-secondary btn-block btn-sm']); ?>
                                                     </li>
                                                 <?php else: ?>
                                                     <li class="nav-item">
@@ -223,7 +223,7 @@
                                             <!-- /* Visitante não vota */ -->
                                             <?php if (count($c_item['Votacao']) > 0): ?>
                                                 <li class="nav-item">
-                                                    <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['tr' => $c_item['Item']['tr'], 'evento_id' => $c_item['Apoio']['evento_id']]], ['class' => 'btn btn-secondary']); ?>
+                                                    <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['item' => $c_item['Item']['item'], 'evento_id' => $c_item['Apoio']['evento_id']]], ['class' => 'btn btn-secondary']); ?>
                                                 </li>
                                             <?php else: ?>
                                                 <li class="nav-item">

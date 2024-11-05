@@ -1,5 +1,6 @@
 <?php // pr($item); ?>
 <?php // pr($votacao); ?>
+<?php // pr($usuario); ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
@@ -65,13 +66,9 @@
     <dd class="col-sm-9">
         <?php
         if ($item['Votacao']) {
-            echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id']]]);
+            echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id'], 'grupo' => substr($usuario['username'], 5, 2)]]);
         } else {
-            if (isset($usuario) && ($usuario['role'] == 'relator' || $usuario['role'] == 'admin')) {
-                echo $this->Html->link(__('Sem votação'), ['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $item['Item']['id']], 'class' => "nav-link"]);
-            } else {
-                echo "Sem votação";
-            }
+            echo "Sem votação";
         }
         ?>
         &nbsp;

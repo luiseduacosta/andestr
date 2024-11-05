@@ -51,7 +51,6 @@ class VotacaosController extends AppController
         if (empty($evento_id)):
             $evento_id = end($eventos);
         endif;
-
         if ($evento_id) {
             $this->Session->write('evento_id', $evento_id);
         }
@@ -62,8 +61,8 @@ class VotacaosController extends AppController
         // echo "Evento: " . $evento_id . "<br>";
         // echo "Grupo: " . $grupo . "<br>";
         // echo "Item: " . $item . "<br>";
-        /// echo "Tr: " .$tr . "<br>";
-        // echo "Item_id: " . $item_id . "<br>";
+        // echo "Tr: " .$tr . "<br>";
+        // echo "Item_id= " . $item_id . "<br>";
         // die();
 
         $this->Votacao->contain();
@@ -75,11 +74,11 @@ class VotacaosController extends AppController
                 'Votacao.tr' => $tr,
                 'Votacao.evento_id' => $evento_id
             ]));
-        } elseif ($grupo and $item and $evento_id) {
+        } elseif ($grupo and $item and $evento_id) { // relator
             // die("2");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', [
                 'Votacao.grupo' => $grupo,
-                'Votacao.item_id' => $item_id,
+                'Votacao.item' => $item,
                 'Votacao.evento_id' => $evento_id
             ]));
         } elseif ($grupo and $tr and $evento_id) {
@@ -107,10 +106,10 @@ class VotacaosController extends AppController
                 'Votacao.tr' => $tr,
                 'Votacao.evento_id' => $evento_id
             ]));
-        } elseif ($item_id and $evento_id) {
+        } elseif ($item and $evento_id) {
             // die("7");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', [
-                'Votacao.item_id' => $item_id,
+                'Votacao.item' => $item,
                 'Votacao.evento_id' => $evento_id
             ]));
         } else {

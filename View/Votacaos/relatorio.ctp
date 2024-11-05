@@ -1,7 +1,7 @@
-<?php // pr($this->data);                              ?>
-<?php // pr($relatorio);                              ?>
-<?php // pr($situacao);                              ?>
-<?php // pr($quantidade);                              ?>
+<?php // pr($this->data); ?>
+<?php // pr($relatorio); ?>
+<?php // pr($situacao); ?>
+<?php // pr($quantidade); ?>
 <?php // pr($evento_id); ?>
 <script>
     $(document).ready(function () {
@@ -11,7 +11,6 @@
             /* alert(evento_id); */
             window.location = url + evento_id;
         })
-
     })
 </script>
 
@@ -20,9 +19,9 @@
 
         <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
         <?php if (isset($evento_id)): ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'class' => ' d-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
         <?php else: ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'class' => ' d-inline-block p-1 form-label'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
         <?php endif; ?>
         <?php echo $this->Form->end(); ?>
     </div>
