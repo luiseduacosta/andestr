@@ -66,7 +66,11 @@
     <dd class="col-sm-9">
         <?php
         if ($item['Votacao']) {
-            echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id'], 'grupo' => substr($usuario['username'], 5, 2)]]);
+            if (isset($usuario)) {
+                echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id'], 'grupo' => substr($usuario['username'], 5, 2)]]);
+            } else {
+                echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id']]]);
+            }
         } else {
             echo "Sem votação";
         }
