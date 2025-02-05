@@ -4,10 +4,11 @@
 <?php // pr($r['Resolucao']['tr']); ?>
 
 <div class="items form">
-    <?php if (!empty($resolucaos)): ?>    
+    <?php if (!empty($resolucaos)): ?>
         <table class="table">
             <tr>
-                <td><?php echo $this->Html->link('Texto de apoio', '/apoios/view/' . $resolucaos['Apoio']['numero_texto']); ?></td>
+                <td><?php echo $this->Html->link('Texto de apoio', '/apoios/view/' . $resolucaos['Apoio']['numero_texto']); ?>
+                </td>
             </tr>
             <tr>
                 <td><?php echo "TR: " . $resolucaos['Item']['tr']; ?></td>
@@ -35,12 +36,12 @@
     <fieldset>
         <legend><?php echo __('Editar item'); ?></legend>
         <?php
-        echo $this->Form->input('id', ['value' => $resolucaos['Item']['id'],'type' => 'hidden']);
-        echo $this->Form->input('apoio_id', ['value' => $resolucaos['Item']['apoio_id'],'type' => 'hidden']);
-        echo $this->Form->input('tr', ['label' => "TR", 'value' => $resolucaos['Item']['tr']]);
-        echo $this->Form->input('item');
+        echo $this->Form->input('id', ['value' => $resolucaos['Item']['id'], 'type' => 'hidden']);
+        echo $this->Form->input('apoio_id', ['value' => $resolucaos['Item']['apoio_id'], 'type' => 'hidden']);
+        echo $this->Form->input('tr', ['label' => ['text' => "TR", 'class' => 'col-3'], 'value' => $resolucaos['Item']['tr']]);
+        echo $this->Form->input('item', ['label' => ['text' => 'Item', 'class' => 'col-3']]);
         echo $this->Form->input('texto', ['class' => 'ckeditor', 'style' => ['font-size: 16px']]);
-?>
+        ?>
     </fieldset>
     <div class='row justify-content-left'>
         <div class='col-auto'>

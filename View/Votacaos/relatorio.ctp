@@ -3,6 +3,7 @@
 <?php // pr($situacao); ?>
 <?php // pr($quantidade); ?>
 <?php // pr($evento_id); ?>
+
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'votacaos', 'action' => 'relatorio?evento_id=']); ?>";
@@ -59,10 +60,8 @@
     <?php
     $i = 0;
     // pr($relatorio);
-    // echo count($relatorio);
-    foreach ($relatorio as $c_relatorio):
-        // pr($c_relatorio);
-    endforeach;
+    // pr(count($relatorio));
+    $j = 0;
 
     if (!empty($relatorio[0])):
         foreach ($relatorio as $c_relatorio):
@@ -73,6 +72,14 @@
             <?php echo $quantidade[$i] . "<br>"; ?>
             <?php echo $situacao[$i] . "<br>"; ?>
             <?php $i++; ?>
+
+            <?php
+            if ($c_relatorio[0]['Votacao']['tr_suprimida'] == '1'):
+                echo '<p style="font-size:18px;">';
+                echo "<b>Suprimidas</b>";
+                echo '</p>';
+            endif;
+            ?>
 
             <?php $textotr = NULL; // Para colocar o texto da TR somente uma vez ?>
             <?php foreach ($c_relatorio as $tr_relatorio): ?>
@@ -95,6 +102,7 @@
                 <?php echo ". Resultado: " . '<b>' . $tr_relatorio['Votacao']['resultado'] . '</b>'; ?>
                 <?php echo ". Votação: (" . $tr_relatorio['Votacao']['votacao'] . ')'; ?>
                 <?php if ($tr_relatorio['Votacao']['observacoes']): ?>
+                    <?php echo "<br />"; ?>
                     <?php echo ". Observações: " . $tr_relatorio['Votacao']['observacoes']; ?>
                 <?php endif; ?>
                 <?php if ($tr_relatorio['Votacao']['item_modificada']): ?>
@@ -102,8 +110,6 @@
                     <?php echo "</ul>"; ?>
                     <?php echo "<br>"; ?>
                 <?php endif; ?>
-
-                <?php // pr($c_relatorio);    ?>
 
             <?php endforeach; ?>
 

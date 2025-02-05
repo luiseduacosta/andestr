@@ -56,7 +56,8 @@
             echo $this->Form->input('tema', [
                 'type' => 'select',
                 'empty' => 'Selecione',
-                'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV']
+                'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV'],
+                'required'
             ]);
             echo $this->Form->input(
                 'gt',
@@ -81,7 +82,8 @@
                         'Tesouraria' => 'Tesouraria',
                         'Secretaria' => 'Secretaria',
                         'Outras' => 'Outras'
-                    ]
+                    ],
+                    'required'
                 ]
             );
             echo $this->Form->input('texto', ['class' => 'ckeditor']);

@@ -171,6 +171,7 @@ class ApoiosController extends AppController
                 $this->Flash->error(__('Já há um texto de apio com essa numeração no evento. Verifique e tente novamente.'));
             else:
                 /** Elimina os r e n do texto original */
+                $this->request->data['Apoio']['autor'] = str_replace(["<br />"], '', $this->request->data['Apoio']['autor']);
                 $this->request->data['Apoio']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Apoio']['texto']);
                 $this->Apoio->create();
                 if ($this->Apoio->save($this->request->data)) {
@@ -198,6 +199,7 @@ class ApoiosController extends AppController
             throw new NotFoundException(__('Invalid apoio'));
         }
         if ($this->request->is(['post', 'put'])) {
+            $this->request->data['Apoio']['autor'] = str_replace(["<br />"], ' ', $this->request->data['Apoio']['autor']);
             $this->request->data['Apoio']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Apoio']['texto']);
             $this->request->data['Apoio']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Apoio']['texto']);
             if ($this->Apoio->save($this->request->data)) {

@@ -120,11 +120,11 @@ class ItemsController extends AppController
         /** Não acontece nunca? */
         if (empty($evento_id)) {
             $this->Flash->error(__('Sem indicação de evento'));
+            // Sem o evento_id não posso fazer nada
             return $this->redirect(['controller' => 'items', 'action' => 'index']);
             // echo "Erro";
         }
-        // pr($evento_id);
-        // die();
+
         /** Localiza se há TRs */
         $this->loadModel('Apoios');
         $apoios = $this->Apoios->find('all', [
@@ -144,6 +144,7 @@ class ItemsController extends AppController
                 'conditions' => ['apoio_id' => $ultimo['Apoios']['id']]
             ]);
             $ultimo_item = end($items);
+
             /** Dividir o item e aumente em + 1 para o próximo */
             if ($ultimo_item) {
                 $ultimoItem = $ultimo_item['Item']['item'];
@@ -176,6 +177,14 @@ class ItemsController extends AppController
 
         if ($this->request->is('post')) {
             // debug($this->request);
+            // Capturo o id corespondente ao TR do apoio do evento
+            $apoio = $this->Apoios->find('first', [
+                'conditions' => ['numero_texto' => $this->request->data['Item']['tr'], 'evento_id' => $evento_id]
+            ]);
+            $this->request->data['Item']['apoio_id'] = $apoio['Apoios']['id'];
+            // Elimina os r e n e <br /> do texto original           
+            $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
+            $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
             // A partir do Tr busco o id na tabela Resolucao
             if ($this->request->data['Item']['apoio_id']) {
 
@@ -183,7 +192,6 @@ class ItemsController extends AppController
                     'first',
                     ['conditions' => ['Apoio.id' => $this->request->data['Item']['apoio_id']]]
                 );
-                // pr($verifica_tr);
                 // $log = $this->Item->getDataSource()->getLog(false, false);
                 // debug($log);
                 /**
@@ -268,6 +276,10 @@ class ItemsController extends AppController
             throw new NotFoundException(__('Item inválido'));
         }
         if ($this->request->is(['post', 'put'])) {
+
+            // Elimina os r e n e <br /> do texto original           
+            $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
+            $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
 
             if ($this->Item->save($this->request->data)) {
                 $this->Flash->success(__('Item atualizado.'));

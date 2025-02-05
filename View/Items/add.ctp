@@ -17,10 +17,9 @@
 
 <div class="row justify-content-center">
     <div class="col-auto">
-
         <?php if (isset($usuario) && $usuario['role'] == 'admin'): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'style' => 'display: inline;'], 'options' => $eventos, 'default' => $evento_id], ['class' => 'form-control']); ?>
+            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Evento', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
             <?php echo $this->Form->end(); ?>
         <?php else: ?>
             <h1 style="text-align: center;"><?php echo end($eventos); ?></h1>
@@ -28,11 +27,11 @@
     </div>
 </div>
 
-<?php echo $this->Html->script('ckeditor/ckeditor', array('inline' => false)); ?>
+<?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
 <?php // pr($resolucaos); ?>
 <?php // pr($tr); ?>
 
-<div class="items form">
+<div class="container">
 
     <?php
     echo $this->Form->create('Item', [
@@ -49,13 +48,14 @@
         ]
     ]);
     ?>
+    
     <fieldset>
         <legend><?php echo "Items da TR "; ?></legend>
         <?php
         echo $this->Form->input('apoio_id', ['value' => $apoio_id, 'options' => $apoios]);
-        echo $this->Form->input('tr', ['label' => 'TR', 'value' => $ultimo_tr]);
-        echo $this->Form->input('item', ['label' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'value' => $ultimo_tr . "." . $item_item, 'placeholder' => '__.__']);
-        echo $this->Form->input('texto', ['label' => 'Item do texto de resolução'], ['class' => 'ckeditor']);
+        echo $this->Form->input('tr', ['label' => ['text' =>'TR', 'class' => 'col-3'], 'value' => $ultimo_tr]);
+        echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'class' => 'col-3'], 'value' => $ultimo_tr . "." . $item_item, 'placeholder' => '__.__']);
+        echo $this->Form->input('texto', ['label' => ['text' => 'Item do texto de resolução', 'class' => 'col-3'], 'class' => 'ckeditor']);
         ?>
     </fieldset>
     <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>

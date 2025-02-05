@@ -27,7 +27,7 @@
         <legend><?php echo __('Acrescentar um evento'); ?></legend>
         <?php
         echo $this->Form->input('nome', ['label' => ['text' => 'Evento']]);
-        echo $this->Form->input('ordem');
+        echo $this->Form->input('ordem', ['value' => $evento['Evento']['ordem'] + 1,'required']);
         echo $this->Form->input('data');
         echo $this->Form->input('local');
         ?>

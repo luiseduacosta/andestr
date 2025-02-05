@@ -14,3 +14,6 @@ Há 7 resultados de votação:
 7) outro
 
 pr($this->Model->validationErrors);
+
+Votação de inclusão suprimida: o item é incluido e riscado para indicar que é uma inclusão sui generis. É uma situação muito estranha porque vai ser incluído um item e votada sua supressão. 
+Quando é inserido um novo item, pode ser reorganizado o valor dos items para que fiquem ordenados

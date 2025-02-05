@@ -66,6 +66,7 @@ class VotacaosController extends AppController
         // die();
 
         $this->Votacao->contain();
+
         if ($grupo and $item_id and $tr and $evento_id) {
             // die("1");
             $this->set('votacaos', $this->Paginator->paginate('Votacao', [
@@ -452,12 +453,12 @@ class VotacaosController extends AppController
             /** Verifica que a votação seja inserida utilizando como separador dos votos uma barra inclinada */
             $verificaponto = strpos(($this->request->data['Votacao']['votacao']), ".");
             if ($verificaponto) {
-                echo "Separar 1 os valores com uma barra inclinada: '/'" . "<br>";
+                echo "Separar os valores com uma barra inclinada: '/'" . "<br>";
                 $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
             }
             $verificabarra = strpos(($this->request->data['Votacao']['votacao']), "/");
             if (empty($verificabarra)) {
-                echo "Separar 2 os valores com uma barra inclinada: '/'" . "<br>";
+                echo "Separar os valores com uma barra inclinada: '/'" . "<br>";
                 $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
             }
 
@@ -467,6 +468,17 @@ class VotacaosController extends AppController
                     $this->Flash->error(__("Especifique no campo 'Observações' o resultado da deliberação do item 'remitido' ou votado como 'outra'."));
                     return $this->redirect(['controller' => 'Items', 'action' => 'view', $item_id]);
                 }
+            }
+
+            /** Verifico se o item já votado pelo grupo */
+            $item_votado = $this->Votacao->find('first', [
+                'conditions' => ['item_id' => $this->request->data['Votacao']['item_id'], 'grupo' => $this->request->data['Votacao']['grupo']]
+            ]);
+            if ($item_votado) {
+                $this->Flash->error(__('Item já foi votado pelo grupo'));
+                return $this->redirect(['controller' => 'Votacaos', 'action' => 'index', '?' => ['item_id' => $item_votado['Votacao']['item_id']]]);
+                // echo "Já foi votado pelo grupo" . '<br />';
+                // die();
             }
 
             /* Finalmente insiro a votação do item */
@@ -479,11 +491,11 @@ class VotacaosController extends AppController
                 // die('flag');
                 if ($flagminoritaria == '1') {
                     // die('votacao minoritaria');
-                    $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
+                    // $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $this->request->data['Votacao']['item_id'], 'votacao_id' => $this->Votacao->getLastInsertID(), 'resultado' => 'minoritária']]);
                     // die('votacao minoritaria ');
                 } else {
-                    $this->Flash->success(__('Votação inserida.'));
+                    // $this->Flash->success(__('Votação inserida.'));
                     // die('votacao normal');
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'view', $this->Votacao->getLastInsertID()]);
                 }
@@ -655,9 +667,9 @@ class VotacaosController extends AppController
                 if ($this->Votacao->save($this->request->data)) {
                     // pr($this->request->data);
                     // die();
-                    $this->Flash->success(__('Votação inserida.'));
+                    // $this->Flash->success(__('Votação inserida como suprimida.'));
                 } else {
-                    $this->Flash->error(__('Votação não foi inserida. Tente novamente.'));
+                    // $this->Flash->error(__('Votação não foi inserida como suprimida. Tente novamente.'));
                 }
 
             }
@@ -720,18 +732,20 @@ class VotacaosController extends AppController
 
     public function delete($id = null)
     {
-
-        if (!$this->Votacao->exists()) {
-            throw new NotFoundException(__('Invalid número'));
+        if (!$this->Votacao->exists($id)) {
+            throw new NotFoundException(__('Argumento inválido'));
         }
-
-        $this->Votacao->id = $id;
 
         $votacao = $this->Votacao->findById($id);
 
+        if (!$votacao) {
+            $this->Flash->error(__('Registro inexistente'));
+            return $this->redirect(['action' => 'index']);
+        }
+
         /* Relator e administrador podem excluir votações */
         if ($this->Auth->user('role') === 'relator' || $this->Auth->user('role') === 'admin') {
-            if ($this->Votacao->delete()) {
+            if ($this->Votacao->delete($id)) {
                 $this->Flash->success(__('Votação foi excluida.'));
                 if ($this->Auth->user('role') === 'relator') {
                     /* Se eh relator vai para grupo */
@@ -751,7 +765,7 @@ class VotacaosController extends AppController
                     return $this->redirect(['action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr']]]);
                 }
             }
-            /* Editor nao podo excluir votacao */
+            /* Editor nao pode excluir votacao */
         } elseif ($this->Auth->user('role') === 'editor') {
             $this->Flash->error(__('Ação não autorizada.'));
             return $this->redirect(['action' => 'index', '?' => ['grupo' => $votacao['Votacao']['grupo']]]);
@@ -798,7 +812,7 @@ class VotacaosController extends AppController
                     $relatorio[$i] = $this->Votacao->find(
                         'all',
                         [
-                            'order' => ['Votacao.item, Votacao.grupo  ASC'],
+                            'order' => ['Votacao.item, Votacao.grupo ASC'],
                             'conditions' => [
                                 'Votacao.tr' => $c_dados,
                                 'Votacao.grupo' => $categoria['grupo'],
@@ -827,18 +841,21 @@ class VotacaosController extends AppController
 
                 $i++;
             }
+            $tr_grupo = null;
 
             // Para cada TR
             for ($i = 0; $i < count($relatorio); $i++) {
 
-                $aprovada = "<b>Aprovados: </b> ";
-                $modificada = "<b>Modificados: </b> ";
-                $suprimida = "<b>Suprimidos: </b> ";
-                $incluida = "<b>Inclusões: </b> ";
-                $minoritaria = "<b>Minoritárias: </b>";
+                $aprovada = "<b>Items aprovados: </b> ";
+                $modificada = "<b>Items modificados: </b> ";
+                $suprimida = "<b>Items suprimidos: </b> ";
+                $incluida = "<b>Novos items incluidos: </b> ";
+                $minoritaria = "<b>Votação de item minoritário: </b>";
                 $remitida = "<b>Remitidas: </b>";
                 $outra = "<b>Outras votações: </b>";
 
+                $suprimida_integralmente = NULL;
+                $tr_suprimida = NULL;
                 $taprovada = NULL;
                 $tmodificada = NULL;
                 $tsuprimida = NULL;
@@ -847,6 +864,7 @@ class VotacaosController extends AppController
                 $tremitida = NULL;
                 $toutra = NULL;
 
+                $qtr_suprimida = 0;
                 $qaprovada = 0;
                 $qmodificada = 0;
                 $qsuprimida = 0;
@@ -856,6 +874,8 @@ class VotacaosController extends AppController
                 $qoutra = 0;
                 $grupos = NULL;
                 $grupos_total = NULL;
+
+                $tr_suprimida_grupo[] = NULL;
 
                 // Captura as votações para cada item da TR
                 for ($t = 0; $t < count($relatorio[$i]); $t++):
@@ -881,6 +901,18 @@ class VotacaosController extends AppController
                         $tmodificada .= ", ";
                         $qmodificada++;
                     endif;
+
+                    /** Localiza as TRs suprimidas integralmente */
+                    if ($relatorio[$i][$t]['Votacao']['tr_suprimida'] == '1'):
+                        if ($tr_grupo != $relatorio[$i][$t]['Votacao']['grupo']):
+                            $tr_grupo = $relatorio[$i][$t]['Votacao']['grupo'];
+                            $tr_suprimida .= $relatorio[$i][$t]['Votacao']['grupo'];
+                            $tr_suprimida .= " ";
+                            $tr_suprimida .= "(" . $relatorio[$i][$t]['Votacao']['votacao'] . ");";
+                            $qtr_suprimida++;
+                        endif;
+                    endif;
+
                     /* Localiza as items suprimidas */
                     if ($relatorio[$i][$t]['Votacao']['resultado'] == 'suprimida'):
                         // echo $i . "Suprimida: ";
@@ -892,6 +924,8 @@ class VotacaosController extends AppController
                         $tsuprimida .= ", ";
                         $qsuprimida++;
                     endif;
+
+                    // pr($relatorio[$i][$t]['Votacao']['resultado']);
                     /* Localiza as items incluídas */
                     if ($relatorio[$i][$t]['Votacao']['resultado'] == 'inclusão'):
                         // echo $i . "Inclusão: ";
@@ -940,9 +974,24 @@ class VotacaosController extends AppController
                     /* Quais grupos trabalharam */
                     $grupos[] = $relatorio[$i][$t]['Votacao']['grupo'];
 
+                    /**
+                     * TRs sumprimidas integralmente
+                     */
+                    $suprimidas_integralmente = explode(';', $tr_suprimida);
+                    $suprimidas_integralmente_sem_elementos_vazios = array_filter($suprimidas_integralmente, 'strlen');
+                    $trs_suprimidas_integralmente = array_unique($suprimidas_integralmente_sem_elementos_vazios);
+                    $trs_suprimidas_integralmente_string = implode(', ', $trs_suprimidas_integralmente);
+                    // pr($trs_suprimidas_integralmente);
+
                 endfor;
 
                 // Junto tudo para fazer o texto
+                if (empty($trs_suprimidas_integralmente)):
+                    $suprimida_integralmente .= 0 . ", ";
+                else:
+                    $suprimida_integralmente .= $trs_suprimidas_integralmente_string;
+                endif;
+
                 if (empty($taprovada)):
                     $aprovada .= 0 . ", ";
                 else:
@@ -993,9 +1042,10 @@ class VotacaosController extends AppController
                     $grupos_total = implode(', ', $grupos_unicos);
                 endif;
                 // die();
-                $quantidade[] = "<b>Grupo(s):</b> " . $grupos_total . '<br>' . "<b>TR: " . $tr . "</b>. " . '<b>Aprovados:</b> ' . $qaprovada . ', <b>modificados:</b> ' . $qmodificada . ', <b>suprimidos:</b> ' . $qsuprimida . ', <b>incluídos:</b> ' . $qincluida . ', <b>minoritários:</b> ' . $qminoritaria . ', <b>remitidas:</b> ' . $qremitida . ' e <b>outras votações:</b> ' . $qoutra;
+                $quantidade[] = "<b>Grupo(s):</b> " . $grupos_total . '<br>' . "<b>TR: " . $tr . "</b>. " . "<b>Suprimida integralmente:</b> " . count($trs_suprimidas_integralmente) . ', <b>Aprovados:</b> ' . $qaprovada . ', <b>modificados:</b> ' . $qmodificada . ', <b>suprimidos:</b> ' . $qsuprimida . ', <b>incluídos:</b> ' . $qincluida . ', <b>minoritários:</b> ' . $qminoritaria . ', <b>remitidas:</b> ' . $qremitida . ' e <b>outras votações:</b> ' . $qoutra;
 
-                $situacao_nos_grupos[] = "<b>TR: " . $tr . "</b>. " . $aprovada . $modificada . $suprimida . $incluida . $minoritaria . $remitida . $outra . "<br>";
+                $situacao_nos_grupos[] = "<b>TR: " . $tr . "</b>. " . "<b>" . "Suprimida integralmente no(s) grupo(s): " . "</b>" . $suprimida_integralmente . '.' . '<br />'. $aprovada . $modificada . $suprimida . $incluida . $minoritaria . $remitida . $outra . "<br>";
+
             }
 
             $this->set('relatorio', $relatorio);

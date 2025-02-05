@@ -77,6 +77,9 @@ class EventosController extends AppController
      */
     public function add()
     {
+        /** Envio o numero de ordem para o formulário */
+        $this->Evento->contain();
+        $this->set('evento', $this->Evento->find('first', ['order' => ['ordem' => 'desc']]));
         if ($this->request->is('post')) {
             $this->Evento->create();
             if ($this->Evento->save($this->request->data)) {
@@ -123,7 +126,7 @@ class EventosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Evento inválido'));
+            throw new NotFoundException(__('Argumento inválido'));
         }
         $this->request->allowMethod('post', 'delete');
         if ($this->Evento->delete($id)) {

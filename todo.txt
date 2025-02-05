@@ -41,3 +41,7 @@ $log = $this->Votacao->getDataSource()->getLog(false, false);
 debug($log);
 
 Colocar a votação para ser formatada através de javascript
+
+# Bugs
+Exclusão de item p. ex. votacaos/view/975
+Alteração ou modificação de item
