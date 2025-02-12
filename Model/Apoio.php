@@ -22,8 +22,9 @@ class Apoio extends AppModel
      */
     public $displayField = 'titulo';
     public $actsAs = ['Containable'];
-    public $belongsTo = ['Evento'];
+    public $belongsTo = ['Evento', 'Gt'];
     public $hasMany = ['Item'];
+
     public $validate = [
         'caderno' => [
             'rule' => ['inList', ['Principal', 'Anexo']],

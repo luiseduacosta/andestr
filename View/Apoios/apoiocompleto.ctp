@@ -21,11 +21,19 @@
             <?php echo h($apoio['Apoio']['tema']); ?>
             &nbsp;
         </dd>
+
         <dt><?php echo __('GT'); ?></dt>
         <dd>
             <?php echo h($apoio['Apoio']['gt']); ?>
             &nbsp;
         </dd>
+
+        <dt><?php echo __('GT'); ?></dt>
+        <dd>
+            <?php echo h($apoio['Apoio']['gt_id']); ?>
+            &nbsp;
+        </dd>
+
         <dt><?php echo __('Titulo'); ?></dt>
         <dd>
             <?php echo strip_tags($apoio['Apoio']['titulo']); ?>

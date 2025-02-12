@@ -86,6 +86,7 @@
                     'required'
                 ]
             );
+            echo $this->Form->input('gt_id', ['type' => 'select', 'options' => [$gts]]);
             echo $this->Form->input('texto', ['class' => 'ckeditor']);
             ?>
         </fieldset>

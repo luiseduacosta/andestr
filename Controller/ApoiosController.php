@@ -85,6 +85,7 @@ class ApoiosController extends AppController
 
         $this->set('apoios', $this->Paginator->paginate());
         $this->set('evento_id', $evento_id);
+        $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
         $this->set('eventos', $eventos);
     }
 
@@ -211,6 +212,7 @@ class ApoiosController extends AppController
         } else {
             $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
             $this->request->data = $this->Apoio->find('first', $options);
+            $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
             $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'nome']));
         }
     }

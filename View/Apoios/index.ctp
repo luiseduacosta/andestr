@@ -56,7 +56,7 @@
     </ul>
 </div>
 
-<div class="row">
+<div class="container">
     <h2><?php echo __('Textos de Apoio'); ?></h2>
     <table cellpadding="0" cellspacing="0" class="table">
         <thead class="thead-light">
@@ -67,6 +67,7 @@
                 <th><?php echo $this->Paginator->sort('numero_texto', 'Nº'); ?></th>
                 <th><?php echo $this->Paginator->sort('tema'); ?></th>
                 <th><?php echo $this->Paginator->sort('gt', 'GT'); ?></th>
+                <th><?php echo $this->Paginator->sort('gt_id', 'GT'); ?></th>
                 <th><?php echo $this->Paginator->sort('titulo'); ?></th>
                 <th><?php echo $this->Paginator->sort('autor'); ?></th>
                 <th><?php echo $this->Paginator->sort('texto'); ?></th>
@@ -84,6 +85,7 @@
                     <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), 'index/tema:' . $apoio['Apoio']['tema']); ?>&nbsp;
                     </td>
                     <td><?php echo h($apoio['Apoio']['gt']); ?>&nbsp;</td>
+                    <td><?php echo h($apoio['Gt']['sigla']); ?>&nbsp;</td>
                     <td><?php echo strip_tags($apoio['Apoio']['titulo']); ?>&nbsp;</td>
                     <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
@@ -104,18 +106,25 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <p>
-        <?php
-        echo $this->Paginator->counter([
-            'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-        ]);
-        ?>
-    </p>
-    <div class="pagination justify-content-center">
-        <?php
-        echo $this->Paginator->prev('< ' . __('anterior'), [], null, ['class' => 'prev disabled']);
-        echo $this->Paginator->numbers(['separator' => ''], ['class' => 'page-link']);
-        echo $this->Paginator->next(__('proximo') . ' >', [], null, ['class' => 'next disabled']);
-        ?>
+
+    <div class="row">
+        <p>
+            <?php
+            echo $this->Paginator->counter([
+                'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+            ]);
+            ?>
+        </p>
     </div>
+
+    <div class="row">
+        <div class="pagination">
+            <?php
+            echo $this->Paginator->prev('< ' . __('anterior'), array('class' => 'page-link'), null, array('class' => 'page-link'));
+            echo $this->Paginator->numbers(array('separator' => '', 'class' => 'page-link'));
+            echo $this->Paginator->next(__('próximo') . ' >', array('class' => 'page-link'), null, array('class' => 'page-link'));
+            ?>
+        </div>
+    </div>
+
 </div>

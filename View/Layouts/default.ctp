@@ -97,9 +97,15 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                         // pr($usuario);
                         ?>
                     </li>
+<li class="nav-item">
+    <?php echo $this->Html->link('Grupos de Trabalho', '/Gts/index', ['class' => 'nav-link']); ?>
+</li>
+
                     <li class="nav-item">
                         <?php echo $this->Html->link('Textos de apoio', '/Apoios/index', ['class' => 'nav-link']); ?>
                     </li>
+
+
                     <li class="nav-item">
                         <?php echo $this->Html->link('TRs', '/Items/index', ['class' => 'nav-link']); ?>
                     </li>

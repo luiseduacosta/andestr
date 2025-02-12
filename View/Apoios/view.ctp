@@ -1,5 +1,5 @@
 <?php
-// pr($apoio['Item']);
+// pr($apoio);
 ?>
 
 <div class="row">
@@ -78,6 +78,12 @@
             <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
             <dd class="col-sm-9">
                 <?php echo h($apoio['Apoio']['gt']); ?>
+                &nbsp;
+            </dd>
+
+            <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
+            <dd class="col-sm-9">
+                <?php echo h($apoio['Gt']['sigla']); ?>
                 &nbsp;
             </dd>
 
