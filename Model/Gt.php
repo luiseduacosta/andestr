@@ -15,6 +15,8 @@ class Gt extends AppModel {
 	public $actsAs = ['Containable'];
     public $hasMany = ['Apoio'];
 
+	public $order = ['Gt.sigla' => 'asc'];
+
 /**
  * Validation rules
  *

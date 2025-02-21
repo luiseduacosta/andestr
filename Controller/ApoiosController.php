@@ -183,6 +183,7 @@ class ApoiosController extends AppController
                 }
             endif;
         }
+        $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
         $this->set('eventos', $eventos);
     }
 

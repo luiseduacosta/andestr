@@ -145,7 +145,7 @@ class ItemsController extends AppController
             ]);
             $ultimo_item = end($items);
 
-            /** Dividir o item e aumente em + 1 para o próximo */
+            /** Dividir o item e aumentar em + 1 para o próximo */
             if ($ultimo_item) {
                 $ultimoItem = $ultimo_item['Item']['item'];
                 $itemparcela = explode('.', $ultimoItem);
@@ -161,8 +161,6 @@ class ItemsController extends AppController
                 } else {
                     $itemparcela_item;
                 }
-                // pr($itemparcela_tr);
-                // pr($itemparcela_item);
             }
 
         } else {
@@ -182,7 +180,7 @@ class ItemsController extends AppController
                 'conditions' => ['numero_texto' => $this->request->data['Item']['tr'], 'evento_id' => $evento_id]
             ]);
             $this->request->data['Item']['apoio_id'] = $apoio['Apoios']['id'];
-            // Elimina os r e n e <br /> do texto original           
+            // Elimina os \r e \n e <br /> do texto original   
             $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
             $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
             // A partir do Tr busco o id na tabela Resolucao
@@ -428,12 +426,12 @@ class ItemsController extends AppController
         foreach ($items as $item) {
 
             // pr($item['Item']['texto']);
-            $itemnovo['Item']['id'] = $item['Item']['id']; 
-            $itemnovo['Item']['apoio_id'] = $item['Item']['apoio_id']; 
-            $itemnovo['Item']['tr'] = $item['Item']['tr']; 
-            $itemnovo['Item']['item'] = $item['Item']['item']; 
-            $itemnovo['Item']['texto'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
-            $itemnovo['Item']['texto1'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
+            $itemnovo['Item']['id'] = $item['Item']['id'];
+            $itemnovo['Item']['apoio_id'] = $item['Item']['apoio_id'];
+            $itemnovo['Item']['tr'] = $item['Item']['tr'];
+            $itemnovo['Item']['item'] = $item['Item']['item'];
+            $itemnovo['Item']['texto'] = str_replace(["\r", "\n"], '', $item['Item']['texto']);
+            $itemnovo['Item']['texto1'] = str_replace(["\r", "\n"], '', $item['Item']['texto']);
             // pr($apoionovo['Apoio']['texto1']);
 
             if ($this->Item->save($itemnovo)) {

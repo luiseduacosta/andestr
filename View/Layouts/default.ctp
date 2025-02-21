@@ -82,24 +82,24 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
             </button>
             <div class="collapse navbar-collapse" id="menuprincipal">
                 <ul class="navbar-nav mr-auto">
+
                     <li class="nav-item">
                         <?php echo $this->Html->link('Eventos', '/Eventos/index', ['class' => 'nav-link']); ?>
                     </li>
+
                     <li class="nav-item">
                         <?php
                         if (isset($usuario)):
-                            // pr($usuario);
-                            // die();
                             if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                                 echo $this->Html->link('Usuários', '/users/index', ['class' => 'nav-link']);
                             endif;
                         endif;
-                        // pr($usuario);
                         ?>
                     </li>
-<li class="nav-item">
-    <?php echo $this->Html->link('Grupos de Trabalho', '/Gts/index', ['class' => 'nav-link']); ?>
-</li>
+
+                    <li class="nav-item">
+                        <?php echo $this->Html->link('Grupos de Trabalho', '/Gts/index', ['class' => 'nav-link']); ?>
+                    </li>
 
                     <li class="nav-item">
                         <?php echo $this->Html->link('Textos de apoio', '/Apoios/index', ['class' => 'nav-link']); ?>
@@ -109,6 +109,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                     <li class="nav-item">
                         <?php echo $this->Html->link('TRs', '/Items/index', ['class' => 'nav-link']); ?>
                     </li>
+
                     <li class="nav-item">
                         <?php
                         if (isset($usuario)):
@@ -120,6 +121,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                         endif;
                         ?>
                     </li>
+
                     <li class="nav-item">
                         <?php
                         if (isset($usuario)):
@@ -136,9 +138,11 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                         endif;
                         ?>
                     </li>
+
                     <li class="nav-item">
                         <?php echo $this->Html->link('Relatórios', '/Votacaos/relatorio', ['class' => 'nav-link']); ?>
                     </li>
+
                     <?php if (isset($usuario)): ?>
                         <li class="nav-item">
                             <?php echo $this->Html->link('Sair', '/Users/logout', ['class' => 'nav-link']); ?>

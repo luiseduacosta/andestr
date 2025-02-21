@@ -24,13 +24,7 @@
 
         <dt><?php echo __('GT'); ?></dt>
         <dd>
-            <?php echo h($apoio['Apoio']['gt']); ?>
-            &nbsp;
-        </dd>
-
-        <dt><?php echo __('GT'); ?></dt>
-        <dd>
-            <?php echo h($apoio['Apoio']['gt_id']); ?>
+            <?php echo h($apoio['Gt']['sigla']); ?>
             &nbsp;
         </dd>
 

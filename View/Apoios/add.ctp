@@ -59,34 +59,7 @@
                 'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV'],
                 'required'
             ]);
-            echo $this->Form->input(
-                'gt',
-                [
-                    'label' => ['text' => 'Setor ou grupo de trabalho', 'class' => 'col-3'],
-                    'empty' => 'Selecione',
-                    'options' => [
-                        'Federais' => 'Federais',
-                        'Estaduais' => 'Estaduais',
-                        'GTCQERGDS' => 'GTCQERGDS',
-                        'GTCA' => 'GTCA',
-                        'GTC' => 'GTC',
-                        'GTCT' => 'GTCT',
-                        'GT Fundações' => 'GT Fundações',
-                        'GTHMD' => 'GTHMD',
-                        'GTPAUA' => 'GTPAUA',
-                        'GTPE' => 'GTPE',
-                        'GTPFS' => 'GTPFS',
-                        'GTSSA' => 'GTSSA',
-                        'GT Verbas' => 'GT Verbas',
-                        'Comissão da Verdade' => 'Comissão da Verdade',
-                        'Tesouraria' => 'Tesouraria',
-                        'Secretaria' => 'Secretaria',
-                        'Outras' => 'Outras'
-                    ],
-                    'required'
-                ]
-            );
-            echo $this->Form->input('gt_id', ['type' => 'select', 'options' => [$gts]]);
+            echo $this->Form->input('gt_id', ['type' => 'select', 'options' => [$gts], 'empty' => 'Selecione'], 'required');
             echo $this->Form->input('texto', ['class' => 'ckeditor']);
             ?>
         </fieldset>
