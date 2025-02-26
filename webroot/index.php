@@ -60,7 +60,7 @@ if (!defined('APP_DIR')) {
  * The following line differs from its sibling
  * /lib/Cake/Console/Templates/skel/webroot/index.php
  */
-define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'Cake' . DS . 'lib');
+define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . APP_DIR . DS . 'Vendor' . DS. 'cakephp'. DS. 'cakephp' . DS. 'lib');
 // define('CAKE_CORE_INCLUDE_PATH', ROOT);
 // define('CAKE_CORE_INCLUDE_PATH', DS . 'usr' . DS . 'share' . DS . 'php');
 // print "CAKE_CORE_INCLUDE_PATH " . CAKE_CORE_INCLUDE_PATH . "<BR>";
