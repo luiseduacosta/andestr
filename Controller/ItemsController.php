@@ -131,8 +131,12 @@ class ItemsController extends AppController
             'conditions' => ['Apoios.evento_id' => $evento_id],
             ['order' => ['numero_texto' => 'desc']]
         ]);
+        if (empty($apoios)) {
+            $this->Flash->error(__('Não há textos de apoio cadastrados!'));
+            return $this->redirect(['controller' => 'Apoios', 'action' => 'add']);
+        }
         $apoioslista = $this->Apoios->find('list');
-        // pr($apoios);
+
         /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
             $ultimo = end($apoios);
@@ -167,7 +171,10 @@ class ItemsController extends AppController
             $itemparcela_tr = '01';
             $itemparcela_item = '01';
         }
+        // pr($itemparcela_tr);
+        // pr($itemparcela_item);
         /** Envio para o formulário */
+        $this->set('evento_id', $evento_id);
         $this->set('ultimo_tr', isset($ultimo_tr) ? $ultimo_tr : '01');
         $this->set('item_item', isset($itemparcela_item) ? $itemparcela_item : '01');
         $this->set('apoio_id', $ultimo['Apoios']['id']);
@@ -208,9 +215,33 @@ class ItemsController extends AppController
                     return $this->redirect(['controller' => 'apoios', 'action' => 'add']);
                 endif;
             }
-
-            // pr($this->request->data);
-            // die();
+            if ($this->request->data['Item']['item'] == '') {
+                $this->Flash->error(__('O campo item não pode ser vazio!'));
+                return $this->redirect(['controller' => 'items', 'action' => 'add']);
+            } else {
+                $item = substr($this->request->data['Item']['item'], 3, 2);
+                /** Caso de uma inserção de um item novo */
+                if ($item == '00') {
+                    $apoio = $this->Apoios->find('first', [
+                        'conditions' => ['numero_texto' => $this->request->data['Item']['tr'], 'evento_id' => $evento_id]
+                    ]);
+                    if ($apoio) {
+                        /** Capturo o último item */
+                        $this->loadModel('Items');
+                        $item = $this->Items->find('first', [
+                            'conditions' => ['Items.apoio_id' => $apoio['Apoios']['id']],
+                            'order' => ['Items.item' => 'desc'],
+                        ]);
+                        $valor_item = explode('.', $item['Items']['item']);
+                        $valor_item = $valor_item[1] + 1;
+                        if (strlen($valor_item) == 1) {
+                            $valor_item = '0' . $valor_item;
+                        }
+                        $this->request->data['Item']['item'] = $this->request->data['Item']['tr'] . '.' . $valor_item;
+                    }
+                    $this->request->data['Item']['apoio_id'] = $apoio['Apoios']['id'];
+                }
+            }
 
             $this->Item->create();
             if ($this->Item->save($this->request->data)) {
@@ -363,7 +394,6 @@ class ItemsController extends AppController
                 } else {
                     debug($this->Item->validationErrors);
                     die();
-                    $this->Flash->error(__('Tente novamente.'));
                 }
             }
 
