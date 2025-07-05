@@ -126,7 +126,8 @@ abstract class ObjectCollection {
 		}
 		$result = null;
 		foreach ($list as $name) {
-			$result = call_user_func_array(array($this->_loaded[$name], $callback), array_filter(compact('subject')) + $params);
+			/** Modificado por mim: https://github.com/cakephp/cakephp/commit/d201312a0ecc584410410ae458ff2d71b3ef3d7e */
+			$result = call_user_func_array(array($this->_loaded[$name], $callback), array_values(array_filter(compact('subject')) + $params));
 			if ($options['collectReturn'] === true) {
 				$collected[] = $result;
 			}
