@@ -1,7 +1,11 @@
 <?php
+
 App::uses('AppModel', 'Model');
+
 /**
  * Gt Model
+ * 
+ * @property Gt $Gt
  *
  */
 class Gt extends AppModel {

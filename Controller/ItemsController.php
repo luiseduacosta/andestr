@@ -56,14 +56,14 @@ class ItemsController extends AppController
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
-            'order' => ['ordem']
+            'order' => ['ordem' => 'asc']
         ]);
 
         /** Se evento_id não veio como parametro nem pode ser calculado a partir do apoio_id então seleciono o último evento */
-        if (empty($evento_id)):
+        if (empty($evento_id)) {
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
-        endif;
+        }
 
         /** Gravo o cookei com o evento_id */
         if ($evento_id) {
@@ -112,17 +112,15 @@ class ItemsController extends AppController
             'order' => ['id' => 'asc']
         ]);
 
-        if (empty($evento_id)):
+        if (empty($evento_id)){
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
-        endif;
+        }
 
         /** Não acontece nunca? */
         if (empty($evento_id)) {
-            $this->Flash->error(__('Sem indicação de evento'));
-            // Sem o evento_id não posso fazer nada
-            return $this->redirect(['controller' => 'items', 'action' => 'index']);
-            // echo "Erro";
+            $this->Flash->error(__('Sem indicação de evento não é possível adicionar itens'));
+            return $this->redirect(['controller' => 'eventos', 'action' => 'index']);
         }
 
         /** Localiza se há TRs */
@@ -253,8 +251,7 @@ class ItemsController extends AppController
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
         }
-        // pr($evento_id);
-        // die();
+
         $tr = $this->Item->Apoio->find(
             'list',
             [
@@ -262,11 +259,6 @@ class ItemsController extends AppController
                 'conditions' => ['Apoio.evento_id' => $evento_id]
             ]
         );
-
-        // $log = $this->Item->Apoio->getDataSource()->getLog(false, false);
-        // debug($log);
-        // pr($tr);
-        // die();
 
         if (!isset($tr)) {
             $this->Flash->error(__('Não há textos de resolução cadastrados!'));
@@ -283,7 +275,7 @@ class ItemsController extends AppController
     {
 
         if (!$this->Item->exists($id)) {
-            throw new NotFoundException(__('Invalid resolucao'));
+            throw new NotFoundException(__('Item não localizado.'));
         }
 
         if ($this->Auth->user('id')):
@@ -299,14 +291,13 @@ class ItemsController extends AppController
 
     public function edit($id = null)
     {
-        // debug($this->request->data);
-        // die();
+
         if (!$this->Item->exists($id)) {
-            throw new NotFoundException(__('Item inválido'));
+            throw new NotFoundException(__('Item não localizado'));
         }
         if ($this->request->is(['post', 'put'])) {
 
-            // Elimina os r e n e <br /> do texto original           
+            // Elimina os \r e \n e <br /> do texto original           
             $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
             $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
 
@@ -330,9 +321,8 @@ class ItemsController extends AppController
 
     public function delete($id = null)
     {
-        $this->Item->id = $id;
-        if (!$this->Item->exists()) {
-            throw new NotFoundException(__('Item inválido'));
+        if (!$this->Item->exists($id)) {
+            throw new NotFoundException(__('Item não localizado'));
         }
 
         // Capturo o valor do campo resolucao_id para ir para a TR do item
@@ -343,7 +333,7 @@ class ItemsController extends AppController
         if ($this->Item->delete()) {
             $this->Flash->success(__('Item excluído.'));
         } else {
-            $this->Flash->error(__('Tente novamente.'));
+            $this->Flash->error(__('Item não foi excluído. Tente novamente.'));
         }
         return $this->redirect(['controller' => 'items', 'action' => 'index', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
     }

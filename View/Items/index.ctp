@@ -9,17 +9,13 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Your code to run since DOM is loaded and ready
 
         var url = "<?= $this->Html->url(['controller' => 'Items', 'action' => 'index']); ?>";
-        console.log(url);
-        // document.getElementById('EventoEventoId');
-        // console.log(document.getElementById('EventoEventoId'));
+
+        console.log(document.getElementById('EventoEventoId'));
         document.querySelector("#EventoEventoId").addEventListener('change', function () {
-            // console.log('Valor: ', this.value);
+            console.log('Valor: ', this.value);
             var evento_id = this.value;
-            // console.log(url + '?evento_id=' + evento_id);
-            // alert(evento_id); */
             window.location.assign(url + '?evento_id=' + evento_id);
         })
     });

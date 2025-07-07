@@ -7,7 +7,7 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 /**
  * User Model
  *
- * @property Votacao $Votacao
+ * @property User $User
  */
 
 class User extends AppModel
@@ -64,5 +64,3 @@ class User extends AppModel
     }
 
 }
-
-?>

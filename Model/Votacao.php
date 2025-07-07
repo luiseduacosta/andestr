@@ -3,7 +3,9 @@
 App::uses('AppModel', 'Model');
 
 /**
- * Apoio Model
+ * Votacao Model
+ * 
+ * @property Votacao $Votacao
  *
  */
 class Votacao extends AppModel {

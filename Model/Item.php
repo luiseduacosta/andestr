@@ -4,6 +4,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * Item Model
+ * 
+ * @property Item $Item
  *
  */
 class Item extends AppModel

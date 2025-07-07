@@ -45,9 +45,9 @@ class UsersController extends AppController {
     }
 
     public function view($id = null) {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Usuário inválido'));
+
+        if (!$this->User->exists($id)) {
+            throw new NotFoundException(__('Usuário não localizado'));
         }
         $options = ['conditions' => ['User.' . $this->User->primaryKey => $id]];
         $this->set('user', $this->User->find('first', $options));
@@ -58,7 +58,7 @@ class UsersController extends AppController {
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
-                $this->Flash->success(__('Ok. Usuário inserido'));
+                $this->Flash->success(__('Usuário inserido!'));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(
@@ -73,9 +73,8 @@ class UsersController extends AppController {
 
             $this->set('usuario', $this->Auth->user());
         
-            $this->User->id = $id;
-            if (!$this->User->exists()) {
-                throw new NotFoundException(__('Usuário inválido'));
+            if (!$this->User->exists($id)) {
+                throw new NotFoundException(__('Usuário não localizado'));
             }
             if ($this->request->is(['post', 'put'])) {
                 if ($this->User->save($this->request->data)) {
@@ -100,17 +99,16 @@ class UsersController extends AppController {
         // Prior to 2.5 use
         // $this->request->onlyAllow('post');
 
-        $this->User->id = $id;
         if (!$this->User->exists($id)) {
-            throw new NotFoundException(__('Invalid user'));
+            throw new NotFoundException(__('Usuário não localizado'));
         }
         $this->request->allowMethod('post', 'delete');
 
         if ($this->User->delete()) {
-            $this->Flash->success(__('Usuário excluído'));
+            $this->Flash->success(__('Usuário excluído!'));
             return $this->redirect(['action' => 'index']);
         } else {
-            $this->Flash->error(__('Não foi possível excluir o usuário'));
+            $this->Flash->error(__('Não foi possível excluir o usuário. Tente novamente.'));
         }
         return $this->redirect(['action' => 'index']);
     }
@@ -132,5 +130,3 @@ class UsersController extends AppController {
     }
 
 }
-
-?>

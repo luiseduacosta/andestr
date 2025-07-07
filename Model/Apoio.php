@@ -4,6 +4,8 @@ App::uses('AppModel', 'Model');
 
 /**
  * Apoio Model
+ * 
+ * @property Apoio $Apoio
  *
  */
 class Apoio extends AppModel

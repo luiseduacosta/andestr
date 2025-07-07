@@ -37,7 +37,7 @@ class GtsController extends AppController
 	public function view($id = null)
 	{
 		if (!$this->Gt->exists($id)) {
-			throw new NotFoundException(__('Parâmetro do GT errado'));
+			throw new NotFoundException(__('GT não encontrado'));
 		}
 		$options = ['conditions' => ['Gt.' . $this->Gt->primaryKey => $id]];
 		$this->set('gt', $this->Gt->find('first', $options));
@@ -53,10 +53,10 @@ class GtsController extends AppController
 		if ($this->request->is('post')) {
 			$this->Gt->create();
 			if ($this->Gt->save($this->request->data)) {
-				$this->Flash->success(__('GT inserido.'));
+				$this->Flash->success(__('GT cadastrado.'));
 				return $this->redirect(['action' => 'index']);
 			} else {
-				$this->Flash->error(__('GT não foi inserido. Tente novamente.'));
+				$this->Flash->error(__('Não foi possível cadastrar o GT. Tente novamente.'));
 			}
 		}
 	}
@@ -71,14 +71,14 @@ class GtsController extends AppController
 	public function edit($id = null)
 	{
 		if (!$this->Gt->exists($id)) {
-			throw new NotFoundException(__('Parâmetro do GT errado'));
+			throw new NotFoundException(__('GT não encontrado'));
 		}
 		if ($this->request->is(['post', 'put'])) {
 			if ($this->Gt->save($this->request->data)) {
 				$this->Flash->success(__('GT atualizado.'));
 				return $this->redirect(['action' => 'index']);
 			} else {
-				$this->Flash->error(__('GT não foi atualizado. Tente novamente.'));
+				$this->Flash->error(__('Não foi possível atualizar o GT. Tente novamente.'));
 			}
 		} else {
 			$options = ['conditions' => ['Gt.' . $this->Gt->primaryKey => $id]];
@@ -96,13 +96,13 @@ class GtsController extends AppController
 	public function delete($id = null)
 	{
 		if (!$this->Gt->exists($id)) {
-			throw new NotFoundException(__('Parâmetro do GT errado'));
+			throw new NotFoundException(__('GT não encontrado'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->Gt->delete($id)) {
 			$this->Flash->success(__('GT excluído.'));
 		} else {
-			$this->Flash->error(__('GT não foi excluído. Tente novamente.'));
+			$this->Flash->error(__('Não foi possível excluir o GT. Tente novamente.'));
 		}
 		return $this->redirect(['action' => 'index']);
 	}
