@@ -248,19 +248,19 @@ class VotacaosController extends AppController
             // pr($resultado);
             // die();
         }
-
+        
         /* Se o resultado é minoritária, então seta a flag com o valor 0 para que não entre em loop */
-        if ($resultado === 'minoritária') {
+        if (isset($resultado) && $resultado == 'minoritária') {
             $this->Session->write('flagminoritaria', 0);
         }
 
-        /** Envio o item para o add da view*/
-        if ($item_id) {
+        /** Envio o item da votação para o add da view*/
+        if (isset($item_id) && $item_id != null) {
             $this->loadModel('Item');
             $this->Item->contain(['Apoio']);
             $options = ['conditions' => ['Item.' . $this->Item->primaryKey => $item_id]];
             $this->set('item', $this->Item->find('first', $options));
-        } else {
+        } else { 
             $this->Flash->error(__('Selecione o item a ser votado.'));
             return $this->redirect(['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]]);
         }
@@ -269,9 +269,9 @@ class VotacaosController extends AppController
 
         if (isset($resultado) && $resultado == 'minoritária'):
             // Se eh uma votacao minoritaria obtenho a votacao realizada para recuperar os resultados
-            if (isset($this->request->query['votacao_id'])):
+            if (isset($this->request->query['votacao_id'])) {
                 $votacao_id = $this->request->query['votacao_id'];
-            endif;
+            }
 
             if ($votacao_id):
                 $options = ['conditions' => ['Votacao.' . $this->Votacao->primaryKey => $votacao_id]];
@@ -280,7 +280,7 @@ class VotacaosController extends AppController
                 $votacao['Votacao']['resultado'] = 'minoritária';
                 $this->set('votacao', $votacao);
             else:
-                $this->Flash->error(__('Sem votação anterior'));
+                $this->Flash->error(__('Sem votação anterior do item.'));
                 // echo "Error: Sem votação anterior" . "<br>";
                 exit;
             endif;
@@ -297,7 +297,7 @@ class VotacaosController extends AppController
             endif;
 
             /** O item_modificado somente se o resultado foi modificada */
-            if ($this->request->data['Votacao']['resultado'] != 'modificada') {
+            if ($this->request->data['Votacao']['resultado'] <> 'modificada') {
                 $this->request->data['Votacao']['item_modificada'] = null;
             }
 
@@ -328,29 +328,12 @@ class VotacaosController extends AppController
                     $this->Session->write('flagminoritaria', 0);
                 }
             }
-            if (isset($this->request->data['Votacao']['votacao'])) {
-                // die();
-                // $this->Session->delete('flagminoritaria');
-                // $flag = $this->Session->read('flagminoritaria');
-                // echo "Entrada = " . $flag . "<br>";
-                //    $minoritaria = $this->minoritaria($this->request->data['Votacao']['votacao']);
-                //    if ($minoritaria == 1):
-                // $this->Flash->success(__('Votação minoritária.'));
-                //    endif;
-                //    $flag = $this->Session->read('flagminoritaria');
-                // echo "Saída = " . $flag . "<br>";
-                // die();
-                // else:
-                //    $this->Flash->error(__('Registre o resultado da votacao. Tente novamente.'));
-                //    return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', $id]);
-            }
 
+            /** Busca se já foi votado o item pelo grupo e avisa no Flash. Exepto quando é uma inclusão ou minoritária */
             if (($this->request->data['Votacao']['resultado'] == 'inclusão') || ($this->request->data['Votacao']['resultado'] == 'minoritária')) {
                 // echo "modifica ou outros resultados" . '<br>';
-                ///die();
+                // die();
             } else {
-                /* Busca se já foi votado o item pelo grupo e avisa no Flash. Não há impedimento (está certo?) */
-                /* Function */
                 $javotado = $this->Votacao->find('first', [
                     'conditions' => [
                         'Votacao.item_id' => $this->request->data['Votacao']['item_id'],
@@ -372,19 +355,15 @@ class VotacaosController extends AppController
                 return $this->redirect(['action' => 'add', $id]);
             }
 
-            /* Function suprime TR na sua totalidade */
+            /** Function suprime TR na sua totalidade */
             /* Quando selecionado 1 => Sim: cria um registo de supresão para cada item da TR. */
             if ($this->request->data['Votacao']['tr_suprimida'] == 1):
-                // pr($this->request->data['Votacao']['tr_suprimida']);
-                // die();
                 $this->suprimeTR($this->request->data['Votacao']['tr_suprimida']);
             endif;
 
-            /* Function aprovaembloco */
+            /** Function aprovaembloco */
             /* Quando selecionado 1 => Sim: cria um registo de aprovação para cada item da TR excluindo os items que já foram votados. */
             if ($this->request->data['Votacao']['tr_aprovada'] == 1):
-                // echo $this->request->data['Votacao']['tr_aprovada'];
-                // die();
                 $this->aprovaembloco($this->request->data);
             endif;
 
@@ -395,7 +374,7 @@ class VotacaosController extends AppController
                 endif;
             endif;
 
-            /* Se é uma inclussão de um novo item tenho que criar o item na tabela */
+            /** Se é uma inclusão de um novo item tenho que criar o registro na tabela Items */
             if ($this->request->data['Votacao']['resultado'] == 'inclusão') {
                 // die('inclusão');
                 $this->request->data['Votacao']['item'] = $this->request->data['Votacao']['tr'] . '.99';
@@ -446,12 +425,16 @@ class VotacaosController extends AppController
                 }
             }
 
-            /* Finalmente insiro a votação do item */
+            if ($this->request->data['Votacao']['resultado'] == 'aprovada') {
+                $this->request->data['Votacao']['item_modificada'] = null;
+            }
+
+            /** Finalmente insiro a votação do item. Quando minoritária retorna para adicionar a votação minoritária */
             $this->Votacao->create();
             if ($this->Votacao->save($this->request->data)) {
                 $flagminoritaria = $this->Session->read('flagminoritaria');
                 if ($flagminoritaria == '1') {
-                    // $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
+                    $this->Flash->success(__('Votação inserida. Registre a votação minoritária'));
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $this->request->data['Votacao']['item_id'], 'votacao_id' => $this->Votacao->getLastInsertID(), 'resultado' => 'minoritária']]);
                 } else {
                     // $this->Flash->success(__('Votação inserida.'));

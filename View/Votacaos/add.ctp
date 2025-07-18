@@ -276,7 +276,7 @@ endif;
         .then(editor => {
             minoritaria = editor;
             console.log('Olá editor VotacaoItemMinoritaria was initialized', minoritaria);
-            minoritaria.setData("");
+            minoritaria.setData("<?= str_replace(["\r", "\n"], '', $item['Item']['texto']); ?>");
         });
 
     let observacoes;
@@ -304,6 +304,10 @@ endif;
     document.getElementById("itemmodificada").style.display = "none";
     document.getElementById("itemincluida").style.display = "none";
     document.getElementById("itemminoritaria").style.display = "none";
+
+    if (document.getElementById("VotacaoResultado").value == "minoritária") {
+        document.getElementById("itemminoritaria").style.display = "block";
+    }
 
     function oculta() {
 
@@ -365,7 +369,7 @@ endif;
     function selecionavotacao() {
 
         var resultado = document.getElementById("VotacaoResultado").value;
-        alert(resultado);
+        // alert(resultado);
         if (resultado == 'suprimida') {
             document.getElementById("itemmodificada").style.display = "none";
             document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>"
