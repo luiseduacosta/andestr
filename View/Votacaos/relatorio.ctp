@@ -98,12 +98,12 @@
                 $textotr = $tr_relatorio['Votacao']['item']; // Guardo o texto da TR para comparar e saber se mudou e assim garantir que não coloque outra vez
                 ?>
 
-                <?php echo "<p>Grupo: " . $tr_relatorio['Votacao']['grupo']; ?>
-                <?php echo ". Resultado: " . '<b>' . $tr_relatorio['Votacao']['resultado'] . '</b>'; ?>
-                <?php echo ". Votação: (" . $tr_relatorio['Votacao']['votacao'] . ')'; ?>
+                <?php echo "<p>Grupo: " . $tr_relatorio['Votacao']['grupo'] . "."; ?>
+                <?php echo " Resultado: " . '<b>' . $tr_relatorio['Votacao']['resultado'] . '</b>' . '.'; ?>
+                <?php echo " Votação: (" . $tr_relatorio['Votacao']['votacao'] . ')'; ?>
                 <?php if ($tr_relatorio['Votacao']['observacoes']): ?>
                     <?php echo "<br />"; ?>
-                    <?php echo ". Observações: " . $tr_relatorio['Votacao']['observacoes']; ?>
+                    <?php echo "Observações: " . strip_tags($tr_relatorio['Votacao']['observacoes']); ?>
                 <?php endif; ?>
                 <?php if ($tr_relatorio['Votacao']['item_modificada']): ?>
                     <?php echo '<ul><p><span style = "font-family: Lucida Console, Courier New, monospace;">' . $tr_relatorio['Votacao']['item_modificada'] . "</span></p>"; ?>
@@ -116,7 +116,6 @@
             <?php // echo $i;       ?>
 
             <?php echo '<br>'; ?>
-
 
         <?php endforeach; ?>
     <?php // pr($grupos);  ?>

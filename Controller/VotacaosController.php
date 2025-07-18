@@ -186,11 +186,56 @@ class VotacaosController extends AppController
                 $this->Flash->error(__('Há uma votação minoritária. Não esqueça de registrar essa votação minoritária em observações ou num novo item minoritário.'));
             }
 
+            /** Verifica que a votação seja inserida utilizando como separador dos votos uma barra inclinada */
+            $verificaponto = strpos(($this->request->data['Votacao']['votacao']), ".");
+            if ($verificaponto) {
+                // echo "Separar os valores com uma barra inclinada: '/'" . "<br>";
+                $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
+            }
+            $verificabarra = strpos(($this->request->data['Votacao']['votacao']), "/");
+            if (empty($verificabarra)) {
+                // echo "Separar os valores com uma barra inclinada: '/'" . "<br>";
+                $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
+            } else {
+                /** Se a barra inclinada existe, então separa os votos */
+                $votos = explode('/', $this->request->data['Votacao']['votacao']);
+                if (count($votos) != 3) {
+                    // echo "A votação tem que ter três valores separados por barra inclinada: '/'" . "<br>";
+                    $this->Flash->error(__("A votação tem que ter três valores separados por barra inclinada: '/'"));
+                    return $this->redirect(['controller' => 'Items', 'action' => 'view', $item_id]);
+                }
+                /** Verifica se os votos tem mais de um dígito e se o primeiro dígito é zero, então retira o zero */
+                if (strlen($votos[0]) > 1) {
+                    if (substr($votos[0], 0, 1) == '0') {
+                        $votos[0] = substr($votos[0], 1);
+                    }
+                }
+                if (strlen($votos[1]) > 1) {
+                    if (substr($votos[1], 0, 1) == '0') {
+                        $votos[1] = substr($votos[1], 1);
+                    }
+                }
+                if (strlen($votos[2]) > 1) {
+                    if (substr($votos[2], 0, 1) == '0') {
+                        $votos[2] = substr($votos[2], 1);
+                    }
+                }
+                $this->request->data['Votacao']['votacao'] = $votos[0] . '/' . $votos[1] . '/' . $votos[2];
+            }
+
+            if ($this->request->data['Votacao']['resultado'] == 'aprovada') {
+                $this->request->data['Votacao']['item_modificada'] = null;
+            }
+
+            if ($this->request->data['Votacao']['resultado'] == 'suprimida') {
+                $this->request->data['Votacao']['item_modificada'] = null;
+            }
+
             if ($this->Votacao->save($this->request->data)):
                 $this->Flash->success(__('Votação atualizada.'));
                 return $this->redirect(['action' => 'view', $this->request->data['Votacao']['id']]);
             else:
-                pr($this->Votacao->validationErrors);
+                // pr($this->Votacao->validationErrors);
                 $this->Flash->error(__('Votação não foi atualizada. Tente novamente.'));
             endif;
         }
@@ -254,7 +299,7 @@ class VotacaosController extends AppController
             $this->Session->write('flagminoritaria', 0);
         }
 
-        /** Envio o item da votação para o add da view*/
+        /** Envio o item da votação para o add da view */
         if (isset($item_id) && $item_id != null) {
             $this->loadModel('Item');
             $this->Item->contain(['Apoio']);
@@ -267,6 +312,7 @@ class VotacaosController extends AppController
 
         $this->set('usuario', $this->Auth->user());
 
+        /** O valor de resultado só pode ser 'minoritária' */
         if (isset($resultado) && $resultado == 'minoritária'):
             // Se eh uma votacao minoritaria obtenho a votacao realizada para recuperar os resultados
             if (isset($this->request->query['votacao_id'])) {
@@ -280,7 +326,7 @@ class VotacaosController extends AppController
                 $votacao['Votacao']['resultado'] = 'minoritária';
                 $this->set('votacao', $votacao);
             else:
-                $this->Flash->error(__('Sem votação anterior do item.'));
+                $this->Flash->error(__('Sem votação do item?'));
                 // echo "Error: Sem votação anterior" . "<br>";
                 exit;
             endif;
@@ -296,12 +342,12 @@ class VotacaosController extends AppController
                 $this->request->data['Votacao']['user_id'] = $this->Auth->user('id');
             endif;
 
-            /** O item_modificado somente se o resultado foi modificada */
+            /** O item_modificado só tem conteúdo se o resultado da votação foi aprovação com modificações */
             if ($this->request->data['Votacao']['resultado'] <> 'modificada') {
                 $this->request->data['Votacao']['item_modificada'] = null;
             }
 
-            /** Trasfero o valor de item_incluida e item_minoritaria para item_modificada somente se está vazia e excluo item_incluida e item_minoritaria */
+            /** Copio o valor do item_incluida e do item_minoritaria para item_modificada somente se está vazia e excluo o conteúdo dos item_incluida e item_minoritaria */
             if (empty($this->request->data['Votacao']['item_modificada'])) {
                 if ($this->request->data['Votacao']['item_incluida']) {
                     $this->request->data['Votacao']['item_modificada'] = $this->request->data['Votacao']['item_incluida'];
@@ -345,14 +391,14 @@ class VotacaosController extends AppController
 
                 if ($javotado) {
                     $this->Flash->error(__("Item já votado pelo grupo."));
-                    // return $this->redirect(['controller' => 'votacaos', 'action' => 'view', $javotado['Votacao']['id']]);
+                    return $this->redirect(['controller' => 'votacaos', 'action' => 'view', $javotado['Votacao']['id']]);
                 }
             }
 
             /** Verifica se os dois primeiros dígitos do item correspondem com a TR na votação */
             if (substr($this->request->data['Votacao']['item'], 0, 2) != $this->request->data['Votacao']['tr']) {
                 $this->Flash->error(__('Os dois primeiros dígitos do campo Item tem que ser iguais ao TR.'));
-                return $this->redirect(['action' => 'add', $id]);
+                return $this->redirect(['action' => 'add', $item_id]);
             }
 
             /** Function suprime TR na sua totalidade */
@@ -398,7 +444,8 @@ class VotacaosController extends AppController
 
                 $this->Item->create();
                 if ($this->Item->save($item)):
-                    echo "Item novo inserido";
+                    $this->Flash->success(__('Item inserido'));
+                    // echo "Item novo inserido";
                 endif;
 
                 /* Altero o valor do item_id com o id do item inserido */
@@ -415,6 +462,31 @@ class VotacaosController extends AppController
             if (empty($verificabarra)) {
                 // echo "Separar os valores com uma barra inclinada: '/'" . "<br>";
                 $this->Flash->error(__("Separar os valores da votação com uma barra inclinada: '/'"));
+            } else {
+                /** Se a barra inclinada existe, então separa os votos */
+                $votos = explode('/', $this->request->data['Votacao']['votacao']);
+                if (count($votos) != 3) {
+                    // echo "A votação tem que ter três valores separados por barra inclinada: '/'" . "<br>";
+                    $this->Flash->error(__("A votação tem que ter três valores separados por barra inclinada: '/'"));
+                    return $this->redirect(['controller' => 'Items', 'action' => 'view', $item_id]);
+                }
+                /** Verifica se os votos tem mais de um dígito e se o primeiro dígito é zero, então retira o zero */
+                if (strlen($votos[0]) > 1) {
+                    if (substr($votos[0], 0, 1) == '0') {
+                        $votos[0] = substr($votos[0], 1);
+                    }
+                }
+                if (strlen($votos[1]) > 1) {
+                    if (substr($votos[1], 0, 1) == '0') {
+                        $votos[1] = substr($votos[1], 1);
+                    }
+                }
+                if (strlen($votos[2]) > 1) {
+                    if (substr($votos[2], 0, 1) == '0') {
+                        $votos[2] = substr($votos[2], 1);
+                    }
+                }
+                $this->request->data['Votacao']['votacao'] = $votos[0] . '/' . $votos[1] . '/' . $votos[2];
             }
 
             /** Quando a TR é votada como remitida ou como outra tem que ter um texto em observações explicando */
@@ -426,6 +498,10 @@ class VotacaosController extends AppController
             }
 
             if ($this->request->data['Votacao']['resultado'] == 'aprovada') {
+                $this->request->data['Votacao']['item_modificada'] = null;
+            }
+
+            if ($this->request->data['Votacao']['resultado'] == 'suprimida') {
                 $this->request->data['Votacao']['item_modificada'] = null;
             }
 

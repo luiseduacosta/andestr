@@ -162,7 +162,7 @@
                                             <!-- /** Relator vota */ -->
                                             <?php if ($usuario['role'] == 'relator'): ?>
                                                 <!-- se for um item de inclusão, não tem que aparecer o botão de votar -->
-                                                <?php if ($c_item['Votacao']['resultado'] == 'inclusão'): ?>
+                                                <?php if (isset($c_item['Votacao']['resultado']) && $c_item['Votacao']['resultado'] == 'inclusão'): ?>
                                                     <li class="nav-item">
                                                         <p class='btn btn-secondary btn-block btn-sm'>Item incluído</p>
                                                     </li>

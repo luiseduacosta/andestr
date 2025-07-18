@@ -134,7 +134,7 @@ endif;
         'selected' => isset($votacao) ? $votacao['Votacao']['resultado'] : null,
         'empty' => 'Selecione',
         'options' => [
-            'aprovada' => 'Aprovada sem alterações',
+            'aprovada' => 'Aprovada integralmente',
             'modificada' => 'Aprovada com modificações',
             'suprimida' => 'Suprimida',
             'inclusão' => 'Inclusão de novo item',
@@ -176,7 +176,7 @@ endif;
     <div id='itemminoritaria'>
         <?php
         echo "<br>";
-        echo $this->Form->input('item_minoritaria', ['label' => ['text' => 'Item minoritária', 'class' => 'col-4 form-label'], 'type' => 'textarea', 'rows' => 5, 'cols' => 50, 'value' => isset($item_modificada) ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'form-control']);
+        echo $this->Form->input('item_minoritaria', ['label' => ['text' => 'Item minoritária. Tache o texto do item para indicar suprimida e digite "suprimida" em Observações.', 'class' => 'col-4 form-label'], 'type' => 'textarea', 'rows' => 5, 'cols' => 50, 'value' => isset($item_modificada) ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'form-control']);
         ?>
     </div>
 
