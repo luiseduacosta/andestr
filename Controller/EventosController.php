@@ -83,10 +83,10 @@ class EventosController extends AppController
         if ($this->request->is('post')) {
             $this->Evento->create();
             if ($this->Evento->save($this->request->data)) {
-                $this->Flash->success(__('Evento criado.'));
+                $this->Flash->success(__('Evento cadastrado.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('Tente novamente.'));
+                $this->Flash->error(__('Não foi possível cadastrar o evento. Tente novamente.'));
             }
         }
     }
@@ -101,7 +101,7 @@ class EventosController extends AppController
     public function edit($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Invalid evento'));
+            throw new NotFoundException(__('Evento não encontrado'));
         }
         if ($this->request->is(['post', 'put'])) {
             if ($this->Evento->save($this->request->data)) {
@@ -126,13 +126,13 @@ class EventosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Argumento inválido'));
+            throw new NotFoundException(__('Evento não encontrado'));
         }
         $this->request->allowMethod('post', 'delete');
         if ($this->Evento->delete($id)) {
             $this->Flash->success(__('Evento excluído.'));
         } else {
-            $this->Flash->error(__('Evento não foi excluído. Tente novamente.'));
+            $this->Flash->error(__('Não foi possível excluir o evento. Tente novamente.'));
         }
         return $this->redirect(['action' => 'index']);
     }

@@ -56,14 +56,14 @@ class ItemsController extends AppController
         /** Para fazer a lista dos eventos */
         $this->loadModel('Evento');
         $eventos = $this->Evento->find('list', [
-            'order' => ['ordem']
+            'order' => ['ordem' => 'asc']
         ]);
 
         /** Se evento_id não veio como parametro nem pode ser calculado a partir do apoio_id então seleciono o último evento */
-        if (empty($evento_id)):
+        if (empty($evento_id)) {
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
-        endif;
+        }
 
         /** Gravo o cookei com o evento_id */
         if ($evento_id) {
@@ -112,17 +112,15 @@ class ItemsController extends AppController
             'order' => ['id' => 'asc']
         ]);
 
-        if (empty($evento_id)):
+        if (empty($evento_id)){
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
-        endif;
+        }
 
         /** Não acontece nunca? */
         if (empty($evento_id)) {
-            $this->Flash->error(__('Sem indicação de evento'));
-            // Sem o evento_id não posso fazer nada
-            return $this->redirect(['controller' => 'items', 'action' => 'index']);
-            // echo "Erro";
+            $this->Flash->error(__('Sem indicação de evento não é possível adicionar itens'));
+            return $this->redirect(['controller' => 'eventos', 'action' => 'index']);
         }
 
         /** Localiza se há TRs */
@@ -131,8 +129,12 @@ class ItemsController extends AppController
             'conditions' => ['Apoios.evento_id' => $evento_id],
             ['order' => ['numero_texto' => 'desc']]
         ]);
+        if (empty($apoios)) {
+            $this->Flash->error(__('Não há textos de apoio cadastrados!'));
+            return $this->redirect(['controller' => 'Apoios', 'action' => 'add']);
+        }
         $apoioslista = $this->Apoios->find('list');
-        // pr($apoios);
+
         /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
             $ultimo = end($apoios);
@@ -145,7 +147,7 @@ class ItemsController extends AppController
             ]);
             $ultimo_item = end($items);
 
-            /** Dividir o item e aumente em + 1 para o próximo */
+            /** Dividir o item e aumentar em + 1 para o próximo */
             if ($ultimo_item) {
                 $ultimoItem = $ultimo_item['Item']['item'];
                 $itemparcela = explode('.', $ultimoItem);
@@ -161,15 +163,16 @@ class ItemsController extends AppController
                 } else {
                     $itemparcela_item;
                 }
-                // pr($itemparcela_tr);
-                // pr($itemparcela_item);
             }
 
         } else {
             $itemparcela_tr = '01';
             $itemparcela_item = '01';
         }
+        // pr($itemparcela_tr);
+        // pr($itemparcela_item);
         /** Envio para o formulário */
+        $this->set('evento_id', $evento_id);
         $this->set('ultimo_tr', isset($ultimo_tr) ? $ultimo_tr : '01');
         $this->set('item_item', isset($itemparcela_item) ? $itemparcela_item : '01');
         $this->set('apoio_id', $ultimo['Apoios']['id']);
@@ -182,7 +185,7 @@ class ItemsController extends AppController
                 'conditions' => ['numero_texto' => $this->request->data['Item']['tr'], 'evento_id' => $evento_id]
             ]);
             $this->request->data['Item']['apoio_id'] = $apoio['Apoios']['id'];
-            // Elimina os r e n e <br /> do texto original           
+            // Elimina os \r e \n e <br /> do texto original   
             $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
             $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
             // A partir do Tr busco o id na tabela Resolucao
@@ -210,9 +213,33 @@ class ItemsController extends AppController
                     return $this->redirect(['controller' => 'apoios', 'action' => 'add']);
                 endif;
             }
-
-            // pr($this->request->data);
-            // die();
+            if ($this->request->data['Item']['item'] == '') {
+                $this->Flash->error(__('O campo item não pode ser vazio!'));
+                return $this->redirect(['controller' => 'items', 'action' => 'add']);
+            } else {
+                $item = substr($this->request->data['Item']['item'], 3, 2);
+                /** Caso de uma inserção de um item novo */
+                if ($item == '00') {
+                    $apoio = $this->Apoios->find('first', [
+                        'conditions' => ['numero_texto' => $this->request->data['Item']['tr'], 'evento_id' => $evento_id]
+                    ]);
+                    if ($apoio) {
+                        /** Capturo o último item */
+                        $this->loadModel('Items');
+                        $item = $this->Items->find('first', [
+                            'conditions' => ['Items.apoio_id' => $apoio['Apoios']['id']],
+                            'order' => ['Items.item' => 'desc'],
+                        ]);
+                        $valor_item = explode('.', $item['Items']['item']);
+                        $valor_item = $valor_item[1] + 1;
+                        if (strlen($valor_item) == 1) {
+                            $valor_item = '0' . $valor_item;
+                        }
+                        $this->request->data['Item']['item'] = $this->request->data['Item']['tr'] . '.' . $valor_item;
+                    }
+                    $this->request->data['Item']['apoio_id'] = $apoio['Apoios']['id'];
+                }
+            }
 
             $this->Item->create();
             if ($this->Item->save($this->request->data)) {
@@ -224,8 +251,7 @@ class ItemsController extends AppController
                 $this->Flash->error(__('Item não foi inserido. Tente novamente.'));
             }
         }
-        // pr($evento_id);
-        // die();
+
         $tr = $this->Item->Apoio->find(
             'list',
             [
@@ -233,11 +259,6 @@ class ItemsController extends AppController
                 'conditions' => ['Apoio.evento_id' => $evento_id]
             ]
         );
-
-        // $log = $this->Item->Apoio->getDataSource()->getLog(false, false);
-        // debug($log);
-        // pr($tr);
-        // die();
 
         if (!isset($tr)) {
             $this->Flash->error(__('Não há textos de resolução cadastrados!'));
@@ -254,7 +275,7 @@ class ItemsController extends AppController
     {
 
         if (!$this->Item->exists($id)) {
-            throw new NotFoundException(__('Invalid resolucao'));
+            throw new NotFoundException(__('Item não localizado.'));
         }
 
         if ($this->Auth->user('id')):
@@ -270,14 +291,13 @@ class ItemsController extends AppController
 
     public function edit($id = null)
     {
-        // debug($this->request->data);
-        // die();
+
         if (!$this->Item->exists($id)) {
-            throw new NotFoundException(__('Item inválido'));
+            throw new NotFoundException(__('Item não localizado'));
         }
         if ($this->request->is(['post', 'put'])) {
 
-            // Elimina os r e n e <br /> do texto original           
+            // Elimina os \r e \n e <br /> do texto original           
             $this->request->data['Item']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Item']['texto']);
             $this->request->data['Item']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Item']['texto']);
 
@@ -301,9 +321,8 @@ class ItemsController extends AppController
 
     public function delete($id = null)
     {
-        $this->Item->id = $id;
-        if (!$this->Item->exists()) {
-            throw new NotFoundException(__('Item inválido'));
+        if (!$this->Item->exists($id)) {
+            throw new NotFoundException(__('Item não localizado'));
         }
 
         // Capturo o valor do campo resolucao_id para ir para a TR do item
@@ -314,7 +333,7 @@ class ItemsController extends AppController
         if ($this->Item->delete()) {
             $this->Flash->success(__('Item excluído.'));
         } else {
-            $this->Flash->error(__('Tente novamente.'));
+            $this->Flash->error(__('Item não foi excluído. Tente novamente.'));
         }
         return $this->redirect(['controller' => 'items', 'action' => 'index', '?' => ['apoio_id' => $resolucao['Item']['apoio_id']]]);
     }
@@ -365,7 +384,6 @@ class ItemsController extends AppController
                 } else {
                     debug($this->Item->validationErrors);
                     die();
-                    $this->Flash->error(__('Tente novamente.'));
                 }
             }
 
@@ -428,12 +446,12 @@ class ItemsController extends AppController
         foreach ($items as $item) {
 
             // pr($item['Item']['texto']);
-            $itemnovo['Item']['id'] = $item['Item']['id']; 
-            $itemnovo['Item']['apoio_id'] = $item['Item']['apoio_id']; 
-            $itemnovo['Item']['tr'] = $item['Item']['tr']; 
-            $itemnovo['Item']['item'] = $item['Item']['item']; 
-            $itemnovo['Item']['texto'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
-            $itemnovo['Item']['texto1'] = str_replace(["\r", "\n"], '', $item['Item']['texto']); 
+            $itemnovo['Item']['id'] = $item['Item']['id'];
+            $itemnovo['Item']['apoio_id'] = $item['Item']['apoio_id'];
+            $itemnovo['Item']['tr'] = $item['Item']['tr'];
+            $itemnovo['Item']['item'] = $item['Item']['item'];
+            $itemnovo['Item']['texto'] = str_replace(["\r", "\n"], '', $item['Item']['texto']);
+            $itemnovo['Item']['texto1'] = str_replace(["\r", "\n"], '', $item['Item']['texto']);
             // pr($apoionovo['Apoio']['texto1']);
 
             if ($this->Item->save($itemnovo)) {

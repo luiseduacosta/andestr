@@ -12,7 +12,14 @@
             window.location = url + evento_id;
         })
 
+        var tr;
+        tr = "<?= isset($ultimo_tr) ? $ultimo_tr : '01'; ?>";
+        $("#ItemTr").on("keyup", function () {
+            var value = $(this).val();
+            $("#ItemItem").val(value + "." + "00");
+        });
     })
+
 </script>
 
 <div class="row justify-content-center">

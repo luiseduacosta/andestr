@@ -5,7 +5,7 @@ App::uses('AppModel', 'Model');
 /**
  * Evento Model
  *
- * @property Apoio $Apoio
+ * @property Evento $Evento
  */
 class Evento extends AppModel {
 

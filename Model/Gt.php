@@ -1,7 +1,11 @@
 <?php
+
 App::uses('AppModel', 'Model');
+
 /**
  * Gt Model
+ * 
+ * @property Gt $Gt
  *
  */
 class Gt extends AppModel {
@@ -14,6 +18,8 @@ class Gt extends AppModel {
 	public $displayField = 'nome';
 	public $actsAs = ['Containable'];
     public $hasMany = ['Apoio'];
+
+	public $order = ['Gt.sigla' => 'asc'];
 
 /**
  * Validation rules

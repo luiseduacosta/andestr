@@ -26,14 +26,32 @@
     </div>
 </div>
 
+<div class="row justify-content-center">
+    <p>
+        <?php
+        echo $this->Paginator->counter([
+            'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+        ]);
+        ?>
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="pagination">
+        <?php
+        echo $this->Paginator->prev('< ' . __('anterior'), array('class' => 'page-link'), null, array('class' => 'page-link'));
+        echo $this->Paginator->numbers(array('separator' => '', 'class' => 'page-link'));
+        echo $this->Paginator->next(__('próximo') . ' >', array('class' => 'page-link'), null, array('class' => 'page-link'));
+        ?>
+    </div>
+</div>
+
 <div class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav mr-auto">
         <a class="navbar-brand"><?php echo __('Ações'); ?></a>
         <?php if (isset($evento_id)): ?>
             <?php
             if (isset($usuario)):
-                // pr($usuario);
-                // die();
                 if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                     ?>
                     <li class="nav-item">
@@ -58,6 +76,7 @@
 
 <div class="container">
     <h2><?php echo __('Textos de Apoio'); ?></h2>
+
     <table cellpadding="0" cellspacing="0" class="table">
         <thead class="thead-light">
             <tr>
@@ -107,7 +126,7 @@
         </tbody>
     </table>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <p>
             <?php
             echo $this->Paginator->counter([
@@ -117,7 +136,7 @@
         </p>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="pagination">
             <?php
             echo $this->Paginator->prev('< ' . __('anterior'), array('class' => 'page-link'), null, array('class' => 'page-link'));

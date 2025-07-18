@@ -77,7 +77,7 @@
             echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '6', 'cols' => '50', 'class' => 'ckeditor']);
             ?>
         </fieldset>
-        <div class='row justify-content-left'>
+        <div class='row justify-content-center'>
             <div class='col-auto'>
                 <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
                 <?= $this->Form->end() ?>
