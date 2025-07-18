@@ -256,7 +256,7 @@ endif;
         })
         .then(editor => {
             incluida = editor;
-            console.log('Olá editor VotacaoItemModificada was initialized', incluida);
+            console.log('Olá editor VotacaoItemIncluida was initialized', incluida);
             incluida.setData("");
         });
 
@@ -365,7 +365,7 @@ endif;
     function selecionavotacao() {
 
         var resultado = document.getElementById("VotacaoResultado").value;
-
+        alert(resultado);
         if (resultado == 'suprimida') {
             document.getElementById("itemmodificada").style.display = "none";
             document.getElementById("VotacaoItem").value = "<?= $item['Item']['item'] ?>"
