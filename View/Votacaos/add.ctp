@@ -176,7 +176,7 @@ endif;
     <div id='itemminoritaria'>
         <?php
         echo "<br>";
-        echo $this->Form->input('item_minoritaria', ['label' => ['text' => 'Item minoritária. Tache o texto do item para indicar suprimida e digite "suprimida" em Observações.', 'class' => 'col-4 form-label'], 'type' => 'textarea', 'rows' => 5, 'cols' => 50, 'value' => isset($item_modificada) ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'form-control']);
+        echo $this->Form->input('item_minoritaria', ['label' => ['text' => 'Item minoritária. Tache o texto do item para indicar suprimida e digite "Suprimida" em Observações.', 'class' => 'col-4 form-label'], 'type' => 'textarea', 'rows' => 5, 'cols' => 50, 'value' => isset($item_modificada) ? $votacao['Votacao']['item_modificada'] : '', 'class' => 'form-control']);
         ?>
     </div>
 
@@ -226,7 +226,6 @@ endif;
     if (typeof modificada !== 'undefined') {
         modificada.destroy();
     }
-
     ClassicEditor
         .create(document.querySelector('#VotacaoItemModificada'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
@@ -245,7 +244,6 @@ endif;
     if (typeof incluida !== 'undefined') {
         incluida.destroy();
     }
-
     ClassicEditor
         .create(document.querySelector('#VotacaoItemIncluida'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
@@ -264,7 +262,6 @@ endif;
     if (typeof minoritaria !== 'undefined') {
         minoritaria.destroy();
     }
-
     ClassicEditor
         .create(document.querySelector('#VotacaoItemMinoritaria'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
@@ -283,7 +280,6 @@ endif;
     if (typeof observacoes !== 'undefined') {
         observacoes.destroy();
     }
-
     ClassicEditor
         .create(document.querySelector('#VotacaoObservacoes'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
