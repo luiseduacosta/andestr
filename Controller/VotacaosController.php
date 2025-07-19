@@ -7,6 +7,10 @@ App::uses("AppController", "Controller");
 
 /**
  * Votacaos Controller
+ * @property Evento $Evento
+ * @property Votacao $Votacao
+ * @property Item $Item
+ * @property User $User
  */
 class VotacaosController extends AppController
 {
