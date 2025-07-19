@@ -4,6 +4,7 @@ App::uses("AppController", "Controller");
 
 /**
  * Items Controller
+ * @property Evento $Evento
  * @property Item $Item
  * @property User $User
  * @property Apoio $Apoio
@@ -144,8 +145,8 @@ class ItemsController extends AppController
         }
 
         /** Localiza se há TRs */
-        $this->loadModel("Apoios");
-        $apoios = $this->Apoios->find("all", [
+        $this->loadModel("Apoio");
+        $apoios = $this->Apoio->find("all", [
             "conditions" => ["Apoios.evento_id" => $evento_id],
             ["order" => ["numero_texto" => "desc"]],
         ]);
@@ -156,17 +157,17 @@ class ItemsController extends AppController
                 "action" => "add",
             ]);
         }
-        $apoioslista = $this->Apoios->find("list");
+        $apoioslista = $this->Apoio->find("list");
 
         /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
             $ultimo = end($apoios);
-            $ultimo_tr = $ultimo["Apoios"]["numero_texto"];
+            $ultimo_tr = $ultimo["Apoio"]["numero_texto"];
             if (strlen($ultimo_tr) == 1) {
                 $ultimo_tr = "0" . $ultimo_tr;
             }
             $items = $this->Item->find("all", [
-                "conditions" => ["apoio_id" => $ultimo["Apoios"]["id"]],
+                "conditions" => ["apoio_id" => $ultimo["Apoio"]["id"]],
             ]);
             $ultimo_item = end($items);
 
@@ -206,7 +207,7 @@ class ItemsController extends AppController
         if ($this->request->is("post")) {
             // debug($this->request);
             // Capturo o id corespondente ao TR do apoio do evento
-            $apoio = $this->Apoios->find("first", [
+            $apoio = $this->Apoio->find("first", [
                 "conditions" => [
                     "numero_texto" => $this->request->data["Item"]["tr"],
                     "evento_id" => $evento_id,
@@ -277,7 +278,7 @@ class ItemsController extends AppController
                 $item = substr($this->request->data["Item"]["item"], 3, 2);
                 /** Caso de uma inserção de um item novo */
                 if ($item == "00") {
-                    $apoio = $this->Apoios->find("first", [
+                    $apoio = $this->Apoio->find("first", [
                         "conditions" => [
                             "numero_texto" =>
                                 $this->request->data["Item"]["tr"],
@@ -287,7 +288,7 @@ class ItemsController extends AppController
                     if ($apoio) {
                         /** Capturo o último item */
                         $this->loadModel("Items");
-                        $item = $this->Items->find("first", [
+                        $item = $this->Item->find("first", [
                             "conditions" => [
                                 "Items.apoio_id" => $apoio["Apoios"]["id"],
                             ],
@@ -519,7 +520,7 @@ class ItemsController extends AppController
         endforeach;
     }
 
-    public function seleciona_lista(): void
+    public function seleciona_lista()
     {
         $items = $this->Item->find("list", [
             "fields" => ["id", "item", "texto"],
