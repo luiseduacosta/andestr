@@ -1,10 +1,15 @@
 <?php
+
 // pr($apoio);
+// pr($gts);
+// pr($eventos);
+// die();
+
 ?>
 
 <script>
     $(document).ready(function () {
-        var url = "<?= $this->Html->url(['controller' => 'Apoios', 'action' => 'index?evento_id=']); ?>";
+        var url = "<?= $this->Html->build(['controller' => 'Apoios', 'action' => 'index', '?' => ['evento_id' => '']]); ?>";
         $("#EventoEventoId").change(function () {
             var evento_id = $(this).val();
             /* alert(evento_id); */

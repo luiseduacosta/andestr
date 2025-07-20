@@ -7,11 +7,13 @@ App::uses("AppController", "Controller");
 
 /**
  * Votacaos Controller
+ * 
  * @property Evento $Evento
  * @property Votacao $Votacao
  * @property Item $Item
  * @property User $User
  * @property Apoio $Apoio
+ * 
  */
 class VotacaosController extends AppController
 {
@@ -41,6 +43,12 @@ class VotacaosController extends AppController
         $this->set("usuario", $usuario);
     }
 
+    /**
+     * index method
+     *
+     * @param string $id
+     * @return void
+     */
     public function index($id = null)
     {
         $grupo = isset($this->request->query["grupo"])
@@ -350,6 +358,7 @@ class VotacaosController extends AppController
     }
 
     /** Cuidado com esta função que altera  o user_id da tabela Votacao */
+    /** Atualiza o user_id da tabela Votacao com o id do usuario que tem o username igual a grupoX, onde X é o número do grupo */
     public function atualizausuario()
     {
         $grupos = $this->Votacao->find("all", [
@@ -384,7 +393,12 @@ class VotacaosController extends AppController
         endforeach;
     }
 
-    /** Id eh o item_id em votação */
+    /**
+     * add method
+     *
+     * @param string $id
+     * @return void
+     */
     public function add($id = null)
     {
         $evento_id = isset($this->request->query["evento_id"])
@@ -926,11 +940,9 @@ class VotacaosController extends AppController
 
                 $this->Votacao->create();
                 if ($this->Votacao->save($this->request->data)) {
-                    // pr($this->request->data);
-                    // die();
-                    // $this->Flash->success(__('Votação inserida como suprimida.'));
+                    $this->Flash->success(__('Item suprimido.'));
                 } else {
-                    // $this->Flash->error(__('Votação não foi inserida como suprimida. Tente novamente.'));
+                    $this->Flash->error(__('Item não suprimido. Tente novamente.'));
                 }
             }
             return $this->redirect([
@@ -947,6 +959,12 @@ class VotacaosController extends AppController
         }
     }
 
+    /**
+     * usuario method
+     *
+     * @param string $data
+     * @return void
+     */
     public function usuario($data)
     {
         $this->request->data["Votacao"] = $data;
@@ -1022,7 +1040,7 @@ class VotacaosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Votacao->exists($id)) {
-            throw new NotFoundException(__("Argumento inválido"));
+            throw new NotFoundException(__("Registro inexistente."));
         }
 
         $votacao = $this->Votacao->findById($id);
@@ -1080,6 +1098,11 @@ class VotacaosController extends AppController
         }
     }
 
+    /**
+     * relatorio method
+     *
+     * @return void
+     */
     public function relatorio()
     {
         $evento_id = isset($this->request->query["evento_id"])
@@ -1483,6 +1506,11 @@ class VotacaosController extends AppController
         }
     }
 
+    /**
+     * evento method
+     *
+     * @return void
+     */
     public function evento($id = null)
     {
         $this->loadModel("Evento");

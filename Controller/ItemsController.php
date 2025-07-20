@@ -4,11 +4,13 @@ App::uses("AppController", "Controller");
 
 /**
  * Items Controller
+ * 
  * @property Evento $Evento
  * @property Item $Item
  * @property User $User
  * @property Apoio $Apoio
  * @property Votacao $Votacao
+ * 
  */
 class ItemsController extends AppController
 {
@@ -49,6 +51,11 @@ class ItemsController extends AppController
         $this->set("usuario", $usuario);
     }
 
+    /**
+     * index method
+     *
+     * @return void
+     */
     public function index()
     {
         $apoio_id = isset($this->request->query["apoio_id"])
@@ -105,10 +112,11 @@ class ItemsController extends AppController
         $this->set("items", $this->Paginator->paginate());
 
         /** Para fazer a lista das TRs na coluna lateral */
-        $tresolucao = $this->Apoio->Item->find("all", [
+        $this->Item->contain(['Apoio']);
+        $tresolucao = $this->Item->find("all", [
             "conditions" => ["Apoio.evento_id" => $evento_id],
-            "fields" => ["tr"],
-            "group" => ["tr"],
+            "fields" => ["Item.tr"],
+            "group" => ["Item.tr"],
         ]);
 
         $this->set("grupo", isset($grupo) ? $grupo : null);
@@ -117,8 +125,22 @@ class ItemsController extends AppController
         $this->set("eventos", $eventos);
     }
 
+    /**
+     * view method
+     *
+     * @param string|null $id Item id.
+     * @return void
+     * @throws NotFoundException When item does not exist.
+     */
     public function add()
     {
+        /**
+         * @var mixed $evento_id
+         * Captura o evento_id do querystring ou da sessão
+         * Se não houver, pega o último evento cadastrado
+         * e o coloca no cookie da sessão.
+         * Se não houver evento cadastrado, redireciona para a tela de cadastro de Apoios
+         */
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
@@ -127,21 +149,16 @@ class ItemsController extends AppController
         $eventos = $this->Evento->find("list", [
             "order" => ["id" => "asc"],
         ]);
-
+        if (empty($eventos)) {
+            $this->Flash->error(__("Não há eventos cadastrados!"));
+            return $this->redirect([
+                "controller" => "Eventos",
+                "action" => "add",
+            ]);
+        }
         if (empty($evento_id)) {
             end($eventos); // o ponteiro está no último registro
             $evento_id = key($eventos);
-        }
-
-        /** Não acontece nunca? */
-        if (empty($evento_id)) {
-            $this->Flash->error(
-                __("Sem indicação de evento não é possível adicionar itens"),
-            );
-            return $this->redirect([
-                "controller" => "eventos",
-                "action" => "index",
-            ]);
         }
 
         /** Localiza se há TRs */
@@ -151,7 +168,7 @@ class ItemsController extends AppController
             ["order" => ["numero_texto" => "desc"]],
         ]);
         if (empty($apoios)) {
-            $this->Flash->error(__("Não há textos de apoio cadastrados!"));
+            $this->Flash->error(__("Não há textos de apoio nem TRs cadastrados!"));
             return $this->redirect([
                 "controller" => "Apoios",
                 "action" => "add",
@@ -194,6 +211,7 @@ class ItemsController extends AppController
         }
         // pr($itemparcela_tr);
         // pr($itemparcela_item);
+
         /** Envio para o formulário */
         $this->set("evento_id", $evento_id);
         $this->set("ultimo_tr", isset($ultimo_tr) ? $ultimo_tr : "01");
@@ -227,10 +245,11 @@ class ItemsController extends AppController
             );
             // A partir do Tr busco o id na tabela Resolucao
             if ($this->request->data["Item"]["apoio_id"]) {
-                $verifica_tr = $this->Item->Apoio->find("first", [
+                $verifica_tr = $this->Item->find("first", [
                     "conditions" => [
                         "Apoio.id" => $this->request->data["Item"]["apoio_id"],
                     ],
+                    'contain' => ['Apoio'],
                 ]);
                 // $log = $this->Item->getDataSource()->getLog(false, false);
                 // debug($log);
@@ -326,18 +345,17 @@ class ItemsController extends AppController
             }
         }
 
-        $tr = $this->Item->Apoio->find("list", [
-            "fields" => ["numero_texto"],
+        $this->Item->contain(["Apoio"]);
+        $tr = $this->Item->find("list", [
+            "fields" => ["Apoio.numero_texto"],
             "conditions" => ["Apoio.evento_id" => $evento_id],
         ]);
-
-        if (!isset($tr)) {
+        if (empty($tr)) {
             $this->Flash->error(__("Não há textos de resolução cadastrados!"));
             return $this->redirect([
                 "controller" => "Apoios",
                 "action" => "index",
             ]);
-            // die("Erro: Não há textos de resolução cadastrados!");
         }
 
         $this->set("tr", $tr);
@@ -345,6 +363,12 @@ class ItemsController extends AppController
         $this->set("evento_id", $evento_id);
     }
 
+    /**
+     * view Method
+     * 
+     * @param string|null $id Item id.
+     * @return void
+     */
     public function view($id = null)
     {
         if (!$this->Item->exists($id)) {
@@ -364,6 +388,13 @@ class ItemsController extends AppController
         $this->set("item", $this->Item->find("first", $options));
     }
 
+    /**
+     * edit method
+     *
+     * @param string|null $id Item id.
+     * @return void
+     * @throws NotFoundException When item does not exist.
+     */
     public function edit($id = null)
     {
         if (!$this->Item->exists($id)) {
@@ -403,11 +434,17 @@ class ItemsController extends AppController
 
         $options = ["conditions" => ["Item." . $this->Item->primaryKey => $id]];
         $resolucaos = $this->Item->find("first", $options);
-        // pr($resolucaos);
-        // die();
+
         $this->set("resolucaos", $resolucaos);
     }
 
+    /**
+     * delete method
+     *
+     * @param string|null $id Item id.
+     * @return void
+     * @throws NotFoundException When item does not exist.
+     */
     public function delete($id = null)
     {
         if (!$this->Item->exists($id)) {
@@ -431,7 +468,7 @@ class ItemsController extends AppController
         ]);
     }
 
-    /*
+    /**
      * Método que corrige a numeração do campo item
      */
     public function atualiza()
@@ -558,8 +595,8 @@ class ItemsController extends AppController
                 $this->Flash->error(
                     __(
                         "Não foi possível atualizar o item " .
-                            $item["Item"]["id"] .
-                            ". Tente novamente.",
+                        $item["Item"]["id"] .
+                        ". Tente novamente.",
                     ),
                 );
             }

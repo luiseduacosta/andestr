@@ -43,12 +43,24 @@ class UsersController extends AppController {
       }
      */
 
+     /**
+     * index method
+     *
+     * @return void
+     */   
     public function index() {
         
         $this->User->contain();
         $this->set('users', $this->paginate());
     }
 
+    /**
+     * view method
+     *
+     * @param string|null $id User id.
+     * @return void
+     * @throws NotFoundException When user does not exist.
+     */
     public function view($id = null) {
 
         if (!$this->User->exists($id)) {
@@ -58,6 +70,11 @@ class UsersController extends AppController {
         $this->set('user', $this->User->find('first', $options));
     }
 
+    /**
+     * add method
+     *
+     * @return void
+     */
     public function add() {
 
         if ($this->request->is('post')) {
@@ -72,6 +89,13 @@ class UsersController extends AppController {
         }
     }
 
+    /**
+     * edit method
+     *
+     * @param string|null $id User id.
+     * @return void
+     * @throws NotFoundException When user does not exist.
+     */
     public function edit($id = null) {
         
         if ($this->Auth->user('role') == 'editor' || $this->Auth->user('role') == 'admin'):
@@ -100,6 +124,13 @@ class UsersController extends AppController {
         endif;
     }
 
+    /**
+     * delete method
+     *
+     * @param string|null $id User id.
+     * @return void
+     * @throws NotFoundException When user does not exist.
+     */
     public function delete($id = null) {
         // Prior to 2.5 use
         // $this->request->onlyAllow('post');
@@ -118,6 +149,11 @@ class UsersController extends AppController {
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * login method
+     *
+     * @return void
+     */
     public function login() {
 
         if ($this->request->is('post')) {
@@ -128,6 +164,11 @@ class UsersController extends AppController {
         }
     }
 
+    /**
+     * logout method
+     *
+     * @return void
+     */
     public function logout() {
 
         $this->Session->delete('evento_id');

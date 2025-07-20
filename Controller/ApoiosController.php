@@ -14,7 +14,7 @@ App::uses('AppController', 'Controller');
 class ApoiosController extends AppController
 {
 
-    public $helpers = ['Html', 'Form', 'Text'];
+    public $helpers = ['Html', 'Form', 'Text', 'Paginator'];
 
     /**
      * Components
@@ -86,7 +86,7 @@ class ApoiosController extends AppController
 
         $this->set('apoios', $this->Paginator->paginate());
         $this->set('evento_id', $evento_id);
-        $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
+        $this->set('gts', $this->Apoio->find('list', ['fields' => ['Gt.id', 'Gt.sigla'], 'order' => ['Gt.sigla' => 'asc'], 'contain' => ['Gt']]));
         $this->set('eventos', $eventos);
     }
 
@@ -130,20 +130,23 @@ class ApoiosController extends AppController
      */
     public function add()
     {
-        $evento_id = isset($this->request->query['evento_id']) ?  $this->request->query['evento_id'] : $this->Session->read('evento_id');
 
-        $eventos = $this->Apoio->Evento->find(
+        $evento_id = isset($this->request->query['evento_id']) ?  $this->request->query['evento_id'] : $this->Session->read('evento_id');
+        $this->loadModel('Evento');
+        $eventos = $this->Evento->find(
             'list',
             [
-                'fields' => ['nome'],
+                'fields' => ['id','nome'],
                 'order' => ['ordem' => 'asc']
             ]
         );
-
+        if (empty($eventos)) {
+            $this->Flash->error(__('Não há eventos cadastrados. Cadastre um evento antes de cadastrar um texto de apoio.'));
+            return $this->redirect(['controller' => 'Eventos', 'action' => 'add']);
+        }
         if (empty($evento_id)) {
             $evento_id = end($eventos);
         }
-
         if ($evento_id) {
             /** Envio para o formulário */
             $this->set('evento_id', $evento_id);
@@ -183,7 +186,7 @@ class ApoiosController extends AppController
                 }
             }
         }
-        $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
+        $this->set('gts', $this->Apoio->find('list', ['fields' => ['Gt.id', 'Gt.sigla', 'order' => ['Gt.sigla' => 'asc']], 'contain' => ['Gt']]));
         $this->set('eventos', $eventos);
     }
 
@@ -213,8 +216,8 @@ class ApoiosController extends AppController
         } else {
             $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
             $this->request->data = $this->Apoio->find('first', $options);
-            $this->set('gts', $this->Apoio->Gt->find('list', ['fields' => ['id', 'sigla']]));
-            $this->set('eventos', $this->Apoio->Evento->find('list', ['fields' => 'nome']));
+            $this->set('gts', $this->Apoio->find('list', ['fields' => ['Gt.id', 'Gt.sigla', 'order' => ['Gt.sigla' => 'asc']], 'contain' => ['Gt']]));
+            $this->set('eventos', $this->Apoio->find('list', ['fields' => ['Evento.id','Evento.nome', 'order' => ['Evento.ordem' => 'asc']], 'contain' => ['Evento']]));
         }
     }
 
@@ -270,7 +273,7 @@ class ApoiosController extends AppController
 
             if ($this->Apoio->save($apoionovo, ['validate' => false])) {
             } else {
-                $log = $this->Apoio->getDataSource()->getLog(false, false);
+                // $log = $this->Apoio->getDataSource()->getLog(false, false);
                 // debug($log);
                 $errors = $this->Apoio->invalidFields();
                 // pr($errors);

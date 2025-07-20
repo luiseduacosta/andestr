@@ -42,7 +42,9 @@
     </dd>
 
     <dt class="col-3">Item</dt>
-    <dd class="col-9"><?php echo $votacao['Votacao']['item']; ?></dd>
+    <dd class="col-9">
+        <?php echo $this->Html->link($votacao['Votacao']['item'], ['controller' => 'Votacaos', 'action' => 'index', '?' => ['item_id' => $votacao['Votacao']['item_id']]]); ?>
+    </dd>
 
     <dt class="col-3">Supressão</dt>
     <dd class="col-9"><?php echo $votacao['Votacao']['tr_suprimida'] == 0 ? 'Não' : 'Sim'; ?></dd>
