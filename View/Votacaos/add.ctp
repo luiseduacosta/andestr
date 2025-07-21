@@ -134,13 +134,13 @@ endif;
         'selected' => isset($votacao) ? $votacao['Votacao']['resultado'] : null,
         'empty' => 'Selecione',
         'options' => [
-            'aprovada' => 'Aprovada integralmente',
-            'modificada' => 'Aprovada com modificações',
-            'suprimida' => 'Suprimida',
+            'aprovada' => 'Aprovado integralmente',
+            'modificada' => 'Aprovado com modificações',
+            'suprimida' => 'Suprimido',
             'inclusão' => 'Inclusão de novo item',
             'minoritária' => 'Proposta minoritária (1/3)',
             'remitida' => 'Remitida para outro tema e/ou TR. Especificar em observações',
-            'outra' => 'Outra votação especificar em observações'
+            'outra' => 'Outra votação. Especificar em observações'
         ],
         'onchange' => 'selecionavotacao()'
     ]);
@@ -204,7 +204,7 @@ endif;
     ?>
 </fieldset>
 
-<div class='row justify-content-left'>
+<div class='row justify-content-center'>
     <div class='col-auto'>
         <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
         <?= $this->Form->end() ?>

@@ -3,31 +3,28 @@
 // pr($apoio);
 // pr($gts);
 // pr($eventos);
+// pr($evento_id);
 // die();
 
 ?>
 
 <script>
     $(document).ready(function () {
-        var url = "<?= $this->Html->build(['controller' => 'Apoios', 'action' => 'index', '?' => ['evento_id' => '']]); ?>";
+        var url = "<?= $this->Html->url(['controller' => 'Apoios', 'action' => 'index?evento_id=']); ?>";
+        // alert(url);
         $("#EventoEventoId").change(function () {
             var evento_id = $(this).val();
-            /* alert(evento_id); */
+            // alert(evento_id);
             window.location = url + evento_id;
         })
-
     })
 </script>
 
 <div class="row justify-content-center">
     <div class="row mb-3">
-        <?php if (isset($evento_id)): ?>
-            <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
-        <?php else: ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
-        <?php endif; ?>
-        <?php echo $this->Form->end(); ?>
+    <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
+    <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => isset($evento_id) ? $evento_id : end($eventos), 'class' => 'form-control']); ?>
+    <?php echo $this->Form->end(); ?>
     </div>
 </div>
 

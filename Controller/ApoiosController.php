@@ -186,7 +186,11 @@ class ApoiosController extends AppController
                 }
             }
         }
-        $this->set('gts', $this->Apoio->find('list', ['fields' => ['Gt.id', 'Gt.sigla', 'order' => ['Gt.sigla' => 'asc']], 'contain' => ['Gt']]));
+        $this->set('gts', $this->Apoio->find('list', [
+            'fields' => ['Gt.id', 'Gt.sigla'], 
+            'order' => ['Gt.sigla' => 'asc'], 
+            'contain' => ['Gt']
+        ]));
         $this->set('eventos', $eventos);
     }
 
@@ -204,9 +208,9 @@ class ApoiosController extends AppController
             throw new NotFoundException(__('Texto de apoio não encontrado'));
         }
         if ($this->request->is(['post', 'put'])) {
-            $this->request->data['Apoio']['autor'] = str_replace(["<br />"], ' ', $this->request->data['Apoio']['autor']);
+            $this->request->data['Apoio']['autor'] = str_replace(["<br />"], '', $this->request->data['Apoio']['autor']);
             $this->request->data['Apoio']['texto'] = str_replace(["\r", "\n"], '', $this->request->data['Apoio']['texto']);
-            $this->request->data['Apoio']['texto'] = str_replace(["<br />"], ' ', $this->request->data['Apoio']['texto']);
+            $this->request->data['Apoio']['texto'] = str_replace(["<br />"], '', $this->request->data['Apoio']['texto']);
             if ($this->Apoio->save($this->request->data)) {
                 $this->Flash->success(__('Texto de apoio atualizado.'));
                 return $this->redirect(['action' => 'view', $id]);
@@ -215,9 +219,17 @@ class ApoiosController extends AppController
             }
         } else {
             $options = ['conditions' => ['Apoio.' . $this->Apoio->primaryKey => $id]];
-            $this->request->data = $this->Apoio->find('first', $options);
-            $this->set('gts', $this->Apoio->find('list', ['fields' => ['Gt.id', 'Gt.sigla', 'order' => ['Gt.sigla' => 'asc']], 'contain' => ['Gt']]));
-            $this->set('eventos', $this->Apoio->find('list', ['fields' => ['Evento.id','Evento.nome', 'order' => ['Evento.ordem' => 'asc']], 'contain' => ['Evento']]));
+            $this->set('apoio', $this->Apoio->find('first', $options));
+            $this->set('gts', $this->Apoio->find('list', [
+                'fields' => ['Gt.id', 'Gt.sigla'], 
+                'order' => ['Gt.sigla' => 'asc'], 
+                'contain' => ['Gt']
+            ]));
+            $this->set('eventos', $this->Apoio->find('list', [
+                'fields' => ['Evento.id','Evento.nome'], 
+                'order' => ['Evento.ordem' => 'asc'], 
+                'contain' => ['Evento']
+            ]));
         }
     }
 
