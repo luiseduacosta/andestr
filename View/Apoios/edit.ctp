@@ -4,7 +4,6 @@
 // pr($apoio['Apoio']['numero_texto']);
 // pr($gts);
 // pr($eventos);
-// pr($evento_id);
 // die();
 
 ?>
@@ -47,7 +46,7 @@
             <legend><?php echo __('Editar Textos de Apoio'); ?></legend>
             <?php
             echo $this->Form->input('id', ['type' => 'hidden', 'value' => $apoio['Apoio']['id']]);
-            echo $this->Form->input('evento_id', ['options' => $eventos]);
+            echo $this->Form->input('evento_id', ['default' => $apoio['Apoio']['evento_id'], 'type' => 'select', 'options' => $eventos, 'label' => ['text' => 'Evento', 'class' => 'col-3']]);
             echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
             echo $this->Form->input('numero_texto', ['value' => $apoio['Apoio']['numero_texto']]);
             echo $this->Form->input('tema', [
@@ -63,8 +62,8 @@
                 ]
             );
             echo $this->Form->input('titulo', ['value' => $apoio['Apoio']['titulo']]);
-            echo $this->Form->input('autor', ['value' => $apoio['Apoio']['autor']]);
-            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => $apoio['Apoio']['texto']]);
+            echo $this->Form->input('autor', ['value' => trim($apoio['Apoio']['autor'])]);
+            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => trim($apoio['Apoio']['texto'])]);
             ?>
         </fieldset>
         <div class='row justify-content-center'>
@@ -87,39 +86,75 @@
         Paragraph
     } from 'ckeditor5';
 
-    let autor;
-    if (typeof autor !== 'undefined') {
-        autor.destroy();
+    function initAutorEditor() {
+        let autor;
+        if (typeof autor !== 'undefined') {
+            autor.destroy()
+            .then(() => {
+                console.log('Autor editor destroyed successfully');
+            })
+            .catch(error => {
+                console.error('Error destroying autor editor:', error);
+            });
+        }
+        
+        ClassicEditor
+            .create(document.querySelector('#ApoioAutor'), {
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            })
+            .then(editor => {
+                autor = editor;
+                console.log('Autor editor initialized successfully');
+                var campoAutor = document.querySelector('#ApoioAutor');
+                autor.setData(campoAutor.value);
+                let contenudoAutor = autor.getData();
+                console.log('Conteúdo do autor:', contenudoAutor);
+            })
+            .catch(error => {
+                console.error('Error initializing autor editor:', error);
+            });
     }
-    ClassicEditor
-        .create(document.querySelector('#ApoioAutor'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
-            toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
-                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-            ]
-        })
-        .then(editor => {
-            autor = editor;
-            console.log('Olá editor ApoioAutor was initialized', autor);
-            autor.setData("<?php echo $apoio['Apoio']['autor']; ?>");
-        });
 
-    let texto;
-    if (typeof texto !== 'undefined') {
-        texto.destroy();
+    function initTextoEditor() {
+        let texto;
+        if (typeof texto !== 'undefined') {
+            texto.destroy()
+            .then(() => {
+                console.log('Texto editor destroyed successfully');
+            })
+            .catch(error => {
+                console.error('Error destroying text editor:', error);
+            });
+        }
+        
+        ClassicEditor
+            .create(document.querySelector('#ApoioTexto'), {
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            })
+            .then(editor => {
+                texto = editor;
+                console.log('Texto editor initialized successfully');
+                var campoTexto = document.querySelector('#ApoioTexto');
+                texto.setData(campoTexto.value);
+                let contenudoTexto = texto.getData();
+                console.log('Conteúdo do texto:', contenudoTexto);
+            })
+            .catch(error => {
+                console.error('Error initializing text editor:', error);
+            });
     }
-    ClassicEditor
-        .create(document.querySelector('#ApoioTexto'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
-            toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
-                'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-            ]
-        })
-        .then(editor => {
-            texto = editor;
-            console.log('Olá editor ApoioTexto was initialized', texto);
-            texto.setData("<?php echo $apoio['Apoio']['texto']; ?>");
-        });
+
+    // Initialize editors when the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        initAutorEditor();
+        initTextoEditor();
+    });
 </script>

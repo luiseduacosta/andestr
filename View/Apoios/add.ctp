@@ -1,4 +1,3 @@
-
 <div class="row">
     <div class="col-2">
         <h3 class="h3"><?php echo __('Acões'); ?></h3>
@@ -43,23 +42,25 @@
         <fieldset>
             <legend><?php echo __('Adicionar texto de apoio'); ?></legend>
             <?php
-            if (isset($evento_id)) {
-                echo $this->Form->input('evento_id', ['type' => 'select', 'default' => $evento_id, 'options' => [$eventos]]);
-            } else {
-                echo $this->Form->input('evento_id', ['type' => 'select', 'default' => array_key_last($eventos), 'options' => [$eventos]]);
-            }
+            echo $this->Form->input('evento_id', ['type' => 'select', 'default' => isset($evento_id) ? $evento_id : end($eventos), 'options' => $eventos]);
             echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
-            echo $this->Form->input('numero_texto', ['required']);
-            echo $this->Form->input('autor');
-            echo $this->Form->input('titulo');
+            echo $this->Form->input('numero_texto', ['required' => true]);
+            echo $this->Form->input('autor', ['type' => 'text', 'required' => false]);
+            echo $this->Form->input('titulo', ['required' => true]);
             echo $this->Form->input('tema', [
                 'type' => 'select',
                 'empty' => 'Selecione',
                 'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV'],
-                'required'
+                'required' => true
             ]);
-            echo $this->Form->input('gt_id', ['label' => ['text' => 'GT ou Setor', 'class' => 'col-3'], 'type' => 'select', 'options' => [$gts], 'empty' => 'Selecione'], 'required');
-            echo $this->Form->input('texto', ['textarea', 'rows' => 10, 'cols' => 50, 'required']);
+            echo $this->Form->input('gt_id', [
+                'label' => ['text' => 'GT ou Setor', 'class' => 'col-3'],
+                'type' => 'select',
+                'options' => $gts,
+                'empty' => 'Selecione',
+                'required' => true
+            ]);
+            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => 10, 'cols' => 50]);
             ?>
         </fieldset>
         <div class='row justify-content-center'>
@@ -98,7 +99,6 @@
             autor = editor;
             console.log('Olá editor ApoioAutor was initialized', autor);
             autor.setData("");
-
         });
 
     let texto;
@@ -116,6 +116,6 @@
         .then(editor => {
             texto = editor;
             console.log('Olá editor ApoioTexto was initialized', texto);
-            texto.setData("");        
+            texto.setData("");
         });
 </script>
