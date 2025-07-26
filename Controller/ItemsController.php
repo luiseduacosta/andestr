@@ -456,7 +456,7 @@ class ItemsController extends AppController
 
         $this->request->allowMethod("post", "delete");
 
-        if ($this->Item->delete()) {
+        if ($this->Item->delete($id)) {
             $this->Flash->success(__("Item excluído."));
         } else {
             $this->Flash->error(__("Item não foi excluído. Tente novamente."));

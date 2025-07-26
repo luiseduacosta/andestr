@@ -1,52 +1,49 @@
 <?php
-// pr($apoio);
+//  pr($apoio);
 ?>
 
-<div class="row">
+<div class="container">
 
-    <div class="col-3">
-        <h1 class="h3"><?php echo __('Acões'); ?></h1>
-        <ul class="list-group">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav mr-auto">
             <?php if (isset($usuario)): ?>
                 <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
 
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Editar Texto de apoio'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'list-group-item list-group-item-action']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Form->postLink(__('Excluir Texto de Apoio'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Está seguro que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Listar Todos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Editar Texto'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Novo Texto de Apoio'), ['action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Form->postLink(__('Excluir Texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Está seguro que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Eventos'), ['controller' => 'Eventos', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Novo Texto'), ['action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Inserir TR'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Inserir TR item'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
                     </li>
                 <?php else: ?>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Eventos'), ['controller' => 'Eventos', 'action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
                     </li>
-                    <li class='list-group-item list-group-item-action'>
-                        <?php echo $this->Html->link(__('Listar Todos Apoios'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['id']]], ['class' => 'list-group-item list-group-item-action text-truncate']); ?>
+                    <li class='nav-item'>
+                        <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
                     </li>
 
                 <?php endif; ?>
             <?php endif; ?>
-
         </ul>
-    </div>
+    </nav>
 
-    <div class="col-7">
-        <h1 class="h3"><?php echo __('Texto de apoio: ' . $apoio['Apoio']['numero_texto']); ?></h1>
-        <dl class="row">
-            <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
-            <dd class="col-sm-9">
+    <h1 class="h3"><?php echo __('Texto de apoio: ' . $apoio['Apoio']['numero_texto']); ?></h1>
+    <dl class="row">
+        <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
+        <dd class="col-sm-9">
                 <?php echo h($apoio['Apoio']['id']); ?>
                 &nbsp;
             </dd>
@@ -72,12 +69,6 @@
             <dt class="col-sm-3"><?php echo __('Tema'); ?></dt>
             <dd class="col-sm-9">
                 <?php echo h($apoio['Apoio']['tema']); ?>
-                &nbsp;
-            </dd>
-
-            <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['gt']); ?>
                 &nbsp;
             </dd>
 
@@ -112,14 +103,14 @@
 
         <div class="row">
             <?php if (count($apoio['Item']) > 0): ?>
-                <h3><?php echo __('Texto de resoluções: ' . substr($apoio['Item'][0]['item'], 0, 2)); ?></h3>
+                <h3><?php echo __('TRs: ' . substr($apoio['Item'][0]['item'], 0, 2)); ?></h3>
 
                 <?php foreach ($apoio['Item'] as $c_apoio): ?>
                     <?php // pr($c_apoio); ?>
                     <dl class="row">
                         <dt class="col-sm-1"><?php echo __('Item'); ?></dt>
                         <dd class="col-sm-9">
-                            <?php echo "<p><b>" . $this->Html->link($c_apoio['item'], '/Items/view/' . $c_apoio['id']) . "</b>" . " " . $c_apoio['texto'] . "</p>"; ?>
+                            <?php echo "<p><b>" . $this->Html->link($c_apoio['item'], ['controller' => 'Items', 'action' => 'view', $c_apoio['id']]) . "</b>" . " " . $c_apoio['texto'] . "</p>"; ?>
                             &nbsp;
                         </dd>
                     </dl>

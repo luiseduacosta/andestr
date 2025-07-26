@@ -127,6 +127,7 @@ class ApoiosController extends AppController
             throw new NotFoundException(__("Texto de apoio não encontrado"));
         }
         $options = [
+            "contain" => ["Evento", "Gt"],
             "conditions" => ["Apoio." . $this->Apoio->primaryKey => $id],
         ];
         $this->set("apoio", $this->Apoio->find("first", $options));
@@ -150,7 +151,7 @@ class ApoiosController extends AppController
         if (empty($eventos)) {
             $this->Flash->error(
                 __(
-                    "Não há eventos cadastrados. Cadastre um evento antes de cadastrar um texto de apoio.",
+                    "Não há eventos cadastrados. Cadastre um evento antes de cadastrar um Texto de Apoio.",
                 ),
             );
             return $this->redirect([
@@ -187,19 +188,19 @@ class ApoiosController extends AppController
             if ($apoio) {
                 $this->Flash->error(
                     __(
-                        "Já há um texto de apio com essa numeração no evento. Verifique e tente novamente.",
+                        "Já há um Texto de Apoio com essa numeração no evento. Verifique e tente novamente.",
                     ),
                 );
             } else {
                 /** Elimina os r e n do texto original */
                 $this->request->data["Apoio"]["autor"] = str_replace(
                     ["<br />"],
-                    "",
+                    " ",
                     $this->request->data["Apoio"]["autor"],
                 );
                 $this->request->data["Apoio"]["texto"] = str_replace(
                     ["\r", "\n"],
-                    "",
+                    " ",
                     $this->request->data["Apoio"]["texto"],
                 );
                 $this->Apoio->create();
@@ -212,7 +213,7 @@ class ApoiosController extends AppController
                 } else {
                     $this->Flash->error(
                         __(
-                            "Não foi possível inserir o texto de apoio. Tente novamente.",
+                            "Não foi possível inserir o Texto de Apoio. Tente novamente.",
                         ),
                     );
                 }
@@ -239,7 +240,7 @@ class ApoiosController extends AppController
     public function edit($id = null)
     {
         if (!$this->Apoio->exists($id)) {
-            throw new NotFoundException(__("Texto de apoio não encontrado"));
+            throw new NotFoundException(__("Texto de Apoio não encontrado"));
         }
         if ($this->request->is(["post", "put"])) {
             $this->request->data["Apoio"]["autor"] = str_replace(
@@ -247,14 +248,24 @@ class ApoiosController extends AppController
                 "",
                 $this->request->data["Apoio"]["autor"],
             );
+            $this->request->data["Apoio"]["autor"] = str_replace(
+                ["<br>"],
+                "",
+                $this->request->data["Apoio"]["autor"],
+            );
             $this->request->data["Apoio"]["texto"] = str_replace(
                 ["\r", "\n"],
-                "",
+                " ",
                 $this->request->data["Apoio"]["texto"],
             );
             $this->request->data["Apoio"]["texto"] = str_replace(
                 ["<br />"],
-                "",
+                " ",
+                $this->request->data["Apoio"]["texto"],
+            );
+            $this->request->data["Apoio"]["texto"] = str_replace(
+                ["<br>"],
+                " ",
                 $this->request->data["Apoio"]["texto"],
             );
             if ($this->Apoio->save($this->request->data)) {
@@ -263,7 +274,7 @@ class ApoiosController extends AppController
             } else {
                 $this->Flash->error(
                     __(
-                        "Não foi possível atualizar o texto de apoio. Tente novamente.",
+                        "Não foi possível atualizar o Texto de Apoio. Tente novamente.",
                     ),
                 );
             }
@@ -301,15 +312,16 @@ class ApoiosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Apoio->exists($id)) {
-            throw new NotFoundException(__("Texto de apoio não encontrado"));
+            throw new NotFoundException(__("Texto de Apoio não encontrado"));
         }
         $this->request->allowMethod("post", "delete");
+
         if ($this->Apoio->delete($id)) {
-            $this->Flash->success(__("Texto de apoio excluído."));
+            $this->Flash->success(__("Texto de Apoio excluído."));
         } else {
             $this->Flash->error(
                 __(
-                    "Não foi possível excluir o texto de apoio. Tente novamente.",
+                    "Não foi possível excluir o Texto de Apoio. Tente novamente.",
                 ),
             );
         }

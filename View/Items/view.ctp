@@ -5,7 +5,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
     <ul class="navbar-nav mr-auto">
-        <a class="navbar-brand"><?php echo __('Acões'); ?></a>
         <?php if (isset($usuario)): ?>
             <?php // pr($usuario); ?>
             <?php if ($usuario['role'] == 'relator'): ?>
