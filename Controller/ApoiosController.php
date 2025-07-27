@@ -62,6 +62,8 @@ class ApoiosController extends AppController
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
+        
+        /** Lista todos os eventos */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
             "order" => ["ordem" => "asc"],
@@ -194,7 +196,7 @@ class ApoiosController extends AppController
             } else {
                 /** Elimina os r e n do texto original */
                 $this->request->data["Apoio"]["autor"] = str_replace(
-                    ["<br />"],
+                    ["<br />", "<br>"],
                     " ",
                     $this->request->data["Apoio"]["autor"],
                 );
