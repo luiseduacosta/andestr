@@ -144,7 +144,11 @@ class ItemsController extends AppController
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
-
+        /**
+         * @var array $eventos
+         * Captura todos os eventos cadastrados
+         * Se não houver eventos cadastrados, redireciona para a tela de cadastro de Eventos
+         */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
             "order" => ["id" => "asc"],
@@ -161,24 +165,40 @@ class ItemsController extends AppController
             $evento_id = key($eventos);
         }
 
+        /** Captura o apoio_id do querystring se houver */
+        $apoio_id = isset($this->request->query["apoio_id"])
+            ? $this->request->query["apoio_id"]
+            : null;
+
         /** Localiza se há TRs */
         $this->loadModel("Apoio");
-        $apoios = $this->Apoio->find("all", [
-            "conditions" => ["Apoios.evento_id" => $evento_id],
-            ["order" => ["numero_texto" => "desc"]],
-        ]);
-        if (empty($apoios)) {
-            $this->Flash->error(__("Não há textos de apoio nem TRs cadastrados!"));
-            return $this->redirect([
-                "controller" => "Apoios",
-                "action" => "add",
+        if ($apoio_id) {
+            $apoios = $this->Apoio->find("all", [
+                "conditions" => ["Apoio.evento_id" => $evento_id, "Apoio.id" => $apoio_id],
+                "order" => ["numero_texto" => "desc"],
             ]);
+        } else {
+            $apoios = $this->Apoio->find("all", [
+                "conditions" => ["Apoio.evento_id" => $evento_id],
+                "order" => ["numero_texto" => "desc"],
+            ]);
+            if (empty($apoios)) {
+                $this->Flash->error(__("Não há textos de apoio nem TRs cadastrados!"));
+                return $this->redirect([
+                    "controller" => "Apoios",
+                    "action" => "add",
+                ]);
+            }
         }
         $apoioslista = $this->Apoio->find("list");
 
         /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
-            $ultimo = end($apoios);
+            if ($apoio_id) {
+                $ultimo = $apoios[0];
+            } else {
+                $ultimo = end($apoios);
+            }
             $ultimo_tr = $ultimo["Apoio"]["numero_texto"];
             if (strlen($ultimo_tr) == 1) {
                 $ultimo_tr = "0" . $ultimo_tr;
@@ -219,11 +239,11 @@ class ItemsController extends AppController
             "item_item",
             isset($itemparcela_item) ? $itemparcela_item : "01",
         );
-        $this->set("apoio_id", $ultimo["Apoios"]["id"]);
+        $this->set("apoio_id", $ultimo["Apoio"]["id"]);
         $this->set("apoios", $apoioslista);
 
         if ($this->request->is("post")) {
-            // debug($this->request);
+            // pr($this->request->data);
             // Capturo o id corespondente ao TR do apoio do evento
             $apoio = $this->Apoio->find("first", [
                 "conditions" => [
@@ -231,7 +251,7 @@ class ItemsController extends AppController
                     "evento_id" => $evento_id,
                 ],
             ]);
-            $this->request->data["Item"]["apoio_id"] = $apoio["Apoios"]["id"];
+            $this->request->data["Item"]["apoio_id"] = $apoio["Apoio"]["id"];
             // Elimina os \r e \n e <br /> do texto original
             $this->request->data["Item"]["texto"] = str_replace(
                 ["\r", "\n"],
@@ -239,20 +259,18 @@ class ItemsController extends AppController
                 $this->request->data["Item"]["texto"],
             );
             $this->request->data["Item"]["texto"] = str_replace(
-                ["<br />"],
+                ["<br />", "<br>"],
                 " ",
                 $this->request->data["Item"]["texto"],
             );
-            // A partir do Tr busco o id na tabela Resolucao
-            if ($this->request->data["Item"]["apoio_id"]) {
-                $verifica_tr = $this->Item->find("first", [
-                    "conditions" => [
-                        "Apoio.id" => $this->request->data["Item"]["apoio_id"],
+            // A partir do Tr busco o id na tabela Items
+            if ($this->request->data['Item']['apoio_id']) {
+                $this->loadModel("Apoio");
+                $verifica_tr = $this->Apoio->find('first', [
+                    'conditions' => [
+                        'Apoio.id' => $this->request->data['Item']['apoio_id'],
                     ],
-                    'contain' => ['Apoio'],
                 ]);
-                // $log = $this->Item->getDataSource()->getLog(false, false);
-                // debug($log);
                 /**
                  * Verifica que o item e o Tr estejam coordenados
                  */

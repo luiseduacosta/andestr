@@ -45,7 +45,7 @@
             echo $this->Form->input('evento_id', ['type' => 'select', 'default' => isset($evento_id) ? $evento_id : end($eventos), 'options' => $eventos]);
             echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
             echo $this->Form->input('numero_texto', ['required' => true]);
-            echo $this->Form->input('autor', ['type' => 'text', 'required' => false]);
+            echo $this->Form->input('autor', ['type' => 'textarea', 'required' => false]);
             echo $this->Form->input('titulo', ['required' => true]);
             echo $this->Form->input('tema', [
                 'type' => 'select',
@@ -60,7 +60,7 @@
                 'empty' => 'Selecione',
                 'required' => true
             ]);
-            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => 10, 'cols' => 50]);
+            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => 10, 'cols' => 50, 'required' => false]);
             ?>
         </fieldset>
         <div class='row justify-content-center'>
@@ -80,7 +80,9 @@
         Italic,
         Strikethrough,
         Font,
-        Paragraph
+        Paragraph,
+        Table,
+        TableToolbar
     } from 'ckeditor5';
 
     let autor;
@@ -97,8 +99,11 @@
         })
         .then(editor => {
             autor = editor;
-            console.log('Olá editor ApoioAutor was initialized', autor);
             autor.setData("");
+            console.log("Autor editor initialized successfully");
+        })
+        .catch(error => {
+            console.error('Error initializing autor editor:', error);
         });
 
     let texto;
@@ -107,15 +112,26 @@
     }
     ClassicEditor
         .create(document.querySelector('#ApoioTexto'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar],
             toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-            ]
+            ],
+            table: {
+                contentToolbar: [
+                    'tableColumn',
+                    'tableRow',
+                    'mergeTableCells'
+                ]
+            }
         })
         .then(editor => {
             texto = editor;
-            console.log('Olá editor ApoioTexto was initialized', texto);
             texto.setData("");
+            console.log("Texto editor initialized successfully");
+        })
+        .catch(error => {
+            console.error('Error initializing texto editor:', error);
         });
+        
 </script>

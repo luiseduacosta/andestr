@@ -62,7 +62,7 @@
                 ]
             );
             echo $this->Form->input('titulo', ['value' => $apoio['Apoio']['titulo']]);
-            echo $this->Form->input('autor', ['value' => trim($apoio['Apoio']['autor'])]);
+            echo $this->Form->input('autor', ['value' => trim($apoio['Apoio']['autor']), 'required' => true]);
             echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => trim($apoio['Apoio']['texto'])]);
             ?>
         </fieldset>
@@ -83,7 +83,9 @@
         Italic,
         Strikethrough,
         Font,
-        Paragraph
+        Paragraph,
+        Table,
+        TableToolbar
     } from 'ckeditor5';
 
     function initAutorEditor() {
@@ -133,11 +135,19 @@
         
         ClassicEditor
             .create(document.querySelector('#ApoioTexto'), {
-                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar],
                 toolbar: [
                     'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-                ]
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'insertTable'
+                ],
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                }
             })
             .then(editor => {
                 texto = editor;

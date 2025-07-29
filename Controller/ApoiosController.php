@@ -62,7 +62,7 @@ class ApoiosController extends AppController
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
-        
+
         /** Lista todos os eventos */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
@@ -194,10 +194,10 @@ class ApoiosController extends AppController
                     ),
                 );
             } else {
-                /** Elimina os r e n do texto original */
+                /** Elimina os retornos e as novas linhas do texto original */
                 $this->request->data["Apoio"]["autor"] = str_replace(
                     ["<br />", "<br>"],
-                    " ",
+                    "",
                     $this->request->data["Apoio"]["autor"],
                 );
                 $this->request->data["Apoio"]["texto"] = str_replace(
@@ -205,6 +205,33 @@ class ApoiosController extends AppController
                     " ",
                     $this->request->data["Apoio"]["texto"],
                 );
+
+                /** Preenche o campo nomedovento */
+                if ($this->request->data['Apoio']['evento_id']) {
+                    $this->loadModel('Evento');
+                    $evento = $this->Evento->find('first', [
+                    'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
+                    ]);
+                } else {
+                    $this->Flash->error(__('Selecione o evento'));
+                }
+                if ($evento) {
+                    $this->request->data['Apoio']['nomedoevento'] = $evento['Evento']['nome'];
+                }
+
+                /** Prenche o campo gt */
+                if ($this->request->data['Apoio']['gt_id']) {
+                    $this->loadModel('Gt');
+                    $grupodetrabalho = $this->Gt->find('first', [
+                    'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
+                    ]);
+                } else {
+                    $this->Flash->error(__('Selecione um Grupo de Trabalho ou Setor'));
+                }
+                if ($grupodetrabalho) {
+                    $this->request->data['Apoio']['gt'] = $grupodetrabalho['Gt']['sigla'];
+                }
+
                 $this->Apoio->create();
                 if ($this->Apoio->save($this->request->data)) {
                     $this->Flash->success(__("Texto de apoio inserido."));
@@ -246,32 +273,54 @@ class ApoiosController extends AppController
         }
         if ($this->request->is(["post", "put"])) {
             $this->request->data["Apoio"]["autor"] = str_replace(
-                ["<br />"],
+                ["<br />", "<br"],
                 "",
                 $this->request->data["Apoio"]["autor"],
             );
             $this->request->data["Apoio"]["autor"] = str_replace(
-                ["<br>"],
-                "",
+                ["\r", "\n"],
+                " ",
                 $this->request->data["Apoio"]["autor"],
+            );
+            $this->request->data["Apoio"]["texto"] = str_replace(
+                ["<br />", "<br>"],
+                "",
+                $this->request->data["Apoio"]["texto"],
             );
             $this->request->data["Apoio"]["texto"] = str_replace(
                 ["\r", "\n"],
                 " ",
                 $this->request->data["Apoio"]["texto"],
             );
-            $this->request->data["Apoio"]["texto"] = str_replace(
-                ["<br />"],
-                " ",
-                $this->request->data["Apoio"]["texto"],
-            );
-            $this->request->data["Apoio"]["texto"] = str_replace(
-                ["<br>"],
-                " ",
-                $this->request->data["Apoio"]["texto"],
-            );
+
+            /** Preenche o campo nomedovento */
+            if ($this->request->data['Apoio']['evento_id']) {
+                $this->loadModel('Evento');
+                $evento = $this->Evento->find('first', [
+                'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
+                ]);
+            } else {
+                $this->Flash->error(__('Selecione o evento'));
+            }
+            if ($evento) {
+                $this->request->data['Apoio']['nomedoevento'] = $evento['Evento']['nome'];
+            }
+
+            /** Preenche o campo gt */
+            if ($this->request->data['Apoio']['gt_id']) {
+                $this->loadModel('Gt');
+                $grupodetrabalho = $this->Gt->find('first', [
+                'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
+                ]);
+            } else {
+                $this->Flash->error(__('Selecione um Grupo de Trabalho ou Setor'));
+            }
+            if ($grupodetrabalho) {
+                $this->request->data['Apoio']['gt'] = $grupodetrabalho['Gt']['sigla'];
+            }
+
             if ($this->Apoio->save($this->request->data)) {
-                $this->Flash->success(__("Texto de apoio atualizado."));
+                $this->Flash->success(__("Texto de Apoio atualizado."));
                 return $this->redirect(["action" => "view", $id]);
             } else {
                 $this->Flash->error(

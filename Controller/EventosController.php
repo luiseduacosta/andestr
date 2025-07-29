@@ -62,8 +62,16 @@ class EventosController extends AppController
         }
         /** Gravo o evento selecionado */
         $this->Session->write("evento_id", $id);
-        $this->Evento->contain(["Apoio"]);
+        $this->Evento->contain([
+            "Apoio" => [
+                "order" => ["Apoio.evento_id" => "asc", "Apoio.numero_texto" => "asc"],
+                "Gt"
+            ]
+        ]);
         $options = [
+            'contains' => ['Apoio' => [
+                'order' => ['Apoio.evento_id' => 'asc', 'Apoio.numero_texto' => 'asc']], 
+                'Gt'],
             "conditions" => ["Evento." . $this->Evento->primaryKey => $id],
         ];
         $this->set("evento", $this->Evento->find("first", $options));

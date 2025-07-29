@@ -1,3 +1,7 @@
+<?php
+// pr($evento);
+?>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
     <ul class='navbar-nav mr-auto'>
@@ -72,7 +76,7 @@
                         <td><?php echo $apoio['caderno']; ?></td>
                         <td><?php echo $apoio['numero_texto']; ?></td>
                         <td><?php echo $apoio['tema']; ?></td>
-                        <td><?php echo $apoio['gt']; ?></td>
+                        <td><?php echo $apoio['Gt']['sigla']; ?></td>
                         <td><?php echo $this->Html->link($apoio['titulo'], ['controller' => 'apoios', 'action' => 'view', $apoio['id']]); ?></td>
                     </tr>
                 <?php endforeach; ?>

@@ -1,5 +1,5 @@
 <?php
-//  pr($apoio);
+// pr($apoio['Apoio']['texto']);
 ?>
 
 <div class="container">
@@ -25,7 +25,7 @@
                         <?php echo $this->Html->link(__('Novo Texto'), ['action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
                     </li>
                     <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Inserir TR item'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link(__('Inserir TR item'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id'], 'apoio_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
                     </li>
                 <?php else: ?>
                     <li class='nav-item'>
@@ -95,7 +95,7 @@
             <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
             <dd class="col-sm-9">
                 <?php
-                echo $this->Text->truncate($apoio['Apoio']['texto'], 200, ['ellipsis' => $this->Html->link(' ...', 'apoiocompleto/' . $apoio['Apoio']['id']), 'exact' => false]);
+                echo $this->Text->truncate($apoio['Apoio']['texto'], 120, ['ellipsis' => $this->Html->link(' ...', ['action' =>  'apoiocompleto', $apoio['Apoio']['id']]), 'exact' => true]);
                 ?>
                 &nbsp;
             </dd>

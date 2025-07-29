@@ -19,7 +19,7 @@
                     <?php echo $this->Html->link(__('Novo Apoio'), ['controller' => 'Apoios', 'action' => 'add', '?' => ['evento_id' => $item['Apoio']['evento_id']]], ['class' => "nav-link"]); ?>
                 </li>
                 <li class="nav-item">
-                    <?php echo $this->Html->link(__('Novo Item'), ['action' => 'add', '?' => ['evento_id' => $item['Apoio']['evento_id']]], ['class' => "nav-link"]); ?>
+                    <?php echo $this->Html->link(__('Novo Item'), ['action' => 'add', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'apoio_id' => $item['Item']['apoio_id'], 'tr' => $item['Item']['tr']]], ['class' => "nav-link"]); ?>
                 </li>
                 <li class="nav-item">
                     <?php echo $this->Html->link(__('Editar Item'), ['action' => 'edit', $item['Item']['id']], ['class' => "nav-link"]); ?>

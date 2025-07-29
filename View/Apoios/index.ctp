@@ -103,14 +103,14 @@
                     <td><?php echo h($apoio['Evento']['nome']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['caderno']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['numero_texto']); ?>&nbsp;</td>
-                    <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), 'index/tema:' . $apoio['Apoio']['tema']); ?>&nbsp;
+                    <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), ['index', '?' => ['tema:' . $apoio['Apoio']['tema']]]); ?>&nbsp;
                     </td>
                     <td><?php echo h($apoio['Apoio']['gt']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Gt']['sigla']); ?>&nbsp;</td>
                     <td><?php echo strip_tags($apoio['Apoio']['titulo']); ?>&nbsp;</td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 120, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
                     <td class="actions">
                         <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $apoio['Apoio']['id']]); ?>

@@ -35,32 +35,25 @@ class Apoio extends AppModel
         'tema' => [
             'rule' => ['inList', ['I', 'II', 'III', 'IV']]
         ],
-        'gt' => [
-            'rule' => [
-                'inList',
-                [
-                    'Federais',
-                    'Estaduais',
-                    'GTCQERGDS',
-                    'GTCA',
-                    'GTC',
-                    'GTCT',
-                    'GT Fundações',
-                    'GTHMD',
-                    'GTPAUA',
-                    'GTPE',
-                    'GTPFS',
-                    'GTSSA',
-                    'GT Verbas',
-                    'Comissão da Verdade',
-                    'Tesouraria',
-                    'Secretaria',
-                    'Outras'
-                ]
-            ],
-            'required' => FALSE,
-            'allowEmpty' => TRUE,
-            'message' => 'Selecione a Comissão ou o GT.'
-        ]
+        'numero_texto' => [
+            'rule' => ['numeric', 'notBlank'],
+            'message' => 'Digite o número do texto.'
+        ],
+        'gt_id' => [
+            'rule' => ['notBlank'],
+            'message' => 'Selecione o GT ou Setor.'
+        ],
+        'autor' => [
+            'rule' => ['notBlank'],
+            'message' => 'Digite o autor.'
+        ],
+        'titulo' => [
+            'rule' => ['notBlank'],
+            'message' => 'Digite o título.'
+        ],
+        'texto' => [
+            'rule' => ['notBlank'],
+            'message' => 'Digite o texto.'        
+        ],
     ];
 }
