@@ -438,7 +438,6 @@ class VotacaosController extends AppController
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $this->request->data['Votacao']['item_id'], 'votacao_id' => $this->Votacao->getLastInsertID(), 'resultado' => 'minoritária']]);
                 } else {
                     // $this->Flash->success(__('Votação inserida.'));
-                    // die('votacao normal');
                     return $this->redirect(['controller' => 'Votacaos', 'action' => 'view', $this->Votacao->getLastInsertID()]);
                 }
             } else {
