@@ -44,79 +44,79 @@
     <dl class="row">
         <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
         <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['id']); ?>
-                &nbsp;
-            </dd>
+            <?php echo h($apoio['Apoio']['id']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Evento'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Evento']['nome']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Evento'); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Evento']['nome']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Caderno'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['caderno']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Caderno'); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Apoio']['caderno']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Texto número: '); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['numero_texto']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Texto número: '); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Apoio']['numero_texto']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Tema'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['tema']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Tema'); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Apoio']['tema']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Gt']['sigla']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Gt']['sigla']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Titulo'); ?></dt>
-            <dd class="col-sm-9">
-                <?php echo h($apoio['Apoio']['titulo']); ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Titulo'); ?></dt>
+        <dd class="col-sm-9">
+            <?php echo h($apoio['Apoio']['titulo']); ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Autor(es)'); ?></dt>
-            <dd class="col-sm-9">
-                <?php
-                echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]);
-                ?>
-                &nbsp;
-            </dd>
+        <dt class="col-sm-3"><?php echo __('Autor(es)'); ?></dt>
+        <dd class="col-sm-9">
+            <?php
+            echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]);
+            ?>
+            &nbsp;
+        </dd>
 
-            <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
-            <dd class="col-sm-9">
-                <?php
-                echo $this->Text->truncate($apoio['Apoio']['texto'], 120, ['ellipsis' => $this->Html->link(' ...', ['action' =>  'apoiocompleto', $apoio['Apoio']['id']]), 'exact' => true]);
-                ?>
-                &nbsp;
-            </dd>
-        </dl>
+        <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
+        <dd class="col-sm-9">
+            <?php
+            echo $this->Text->truncate($apoio['Apoio']['texto'], 120, ['ellipsis' => $this->Html->link(' ...', ['action' => 'apoiocompleto', $apoio['Apoio']['id']]), 'exact' => true]);
+            ?>
+            &nbsp;
+        </dd>
+    </dl>
 
-        <div class="row">
-            <?php if (count($apoio['Item']) > 0): ?>
-                <h3><?php echo __('TRs: ' . substr($apoio['Item'][0]['item'], 0, 2)); ?></h3>
+    <div class="row">
+        <?php if (count($apoio['Item']) > 0): ?>
+            <h3><?php echo __('TR: ' . $apoio['Apoio']['numero_texto']); ?></h3>
 
-                <?php foreach ($apoio['Item'] as $c_apoio): ?>
-                    <?php // pr($c_apoio); ?>
-                    <dl class="row">
-                        <dt class="col-sm-1"><?php echo __('Item'); ?></dt>
-                        <dd class="col-sm-9">
-                            <?php echo "<p><b>" . $this->Html->link($c_apoio['item'], ['controller' => 'Items', 'action' => 'view', $c_apoio['id']]) . "</b>" . " " . $c_apoio['texto'] . "</p>"; ?>
-                            &nbsp;
-                        </dd>
-                    </dl>
-                <?php endforeach; ?>
-
-            <?php endif; ?>
-        </div>
+            <?php foreach ($apoio['Item'] as $c_apoio): ?>
+                <?php // pr($c_apoio); ?>
+                <dl class="row">
+                    <dt class="col-sm-1">
+                        <?php echo $this->Html->link($c_apoio['item'], ['controller' => 'Items', 'action' => 'view', $c_apoio['id']]); ?>
+                    </dt>
+                    <dd class="col-sm-9">
+                        <?php echo trim($c_apoio['texto']); ?>
+                    </dd>
+                </dl>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
+</div>
 </div>

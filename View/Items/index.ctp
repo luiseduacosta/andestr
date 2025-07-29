@@ -148,7 +148,12 @@
                                 </td>
 
                                 <td>
-                                    <?= $c_item['Item']['item'] ?>
+                                    <?= $this->Html->link(
+                                        $c_item['Item']['item'],
+                                        ['controller' => 'Items', 'action' => 'view', $c_item['Item']['id']],
+                                        ['title' => strip_tags(html_entity_decode($c_item['Item']['texto'], ENT_QUOTES, 'UTF-8')), 'class' => 'text-decoration-none']
+                                    ); ?>
+                                    &nbsp;
                                 </td>
 
                                 <td>

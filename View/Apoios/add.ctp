@@ -45,7 +45,7 @@
             echo $this->Form->input('evento_id', ['type' => 'select', 'default' => isset($evento_id) ? $evento_id : end($eventos), 'options' => $eventos, 'required' => true, 'label' => ['text' => 'Evento', 'class' => 'col-3']]);
             echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo'], 'required' => true]);
             echo $this->Form->input('numero_texto', ['required' => true]);
-            echo $this->Form->input('autor', ['type' => 'textarea', 'required' => true]);
+            echo $this->Form->input('autor', ['type' => 'textarea', 'required' => false]); // There is a bug whith Ckeditor5, this field may not work properly if is required.  
             echo $this->Form->input('titulo', ['required' => true]);
             echo $this->Form->input('tema', [
                 'type' => 'select',

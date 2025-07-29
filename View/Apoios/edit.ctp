@@ -64,7 +64,7 @@
                 ],        
             );
             echo $this->Form->input('titulo', ['value' => $apoio['Apoio']['titulo'], 'required' => true]);
-            echo $this->Form->input('autor', ['type' => 'textarea' ,'value' => trim($apoio['Apoio']['autor']), 'required' => true]);
+            echo $this->Form->input('autor', ['type' => 'textarea' ,'value' => trim($apoio['Apoio']['autor']), 'required' => false]); // There is a bug whith Ckeditor5, this field may not work properly if is required.  
             echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => trim($apoio['Apoio']['texto']), 'required' => false]);
             ?>
         </fieldset>

@@ -18,7 +18,7 @@
         <?php endif; ?>
         <li class="nav-item"><?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $apoio['Evento']['id']]], ['class' => 'nav-link']); ?> </li>
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
-            <li class="nav-item"><?php echo $this->Html->link(__('Inserir items'), ['controller' => 'items', 'action' => 'add', '?' => ['evento_id' => $apoio['Evento']['id']]], ['class' => 'nav-link']); ?> </li>
+            <li class="nav-item"><?php echo $this->Html->link(__('Inserir items'), ['controller' => 'items', 'action' => 'add', '?' => ['evento_id' => $apoio['Evento']['id'], 'apoio_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?> </li>
         <?php endif; ?>
     </ul>
 </nav>
