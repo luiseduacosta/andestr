@@ -79,20 +79,19 @@
 <div class="container">
     <h2><?php echo __('Textos de Apoio'); ?></h2>
 
-    <table cellpadding="0" cellspacing="0" class="table">
+    <table class="table table-striped table-bordered table-hover table-responsive">
         <thead class="thead-light">
             <tr>
                 <th><?php echo $this->Paginator->sort('id'); ?></th>
-                <th><?php echo $this->Paginator->sort('nomedoevento'); ?></th>
+                <th><?php echo $this->Paginator->sort('nomedoevento', 'Evento'); ?></th>
                 <th><?php echo $this->Paginator->sort('caderno'); ?></th>
                 <th><?php echo $this->Paginator->sort('numero_texto', 'Nº'); ?></th>
                 <th><?php echo $this->Paginator->sort('tema'); ?></th>
                 <th><?php echo $this->Paginator->sort('gt', 'GT'); ?></th>
-                <th><?php echo $this->Paginator->sort('gt_id', 'GT'); ?></th>
                 <th><?php echo $this->Paginator->sort('titulo'); ?></th>
                 <th><?php echo $this->Paginator->sort('autor'); ?></th>
                 <th><?php echo $this->Paginator->sort('texto'); ?></th>
-                <th class="actions"><?php echo __('Ações'); ?></th>
+                <th class="row"><?php echo __('Ações'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -105,20 +104,19 @@
                     <td><?php echo h($apoio['Apoio']['numero_texto']); ?>&nbsp;</td>
                     <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), ['index', '?' => ['tema:' . $apoio['Apoio']['tema']]]); ?>&nbsp;
                     </td>
-                    <td><?php echo h($apoio['Apoio']['gt']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Gt']['sigla']); ?>&nbsp;</td>
                     <td><?php echo strip_tags($apoio['Apoio']['titulo']); ?>&nbsp;</td>
                     <td><?php echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
                     <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 120, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
-                    <td class="actions">
+                    <td class="row">
                         <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $apoio['Apoio']['id']]); ?>
                         <?php
                         if (isset($usuario)):
                             if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                                 ?>
-                                <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $apoio['Apoio']['id']]); ?>
+                                <?php echo $this->Html->link(__('Editar'), ['action' => 'edit', $apoio['Apoio']['id']]); ?>
                                 <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id'])]); ?>
                             <?php endif; ?>
                         <?php endif; ?>

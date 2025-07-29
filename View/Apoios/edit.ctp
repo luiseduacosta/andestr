@@ -46,24 +46,26 @@
             <legend><?php echo __('Editar Textos de Apoio'); ?></legend>
             <?php
             echo $this->Form->input('id', ['type' => 'hidden', 'value' => $apoio['Apoio']['id']]);
-            echo $this->Form->input('evento_id', ['default' => $apoio['Apoio']['evento_id'], 'type' => 'select', 'options' => $eventos, 'label' => ['text' => 'Evento', 'class' => 'col-3']]);
-            echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
-            echo $this->Form->input('numero_texto', ['value' => $apoio['Apoio']['numero_texto']]);
+            echo $this->Form->input('evento_id', ['default' => $apoio['Apoio']['evento_id'], 'type' => 'select', 'options' => $eventos, 'label' => ['text' => 'Evento', 'class' => 'col-3'], 'required' => true]);
+            echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo'], 'required' => true]);
+            echo $this->Form->input('numero_texto', ['value' => $apoio['Apoio']['numero_texto'], 'required' => true]);
             echo $this->Form->input('tema', [
                 'type' => 'select',
-                'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV']
+                'options' => ['I' => 'I', 'II' => 'II', 'III' => 'III', 'IV' => 'IV'],
+                'required' => true,
             ]);
             echo $this->Form->input('gt_id', [
                 'label' => ['text' => 'Setor ou grupo de trabalho', 'class' => 'col-3'],
                 'value' => $apoio['Apoio']['gt_id'],
                 'type' => 'select',
                 'options' => [$gts],
-                'empty' => true
-                ]
+                'empty' => true,
+                'required' => true
+                ],        
             );
-            echo $this->Form->input('titulo', ['value' => $apoio['Apoio']['titulo']]);
-            echo $this->Form->input('autor', ['value' => trim($apoio['Apoio']['autor']), 'required' => true]);
-            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => trim($apoio['Apoio']['texto'])]);
+            echo $this->Form->input('titulo', ['value' => $apoio['Apoio']['titulo'], 'required' => true]);
+            echo $this->Form->input('autor', ['type' => 'textarea' ,'value' => trim($apoio['Apoio']['autor']), 'required' => true]);
+            echo $this->Form->input('texto', ['type' => 'textarea', 'rows' => '10', 'cols' => '50', 'value' => trim($apoio['Apoio']['texto']), 'required' => false]);
             ?>
         </fieldset>
         <div class='row justify-content-center'>
@@ -99,7 +101,6 @@
                 console.error('Error destroying autor editor:', error);
             });
         }
-        
         ClassicEditor
             .create(document.querySelector('#ApoioAutor'), {
                 plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
@@ -132,7 +133,6 @@
                 console.error('Error destroying text editor:', error);
             });
         }
-        
         ClassicEditor
             .create(document.querySelector('#ApoioTexto'), {
                 plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar],

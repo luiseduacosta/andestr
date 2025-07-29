@@ -1,10 +1,10 @@
-<div class="row">
-    <div class="col-2">
-        <h3 class="h3"><?php echo __('Acões'); ?></h3>
-        <ul class="list-group">
+<div class="container">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav mr-auto">
             <?php if (isset($evento_id)): ?>
-                <li class="list-group-item list-group-item-action">
-                    <?php echo $this->Html->link(__('Listar Apoios'), ['action' => 'index', '?' => ['evento_id' => $evento_id]]); ?>
+                <li class="nav-item">
+                    <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                 </li>
             <?php endif; ?>
             <?php
@@ -12,8 +12,8 @@
                 if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                     ?>
                     <?php if (isset($evento_id)): ?>
-                        <li class="list-group-item list-group-item-action">
-                            <?php echo $this->Html->link(__('Nova TR'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $evento_id]]); ?>
+                        <li class="nav-item">
+                            <?php echo $this->Html->link(__('Novo item de TR'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                         </li>
                     <?php endif; ?>
                     <?php
@@ -21,7 +21,7 @@
             endif;
             ?>
         </ul>
-    </div>
+    </nav>
 
     <div class="col-9">
         <?php
@@ -40,12 +40,12 @@
         ]);
         ?>
         <fieldset>
-            <legend><?php echo __('Adicionar texto de apoio'); ?></legend>
+            <legend><?php echo __('Adicionar Texto de apoio'); ?></legend>
             <?php
-            echo $this->Form->input('evento_id', ['type' => 'select', 'default' => isset($evento_id) ? $evento_id : end($eventos), 'options' => $eventos]);
-            echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo']]);
+            echo $this->Form->input('evento_id', ['type' => 'select', 'default' => isset($evento_id) ? $evento_id : end($eventos), 'options' => $eventos, 'required' => true, 'label' => ['text' => 'Evento', 'class' => 'col-3']]);
+            echo $this->Form->input('caderno', ['type' => 'select', 'options' => ['Principal' => 'Principal', 'Anexo' => 'Anexo'], 'required' => true]);
             echo $this->Form->input('numero_texto', ['required' => true]);
-            echo $this->Form->input('autor', ['type' => 'textarea', 'required' => false]);
+            echo $this->Form->input('autor', ['type' => 'textarea', 'required' => true]);
             echo $this->Form->input('titulo', ['required' => true]);
             echo $this->Form->input('tema', [
                 'type' => 'select',
@@ -133,5 +133,4 @@
         .catch(error => {
             console.error('Error initializing texto editor:', error);
         });
-        
 </script>

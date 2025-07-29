@@ -66,15 +66,14 @@ class ApoiosController extends AppController
         /** Lista todos os eventos */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
+            "fields" => ["id", "nome"],
             "order" => ["ordem" => "asc"],
         ]);
-
         /** Se evento não veio como parametro nem como cookie então seleciono o último evento */
         if (empty($evento_id)) {
             end($eventos); /** o ponteiro está no último registro */
             $evento_id = key($eventos);
         }
-
         /** Gravo um cookie com o evento_id */
         $this->Session->write("evento_id", $evento_id);
 
