@@ -151,7 +151,15 @@
                                     <?= $c_item['Item']['item'] ?>
                                 </td>
 
-                                <td><?php echo $this->Text->truncate($c_item['Item']['texto'], 500, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
+                                <td>
+                                    <?php 
+                                    $posicao = strpos(html_entity_decode($c_item['Item']['texto'], ENT_QUOTES, 'UTF-8'), ".</p>");
+                                    if ($posicao < 150) {
+                                        echo $this->Text->truncate(html_entity_decode($c_item['Item']['texto'], ENT_QUOTES, 'UTF-8'), $posicao, ['ellipsis' => ' ...', 'exact' => false]); 
+                                    } else {
+                                        echo $this->Text->truncate($c_item['Item']['texto'], 500, ['ellipsis' => ' ...', 'exact' => false]);
+                                    }
+                                ?>&nbsp;
                                 </td>
 
                                 <td class="row">
@@ -162,7 +170,7 @@
                                             <!-- /** Relator vota */ -->
                                             <?php if ($usuario['role'] == 'relator'): ?>
                                                 <!-- se for um item de inclusão, não tem que aparecer o botão de votar -->
-                                                <?php if ($c_item['Votacao']['resultado'] == 'inclusão'): ?>
+                                                <?php if (isset($c_item['Votacao']['resultado']) && $c_item['Votacao']['resultado'] == 'inclusão'): ?>
                                                     <li class="nav-item">
                                                         <p class='btn btn-secondary btn-block btn-sm'>Item incluído</p>
                                                     </li>

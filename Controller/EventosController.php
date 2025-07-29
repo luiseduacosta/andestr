@@ -1,6 +1,6 @@
 <?php
 
-App::uses('AppController', 'Controller');
+App::uses("AppController", "Controller");
 
 /**
  * Eventos Controller
@@ -12,28 +12,27 @@ App::uses('AppController', 'Controller');
  */
 class EventosController extends AppController
 {
-
     /**
      * Components
      *
      * @var array
      */
-    public $components = ['Paginator', 'Session', 'Flash'];
+    public $components = ["Paginator", "Session", "Flash"];
 
     function beforeFilter()
     {
         parent::beforeFilter();
 
         $usuario = $this->Auth->user();
-        if (isset($usuario) && $usuario['role'] == 'relator'):
-            if (strlen($usuario['username']) == 6):
-                $usuariogrupo = substr($usuario['username'], 5, 1);
-            elseif (strlen($usuario['username']) == 7):
-                $usuariogrupo = substr($usuario['username'], 5, 2);
+        if (isset($usuario) && $usuario["role"] == "relator"):
+            if (strlen($usuario["username"]) == 6):
+                $usuariogrupo = substr($usuario["username"], 5, 1);
+            elseif (strlen($usuario["username"]) == 7):
+                $usuariogrupo = substr($usuario["username"], 5, 2);
             endif;
-            $this->set('usuariogrupo', $usuariogrupo);
+            $this->set("usuariogrupo", $usuariogrupo);
         endif;
-        $this->set('usuario', $usuario);
+        $this->set("usuario", $usuario);
     }
 
     /**
@@ -43,11 +42,10 @@ class EventosController extends AppController
      */
     public function index()
     {
-
         $this->Paginator->settings = [
-            'order' => ['ordem' => 'asc']
+            "order" => ["ordem" => "asc"],
         ];
-        $this->set('eventos', $this->Paginator->paginate());
+        $this->set("eventos", $this->Paginator->paginate());
     }
 
     /**
@@ -59,15 +57,24 @@ class EventosController extends AppController
      */
     public function view($id = null)
     {
-
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Invalid evento'));
+            throw new NotFoundException(__("Invalid evento"));
         }
         /** Gravo o evento selecionado */
-        $this->Session->write('evento_id', $id);
-        $this->Evento->contain(['Apoio']);
-        $options = ['conditions' => ['Evento.' . $this->Evento->primaryKey => $id]];
-        $this->set('evento', $this->Evento->find('first', $options));
+        $this->Session->write("evento_id", $id);
+        $this->Evento->contain([
+            "Apoio" => [
+                "order" => ["Apoio.evento_id" => "asc", "Apoio.numero_texto" => "asc"],
+                "Gt"
+            ]
+        ]);
+        $options = [
+            'contains' => ['Apoio' => [
+                'order' => ['Apoio.evento_id' => 'asc', 'Apoio.numero_texto' => 'asc']], 
+                'Gt'],
+            "conditions" => ["Evento." . $this->Evento->primaryKey => $id],
+        ];
+        $this->set("evento", $this->Evento->find("first", $options));
     }
 
     /**
@@ -79,14 +86,19 @@ class EventosController extends AppController
     {
         /** Envio o numero de ordem para o formulário */
         $this->Evento->contain();
-        $this->set('evento', $this->Evento->find('first', ['order' => ['ordem' => 'desc']]));
-        if ($this->request->is('post')) {
+        $this->set(
+            "evento",
+            $this->Evento->find("first", ["order" => ["ordem" => "desc"]]),
+        );
+        if ($this->request->is("post")) {
             $this->Evento->create();
             if ($this->Evento->save($this->request->data)) {
-                $this->Flash->success(__('Evento cadastrado.'));
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success(__("Evento cadastrado."));
+                return $this->redirect(["action" => "index"]);
             } else {
-                $this->Flash->error(__('Não foi possível cadastrar o evento. Tente novamente.'));
+                $this->Flash->error(
+                    __("Não foi possível cadastrar o evento. Tente novamente."),
+                );
             }
         }
     }
@@ -101,18 +113,22 @@ class EventosController extends AppController
     public function edit($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Evento não encontrado'));
+            throw new NotFoundException(__("Evento não encontrado"));
         }
-        if ($this->request->is(['post', 'put'])) {
+        if ($this->request->is(["post", "put"])) {
             if ($this->Evento->save($this->request->data)) {
-                $this->Flash->success(__('Evento atualizado.'));
-                return $this->redirect(['action' => 'view', $id]);
+                $this->Flash->success(__("Evento atualizado."));
+                return $this->redirect(["action" => "view", $id]);
             } else {
-                $this->Flash->error(__('Evento não foi atualizado. Tente novamente.'));
+                $this->Flash->error(
+                    __("Evento não foi atualizado. Tente novamente."),
+                );
             }
         } else {
-            $options = ['conditions' => ['Evento.' . $this->Evento->primaryKey => $id]];
-            $this->request->data = $this->Evento->find('first', $options);
+            $options = [
+                "conditions" => ["Evento." . $this->Evento->primaryKey => $id],
+            ];
+            $this->request->data = $this->Evento->find("first", $options);
         }
     }
 
@@ -126,15 +142,16 @@ class EventosController extends AppController
     public function delete($id = null)
     {
         if (!$this->Evento->exists($id)) {
-            throw new NotFoundException(__('Evento não encontrado'));
+            throw new NotFoundException(__("Evento não encontrado"));
         }
-        $this->request->allowMethod('post', 'delete');
+        $this->request->allowMethod("post", "delete");
         if ($this->Evento->delete($id)) {
-            $this->Flash->success(__('Evento excluído.'));
+            $this->Flash->success(__("Evento excluído."));
         } else {
-            $this->Flash->error(__('Não foi possível excluir o evento. Tente novamente.'));
+            $this->Flash->error(
+                __("Não foi possível excluir o evento. Tente novamente."),
+            );
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(["action" => "index"]);
     }
-
 }

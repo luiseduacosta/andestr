@@ -7,7 +7,7 @@
     <?php if (!empty($resolucaos)): ?>
         <table class="table">
             <tr>
-                <td><?php echo $this->Html->link('Texto de apoio', '/apoios/view/' . $resolucaos['Apoio']['numero_texto']); ?>
+                <td><?php echo $this->Html->link('Texto de apoio', '/apoios/view/' . $resolucaos['Apoio']['id']); ?>
                 </td>
             </tr>
             <tr>

@@ -1,28 +1,30 @@
 <?php
+
 // pr($apoio);
+// pr($gts);
+// pr($eventos);
+// pr($evento_id);
+// die();
+
 ?>
 
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'Apoios', 'action' => 'index?evento_id=']); ?>";
+        // alert(url);
         $("#EventoEventoId").change(function () {
             var evento_id = $(this).val();
-            /* alert(evento_id); */
+            // alert(evento_id);
             window.location = url + evento_id;
         })
-
     })
 </script>
 
 <div class="row justify-content-center">
     <div class="row mb-3">
-        <?php if (isset($evento_id)): ?>
-            <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
-        <?php else: ?>
-            <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => end($eventos), 'class' => 'form-control']); ?>
-        <?php endif; ?>
-        <?php echo $this->Form->end(); ?>
+    <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
+    <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => isset($evento_id) ? $evento_id : end($eventos), 'class' => 'form-control']); ?>
+    <?php echo $this->Form->end(); ?>
     </div>
 </div>
 
@@ -101,14 +103,14 @@
                     <td><?php echo h($apoio['Evento']['nome']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['caderno']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['numero_texto']); ?>&nbsp;</td>
-                    <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), 'index/tema:' . $apoio['Apoio']['tema']); ?>&nbsp;
+                    <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), ['index', '?' => ['tema:' . $apoio['Apoio']['tema']]]); ?>&nbsp;
                     </td>
                     <td><?php echo h($apoio['Apoio']['gt']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Gt']['sigla']); ?>&nbsp;</td>
                     <td><?php echo strip_tags($apoio['Apoio']['titulo']); ?>&nbsp;</td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
-                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 200, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
+                    <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 120, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
                     <td class="actions">
                         <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $apoio['Apoio']['id']]); ?>
