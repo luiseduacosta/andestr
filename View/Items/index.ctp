@@ -7,7 +7,6 @@
 <?php // pr($usuario);  ?>
 
 <script>
-
     document.addEventListener("DOMContentLoaded", function () {
 
         var url = "<?= $this->Html->url(['controller' => 'Items', 'action' => 'index']); ?>";
@@ -23,7 +22,6 @@
 
 <div class="row justify-content-center">
     <div class="col-auto">
-
         <?php if (isset($evento_id)): ?>
             <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
             <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
@@ -36,7 +34,6 @@
 
 <div class="row">
     <div class="col-2">
-
         <h3 class="h2"><?php echo __('TRs'); ?></h3>
         <ul class="list-group">
             <?php
@@ -254,6 +251,7 @@
             </table>
     </div>
 </div>
+
 <div class="row justify-content-center">
     <p>
         <?php

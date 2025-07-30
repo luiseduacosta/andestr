@@ -18,7 +18,7 @@ class ApoiosController extends AppController
      *
      * @var array
      */
-    public $helpers = ["Html", "Form", "Text", "Paginator"];
+    public $helpers = ["Session", "Html", "Form", "Text", "Paginator"];
 
     /**
      * Components

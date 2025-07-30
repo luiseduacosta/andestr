@@ -1,11 +1,14 @@
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-ligth bg-ligth">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <?php echo $this->Html->link(__('Novo GT'), ['action' => 'add'], ['class' => 'btn btn-primary btn-block']); ?>
-            </li>
-        </ul>
-    </nav>
+
+    <?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
+        <nav class="navbar navbar-expand-lg navbar-ligth bg-ligth">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <?php echo $this->Html->link(__('Novo GT'), ['action' => 'add'], ['class' => 'btn btn-primary btn-block']); ?>
+                </li>
+            </ul>
+        </nav>
+    <?php endif; ?>
 
     <div class="gts row">
         <h2 class="h2"><?php echo __('Grupos de Trabalho'); ?></h2>
@@ -15,7 +18,7 @@
                     <th><?php echo $this->Paginator->sort('id'); ?></th>
                     <th><?php echo $this->Paginator->sort('sigla'); ?></th>
                     <th><?php echo $this->Paginator->sort('nome'); ?></th>
-                    <th><?php echo $this->Paginator->sort('outras'); ?></th>
+                    <th><?php echo $this->Paginator->sort('outras', 'Observações'); ?></th>
                     <th colspan="3" class="table-active"><?php echo __('Ações'); ?></th>
                 </tr>
             </thead>
@@ -29,12 +32,28 @@
                         <td class="table-success">
                             <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $gt['Gt']['id']], ['class' => 'btn btn-primary btn-sm btn-block']); ?>
                         </td>
-                        <td class="table-success">
-                            <?php echo $this->Html->link(__('Editar'), ['action' => 'edit', $gt['Gt']['id']], ['class' => 'btn btn-primary btn-sm btn-block']); ?>
-                        </td>
-                        <td class="table-success">
-                            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $gt['Gt']['id']], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $gt['Gt']['id']), 'class' => 'btn btn-danger btn-sm btn-block']); ?>
-                        </td>
+
+                        <?php
+                        if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                            ?>
+                            <td class="table-success">
+                                <?php
+                                echo $this->Html->link(__('Editar'), ['action' => 'edit', $gt['Gt']['id']], ['class' => 'btn btn-primary btn-sm btn-block']);
+                                ?>
+                            </td>
+                            <?php
+                        endif;
+                        ?>
+
+                        <?php
+                        if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                            ?>
+                            <td class="table-success">
+                                <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $gt['Gt']['id']], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $gt['Gt']['id']), 'class' => 'btn btn-danger btn-sm btn-block']); ?>
+                            </td>
+                            <?php
+                        endif;
+                        ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

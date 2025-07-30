@@ -2,7 +2,6 @@
     <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <ul class='navbar-nav mr-auto'>
-                <a class='navbar-brand'><?php echo __('Ações'); ?></a>
                 <li class='nav-item'>
                     <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
                 </li>

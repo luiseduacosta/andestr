@@ -3,9 +3,21 @@
 <?php // pr($trs); ?>
 <?php // pr($r['Resolucao']['tr']); ?>
 
-<div class="items form">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Item.id')], ['confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Item.id'))], ['class' => 'nav-link']);
+            ?>
+        </li>
+        <li class='nav-item'>
+            <?php echo $this->Html->link(__('Listar items'), array('action' => 'index'), ['nav-link']); ?>
+        </li>
+    </ul>
+</nav>
+
+<div class="container">
     <?php if (!empty($resolucaos)): ?>
-        <table class="table">
+        <table class="table table-striped table-hover table-responsive">
             <tr>
                 <td><?php echo $this->Html->link('Texto de apoio', '/apoios/view/' . $resolucaos['Apoio']['id']); ?>
                 </td>
@@ -50,16 +62,4 @@
         </div>
     </div>
 
-</div>
-<div class="row-fluid">
-    <h3 class="h2"><?php echo __('Ações'); ?></h3>
-    <ul class="nav">
-        <li class="nav-item">
-            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Item.id')], ['confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Item.id'))], ['class' => 'nav-link']);
-            ?>
-        </li>
-        <li class='nav-item'>
-            <?php echo $this->Html->link(__('Listar items'), array('action' => 'index'), ['nav-link']); ?>
-        </li>
-    </ul>
 </div>

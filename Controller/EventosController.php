@@ -17,7 +17,7 @@ class EventosController extends AppController
      *
      * @var array
      */
-    public $helpers = ["Html", "Form", "Text"];
+    public $helpers = ["Session", "Html", "Form", "Text"];
     
     /**
      * Components

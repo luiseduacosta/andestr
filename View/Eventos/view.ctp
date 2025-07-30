@@ -5,8 +5,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
     <ul class='navbar-nav mr-auto'>
-        <a class='navbar-brand'><?php echo __('Ações'); ?></a>
-
         <?php if (isset($usuario) && isset($evento)): ?>
             <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
                 <li class='nav-item'>

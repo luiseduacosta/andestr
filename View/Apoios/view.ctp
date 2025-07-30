@@ -5,10 +5,10 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerAndestr" aria-controls="navbarTogglerAndestr" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerApoios">
+        <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerAndestr">
             <?php if (isset($usuario)): ?>
                 <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
 

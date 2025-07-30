@@ -69,9 +69,6 @@ class AppController extends Controller {
     public function beforeFilter() {
 
         $this->Auth->allow('index', 'view', 'apoiocompleto', 'relatorio');
-        // $this->Auth->allow('login');
-        // debug($this->Auth->user());
-        // die();
         $this->set('usuario', $this->Auth->user());
 
     }
@@ -95,13 +92,9 @@ class AppController extends Controller {
                 $usuario = ['grupo' => $grupo, 'papel' => $papel];
                 // pr($usuario);
             endif;
-        // pr($usuario);
-        // die();
         // $this->set('usuario', $usuario);
         return $usuario;
         endif;
-        // pr($grupo);
-    // return $grupo;
     }
 
 }

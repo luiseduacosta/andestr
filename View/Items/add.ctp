@@ -34,9 +34,17 @@
     </div>
 </div>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class='navbar-nav'>
+        <?php if (isset($evento_id)): ?>
+            <li clsss='nav-link'>
+                <?php echo $this->Html->link(__('Listar TRs'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+            </li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
 <?php echo $this->Html->script('ckeditor/ckeditor', ['inline' => false]); ?>
-<?php // pr($resolucaos); ?>
-<?php // pr($tr); ?>
 
 <div class="container">
 
@@ -55,27 +63,16 @@
         ]
     ]);
     ?>
-    
+
     <fieldset>
         <legend><?php echo "Items da TR "; ?></legend>
         <?php
         echo $this->Form->input('apoio_id', ['value' => $apoio_id, 'options' => $apoios]);
-        echo $this->Form->input('tr', ['label' => ['text' =>'TR', 'class' => 'col-3'], 'value' => $ultimo_tr]);
+        echo $this->Form->input('tr', ['label' => ['text' => 'TR', 'class' => 'col-3'], 'value' => $ultimo_tr]);
         echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'class' => 'col-3'], 'value' => $ultimo_tr . "." . $item_item, 'placeholder' => '__.__']);
         echo $this->Form->input('texto', ['label' => ['text' => 'Item do texto de resolução', 'class' => 'col-3'], 'class' => 'ckeditor']);
         ?>
     </fieldset>
     <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
     <?= $this->Form->end(); ?>
-</div>
-
-<div class="row-fluid">
-    <h3 class='h2'><?php echo __('Acões'); ?></h3>
-    <ul class='nav'>
-        <?php if (isset($evento_id)): ?>
-            <li clsss='' nav-link'>
-                <?php echo $this->Html->link(__('Listar TRs'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
-            </li>
-        <?php endif; ?>
-    </ul>
 </div>
