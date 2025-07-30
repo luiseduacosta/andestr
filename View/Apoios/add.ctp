@@ -107,7 +107,6 @@
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, SourceEditing],
             toolbar: [
                 'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
-                'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
             ]
         })
@@ -126,7 +125,6 @@
     }
     ClassicEditor
         .create(document.querySelector('#ApoioTexto'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
             toolbar: [
                 'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
