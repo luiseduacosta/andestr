@@ -9,11 +9,11 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios"
+            aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerApoios">
-            <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerApoios">
             <?php if (isset($evento_id)): ?>
                 <li class="nav-item">
                     <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>

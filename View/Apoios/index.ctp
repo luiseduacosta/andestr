@@ -52,7 +52,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="collapse navbar-collapse" id="navbarTogglerApoios">
+    <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerApoios">
         <li class="nav-item">
             <a class="navbar-brand"><?php echo __('Ações'); ?></a>
         </li>
@@ -65,16 +65,16 @@
                         <?php echo $this->Html->link(__('Novo texto de apoio'), ['action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                     </li>
                     <li class="nav-item">
-                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                     </li>
                 <?php elseif ($usuario['role'] == 'relator'): ?>
                     <li class="nav-item">
-                        <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
+                        <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
                     </li>
                 <?php endif; ?>
             <?php else: ?>
                 <li class="nav-item">
-                    <?php echo $this->Html->link(__('Resoluções'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+                    <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                 </li>
             <?php endif; ?>
         <?php endif; ?>

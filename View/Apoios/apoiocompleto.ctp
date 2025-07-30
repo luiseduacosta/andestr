@@ -10,7 +10,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="collapse navbar-collapse" id="navbarTogglerApoios">
+    <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerApoios">
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
             <li class="nav-item"><?php echo $this->Html->link(__('Editar este texto'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'nav-link']); ?> </li>
             <li class="nav-item"><?php echo $this->Form->postLink(__('Excluir este texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'nav-link']); ?> </li>
