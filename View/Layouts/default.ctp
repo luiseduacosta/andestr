@@ -72,7 +72,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 
 <body class="bg-ligth">
-    <div class="container">
+    <div class="container-fluid">
         <h1 class='h2 bg-danger text-light p-3'>Andes-SN: plataforma para os grupos mistos dos Conads e Congressos</h1>
         <nav class='navbar navbar-expand-lg navbar-light bg-light'>
             <?php echo $this->Html->link('ANDES-SN', 'http://www.andes.org.br', ['target' => '_blank', '_full' => true, 'class' => 'navbar-brand']); ?>
@@ -80,10 +80,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                 aria-controls="menuprincipal" aria-expanded="false" aria-label="Barra de navegação superior">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <ul class="navbar-nav mr-auto collapse navbar-collapse" id="menuprincipal"">
-
+            <ul class="navbar-nav mr-auto collapse navbar-collapse" id="menuprincipal">
                 <li class=" nav-item">
-                <?php echo $this->Html->link('Eventos', ['controller' => 'Eventos', 'action' => 'index'], ['class' => 'nav-link']); ?>
+                    <?php echo $this->Html->link('Eventos', ['controller' => 'Eventos', 'action' => 'index'], ['class' => 'nav-link']); ?>
                 </li>
 
                 <li class="nav-item">
