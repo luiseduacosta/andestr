@@ -93,7 +93,7 @@ class VotacaosController extends AppController
         $this->set("eventos", $eventos);
         $this->set("evento_id", $evento_id);
 
-        $this->Votacao->contain();
+        $this->Votacao->contain(['Item']);
 
         if ($grupo and $item_id and $tr and $evento_id) {
             $this->set(
