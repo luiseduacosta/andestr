@@ -7,7 +7,10 @@
 </div>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <ul class="navbar-nav mr-auto">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="collapse navbar-collapse" id="navbarTogglerApoios">
         <?php if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')): ?>
             <li class="nav-item"><?php echo $this->Html->link(__('Editar este texto'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'nav-link']); ?> </li>
             <li class="nav-item"><?php echo $this->Form->postLink(__('Excluir este texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'nav-link']); ?> </li>
@@ -25,58 +28,57 @@
 
 <div class="apoios view">
     <h2><?php echo __('Texto de Apoio'); ?></h2>
-    <dl>
-        <dt><?php echo __('Id'); ?></dt>
-        <dd>
+    <dl class="row">
+        <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
+        <dd class="col-sm-9">
             <?php echo h($apoio['Apoio']['id']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Caderno'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Caderno'); ?></dt>
+        <dd class="col-sm-9">
             <?php echo h($apoio['Apoio']['caderno']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Texto número: '); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Texto número: '); ?></dt>
+        <dd class="col-sm-9">
             <?php echo h($apoio['Apoio']['numero_texto']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Tema'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Tema'); ?></dt>
+        <dd class="col-sm-9">
             <?php echo h($apoio['Apoio']['tema']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('GT'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('GT'); ?></dt>
+        <dd class="col-sm-9">
             <?php echo h($apoio['Gt']['sigla']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Titulo'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Título'); ?></dt>
+        <dd class="col-sm-9">
             <?php echo strip_tags($apoio['Apoio']['titulo']); ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Autor(es)'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Autor(es)'); ?></dt>
+        <dd class="col-sm-9">
             <?php
             echo strip_tags($apoio['Apoio']['autor']);
             ?>
             &nbsp;
         </dd>
 
-        <dt><?php echo __('Texto de apoio'); ?></dt>
-        <dd>
+        <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
+        <dd class="col-sm-9">
             <?php
-            echo $apoio['Apoio']['texto'];
+            echo strip_tags($apoio['Apoio']['texto']);
             ?>
             &nbsp;
         </dd>
     </dl>
-
 </div>

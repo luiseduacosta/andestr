@@ -1,7 +1,11 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <ul class="navbar-nav mr-auto">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerApoios">
+            <ul class="navbar-nav mr-auto">
             <?php if (isset($evento_id)): ?>
                 <li class="nav-item">
                     <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
@@ -23,7 +27,7 @@
         </ul>
     </nav>
 
-    <div class="col-9">
+    <div class="container">
         <?php
         echo $this->Form->create('Apoio', [
             'class' => 'form-horizontal',
@@ -82,7 +86,8 @@
         Font,
         Paragraph,
         Table,
-        TableToolbar
+        TableToolbar,
+        SourceEditing
     } from 'ckeditor5';
 
     let autor;
@@ -91,9 +96,9 @@
     }
     ClassicEditor
         .create(document.querySelector('#ApoioAutor'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, SourceEditing],
             toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
             ]
         })
@@ -112,9 +117,9 @@
     }
     ClassicEditor
         .create(document.querySelector('#ApoioTexto'), {
-            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar],
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
             toolbar: [
-                'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
+                'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
             ],
             table: {

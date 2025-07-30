@@ -5,7 +5,10 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <ul class="navbar-nav mr-auto">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <ul class="collapse navbar-collapse" id="navbarTogglerApoios">
             <?php if (isset($usuario)): ?>
                 <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
 
@@ -118,5 +121,4 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
-</div>
 </div>

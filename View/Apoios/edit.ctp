@@ -8,25 +8,27 @@
 
 ?>
 
-<div class="row">
-    <div class="col-2">
-        <h3 class="h3"><?php echo __('Ações'); ?></h3>
-        <ul class="list-group">
+<div class="container">
 
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerApoios" aria-controls="navbarTogglerApoios" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <ul class="collapse navbar-collapse" id="navbarTogglerApoios">
             <?php if (isset($usuario)): ?>
                 <?php if (($usuario['role'] == 'editor') || ($usuario['role'] == 'admin')): ?>
-                    <li class="list-group-item list-group-item-action">
-                        <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Apoio.id')], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('Apoio.id'))]); ?>
+                    <li class="nav-item">
+                        <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Apoio.id')], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('Apoio.id')), 'class' => 'nav-link']); ?>
                     </li>
                 <?php endif; ?>
             <?php endif; ?>
-            <li class="list-group-item list-group-item-action">
-                <?php echo $this->Html->link(__('Listar'), ['action' => 'index']); ?></li>
-
+            <li class="nav-item">
+                <?php echo $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'nav-link']); ?>
+            </li>
         </ul>
-    </div>
+    </nav>
 
-    <div class="col-10">
+    <div class="container">
         <?php
         echo $this->Form->create('Apoio', [
             'class' => 'form-horizontal',
@@ -87,7 +89,8 @@
         Font,
         Paragraph,
         Table,
-        TableToolbar
+        TableToolbar,
+        SourceEditing
     } from 'ckeditor5';
 
     function initAutorEditor() {
@@ -103,15 +106,14 @@
         }
         ClassicEditor
             .create(document.querySelector('#ApoioAutor'), {
-                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph],
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, SourceEditing],
                 toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                     'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
                 ]
             })
             .then(editor => {
                 autor = editor;
-                console.log('Autor editor initialized successfully');
                 var campoAutor = document.querySelector('#ApoioAutor');
                 autor.setData(campoAutor.value);
                 let contenudoAutor = autor.getData();
@@ -135,9 +137,9 @@
         }
         ClassicEditor
             .create(document.querySelector('#ApoioTexto'), {
-                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar],
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
                 toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                     'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
                     'insertTable'
                 ],
@@ -151,7 +153,6 @@
             })
             .then(editor => {
                 texto = editor;
-                console.log('Texto editor initialized successfully');
                 var campoTexto = document.querySelector('#ApoioTexto');
                 texto.setData(campoTexto.value);
                 let contenudoTexto = texto.getData();
