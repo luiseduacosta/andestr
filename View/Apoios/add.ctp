@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var $this \App\View\AppView 
+ * 
+ */
+
+?>
+
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -98,6 +106,7 @@
         .create(document.querySelector('#ApoioAutor'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, SourceEditing],
             toolbar: [
+                'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                 'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
             ]
@@ -118,8 +127,9 @@
     ClassicEditor
         .create(document.querySelector('#ApoioTexto'), {
             plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
+            plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
             toolbar: [
-                'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
+                'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', 'insertTable', '|',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
             ],
             table: {

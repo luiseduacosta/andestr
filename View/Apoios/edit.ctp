@@ -108,7 +108,7 @@
             .create(document.querySelector('#ApoioAutor'), {
                 plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, SourceEditing],
                 toolbar: [
-                    'sourceEditing','undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
                     'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
                 ]
             })
