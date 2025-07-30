@@ -1,6 +1,5 @@
 <?php
 
-// app/Controller/UsersController.php
 App::uses('AppController', 'Controller');
 
 /**
@@ -10,6 +9,11 @@ App::uses('AppController', 'Controller');
 
 class UsersController extends AppController {
 
+    /**
+     * Helpers
+     *
+     * @var array
+     */
     public $helpers = ['Html', 'Form', 'Text'];
 
     /**
@@ -26,22 +30,6 @@ class UsersController extends AppController {
         $this->set('usuario', $this->Auth->user());
         
     }
-
-    /*
-      public function isAuthorized($usuario) {
-
-      if (isset($usuario['role']) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')) {
-      return true;
-      }
-
-      // All registered users can view
-      if ($this->action == 'index') {
-      return true;
-      }
-
-      return parent::isAuthorized($usuario);
-      }
-     */
 
      /**
      * index method

@@ -10,6 +10,12 @@ App::uses("AppController", "Controller");
 class GtsController extends AppController
 {
     /**
+     * Helpers
+     *
+     * @var array
+     */
+    public $helpers = ["Html", "Form", "Text"];
+    /**
      * Components
      *
      * @var array

@@ -13,6 +13,11 @@ App::uses("AppController", "Controller");
  */
 class ApoiosController extends AppController
 {
+    /**
+     * Helpers
+     *
+     * @var array
+     */
     public $helpers = ["Html", "Form", "Text", "Paginator"];
 
     /**
@@ -22,6 +27,12 @@ class ApoiosController extends AppController
      */
     public $components = ["Paginator", "Session"];
 
+    /**
+     * isAuthorized method
+     *
+     * @param array $user
+     * @return boolean
+     */
     public function isAuthorized($user)
     {
         if (isset($user["role"]) && $user["role"] === "editor") {
@@ -36,6 +47,11 @@ class ApoiosController extends AppController
         return parent::isAuthorized($user);
     }
 
+    /**
+     * beforeFilter method
+     *
+     * @return void
+     */
     function beforeFilter()
     {
         parent::beforeFilter();

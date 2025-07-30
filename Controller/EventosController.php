@@ -13,6 +13,13 @@ App::uses("AppController", "Controller");
 class EventosController extends AppController
 {
     /**
+     * Helpers
+     *
+     * @var array
+     */
+    public $helpers = ["Html", "Form", "Text"];
+    
+    /**
      * Components
      *
      * @var array

@@ -18,13 +18,23 @@ App::uses("AppController", "Controller");
 class VotacaosController extends AppController
 {
     /**
-     * Scaffold
+     * Helpers
      *
-     * @var mixed
+     * @var array
+     */
+    public $helpers = ["Html", "Form", "Text"];
+    /**
+     * Components
+     *
+     * @var array
      */
     public $components = ["Paginator", "Session"];
-    public $helpers = ["Html", "Form", "Text"];
 
+    /**
+     * beforeFilter method
+     *
+     * @return void
+     */
     function beforeFilter()
     {
         parent::beforeFilter();
@@ -70,6 +80,7 @@ class VotacaosController extends AppController
         /** Faço a lista dos eventos */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
+            'fields' => ['id', 'nome'],
             "order" => ["ordem" => "asc"],
         ]);
         if (empty($evento_id)):
@@ -1515,6 +1526,7 @@ class VotacaosController extends AppController
     {
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
+            'fields' => ['id', 'nome'],
             "order" => ["ordem" => "asc"],
         ]);
         end($eventos);

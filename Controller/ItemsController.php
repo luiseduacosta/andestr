@@ -15,9 +15,15 @@ App::uses("AppController", "Controller");
 class ItemsController extends AppController
 {
     /**
-     * Scaffold
+     * Helpers
      *
-     * @var mixed
+     * @var array
+     */
+    public $helpers = ['Html', 'Form', 'Text'];
+    /**
+     * Components
+     *
+     * @var array
      */
     public $components = ["Paginator", "Session"];
 
