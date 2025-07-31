@@ -81,8 +81,8 @@
                 <table class="table table-striped table-hover">
                     <thead class="thead-light">
                         <tr>
-                            <th>
-                                <?php echo $this->Paginator->sort('id');
+                            <th class="table-info">
+                                <?php echo $this->Paginator->sort('id', 'Ação');
                                 ?>
                             </th>
 
@@ -91,11 +91,11 @@
                                 ?>
                             </th>
                             <th>
-                                <?php echo $this->Paginator->sort('tr');
+                                <?php echo $this->Paginator->sort('tr', 'TR');
                                 ?>
                             </th>
                             <th>
-                                <?php echo $this->Paginator->sort('tr_suprimida', 'Suprimida');
+                                <?php echo $this->Paginator->sort('tr_suprimida', 'TR suprimida');
                                 ?>
                             </th>
                             <th>
@@ -116,10 +116,10 @@
                     <tbody>
                         <?php foreach ($votacaos as $c_votacaos): ?>
                             <tr>
-                                <td>
+                                <td class="table-info">
                                     <?php
                                     if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')):
-                                        echo $this->Html->link($c_votacaos['Votacao']['id'], ['controller' => 'votacaos', 'action' => 'view', $c_votacaos['Votacao']['id']]);
+                                        echo $this->Html->link('Ver', ['controller' => 'votacaos', 'action' => 'view', $c_votacaos['Votacao']['id']]);
                                     else:
                                         echo $c_votacaos['Votacao']['id'];
                                     endif;

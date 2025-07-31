@@ -109,29 +109,25 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
                 <li class="nav-item">
                     <?php
-                    if (isset($usuario)):
-                        if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                            echo $this->Html->link('Votação', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
-                        elseif ($usuario['role'] == 'relator'):
-                            echo $this->Html->link('Votação', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2)]], ['class' => 'nav-link']);
-                        endif;
+                    if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                        echo $this->Html->link('Votações', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
+                    elseif (isset($usuario) && $usuario['role'] == 'relator'):
+                        echo $this->Html->link('Votações', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2)]], ['class' => 'nav-link']);
                     endif;
                     ?>
                 </li>
 
                 <li class="nav-item">
                     <?php
-                    if (isset($usuario)):
-                        if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                            echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
-                        elseif ($usuario['role'] == 'relator'):
-                            if (strlen($usuario['username']) == 6):
-                                $usuariogrupo = substr($usuario['username'], 5, 1);
-                            elseif (strlen($usuario['username']) == 7):
-                                $usuariogrupo = substr($usuario['username'], 5, 2);
-                            endif;
-                            echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => $usuariogrupo]], ['class' => 'nav-link']);
+                    if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                        echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']);
+                    elseif (isset($usuario) && $usuario['role'] == 'relator'):
+                        if (strlen($usuario['username']) == 6):
+                            $usuariogrupo = substr($usuario['username'], 5, 1);
+                        elseif (strlen($usuario['username']) == 7):
+                            $usuariogrupo = substr($usuario['username'], 5, 2);
                         endif;
+                        echo $this->Html->link('Grupos', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => $usuariogrupo]], ['class' => 'nav-link']);
                     endif;
                     ?>
                 </li>
