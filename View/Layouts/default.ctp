@@ -137,7 +137,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                 </li>
 
                 <li class="nav-item">
-                    <?php echo $this->Html->link('Relatórios', ['controller' => 'Votacaos', 'action' => 'index'], ['class' => 'nav-link']); ?>
+                    <?php echo $this->Html->link('Relatórios', ['controller' => 'Votacaos', 'action' => 'relatorio', '?' => ['evento_id' => $this->Session->read('evento_id')]], ['class' => 'nav-link']); ?>
                 </li>
 
                 <?php if (isset($usuario)): ?>
