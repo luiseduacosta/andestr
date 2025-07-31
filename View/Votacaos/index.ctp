@@ -173,7 +173,11 @@
                                         ['title' => strip_tags(html_entity_decode($c_votacaos['Item']['texto'], ENT_QUOTES, 'UTF-8'))]
                                     );
                                     else:
-                                        echo '<abbr title="' . strip_tags(html_entity_decode($c_votacaos['Item']['texto'], ENT_QUOTES, 'UTF-8')) . '">' . $c_votacaos['Votacao']['item'] . '</abbr>';
+                                        echo $this->Html->link($c_votacaos['Votacao']['item'], 
+                                        ['controller' => 'Items', 'action' => 'view', $c_votacaos['Votacao']['item_id']],
+                                        ['title' => strip_tags(html_entity_decode($c_votacaos['Item']['texto'], ENT_QUOTES, 'UTF-8'))]
+                                    );
+                                        // echo '<abbr title="' . strip_tags(html_entity_decode($c_votacaos['Item']['texto'], ENT_QUOTES, 'UTF-8')) . '">' . $c_votacaos['Votacao']['item'] . '</abbr>';
                                     endif;
                                     ?>
                                 </td>

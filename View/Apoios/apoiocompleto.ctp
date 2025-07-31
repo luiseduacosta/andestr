@@ -26,8 +26,9 @@
     </ul>
 </nav>
 
-<div class="apoios view">
+<div class="container">
     <h2><?php echo __('Texto de Apoio'); ?></h2>
+    
     <dl class="row">
         <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
         <dd class="col-sm-9">
@@ -76,7 +77,7 @@
         <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
         <dd class="col-sm-9">
             <?php
-            echo strip_tags($apoio['Apoio']['texto']);
+            echo html_entity_decode($apoio['Apoio']['texto'], ENT_QUOTES, 'UTF-8');
             ?>
             &nbsp;
         </dd>

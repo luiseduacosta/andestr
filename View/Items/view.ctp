@@ -1,4 +1,4 @@
-<?php // pr($item); ?>
+<?php // pr($item['Votacao']); ?>
 <?php // pr($votacao); ?>
 <?php // pr($usuario); ?>
 
@@ -11,7 +11,7 @@
             <li class="nav-item">
                 <?php echo $this->Html->link(__('Votação'), ['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $item['Item']['id']]], ['class' => "nav-link"]); ?>
             </li>
-        <?php elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
+        <?php elseif (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
             <li class="nav-item">
                 <?php echo $this->Html->link(__('Listar Items'), ['action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'apoio_id' => $item['Item']['apoio_id'], 'tr' => $item['Item']['tr']]], ['class' => "nav-link"]); ?>
             </li>
@@ -30,13 +30,21 @@
             <li class="nav-item">
                 <?php echo $this->Form->postLink(__('Excluir Item'), ['action' => 'delete', $item['Item']['id']], ['confirm' => __('Tem certeza que quer excluir este resgistro # %s?'), $item['Item']['id'], 'class' => "nav-link"]); ?>
             </li>
-        <?php elseif ($usuario['role'] == 'admin'): ?>
+        <?php elseif (isset($usuario) && $usuario['role'] == 'admin'): ?>
             <li class="nav-item">
                 <?php echo $this->Html->link(__('Votação'), ['controller' => 'Votacaos', 'action' => 'add', '?' => ['item_id' => $item['Item']['id']]], ['class' => "nav-link"]); ?>
+            </li>
+        <?php else: ?>
+            <li class="nav-item">
+                <?php echo $this->Html->link(__('Listar Items'), ['action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'tr' => $item['Item']['tr']]], ['class' => "btn btn-primary mr-1"]); ?>
             </li>
         <?php endif; ?>
     </ul>
 </nav>
+
+<h1 class="h3">
+    <?php echo $item['Apoio']['Evento']['nome'] . ' - ' . $item['Apoio']['Evento']['local'] . ' - ' . $item['Apoio']['Evento']['data']; ?>
+</h1>
 
 <dl class="row">
     <dt class="col-sm-3"><?php echo __('Texto de apoio: '); ?></dt>
@@ -64,14 +72,14 @@
     <dt class="col-sm-3"><?php echo __('Votação'); ?></dt>
     <dd class="col-sm-9">
         <?php
-        if ($item['Votacao']) {
-            if (isset($usuario)) {
+        if (isset($item['Votacao']) && sizeof($item['Votacao']) > 0) {
+            if (isset($usuario) && $usuario['role'] == 'relator') {
                 echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id'], 'grupo' => substr($usuario['username'], 5, 2)]]);
             } else {
                 echo $this->Html->link('Ver votação', ['controller' => 'votacaos', 'action' => 'index', '?' => ['evento_id' => $item['Apoio']['evento_id'], 'item_id' => $item['Item']['id']]]);
             }
         } else {
-            echo "Sem votação";
+            echo "Sem votação.";
         }
         ?>
         &nbsp;
