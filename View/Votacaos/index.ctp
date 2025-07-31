@@ -165,15 +165,15 @@
                                     if (isset($usuario) && $usuario['role'] == 'relator'):
                                         echo $this->Html->link($c_votacaos['Votacao']['item'], 
                                         ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]],
-                                        ['title' => strip_tags(html_entity_decode($c_votacaos['Votacao']['item'], ENT_QUOTES, 'UTF-8'))]
+                                        ['title' => strip_tags(html_entity_decode($c_votacaos['Votacao']['texto'], ENT_QUOTES, 'UTF-8'))]
                                     );
                                     elseif (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
                                         echo $this->Html->link($c_votacaos['Votacao']['item'], 
                                         ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]],
-                                        ['title' => strip_tags(html_entity_decode($c_votacaos['Votacao']['item'], ENT_QUOTES, 'UTF-8'))]
+                                        ['title' => strip_tags(html_entity_decode($c_votacaos['Votacao']['texto'], ENT_QUOTES, 'UTF-8'))]
                                     );
                                     else:
-                                        echo '<abbr title="' . strip_tags(html_entity_decode($c_votacaos['Votacao']['item'], ENT_QUOTES, 'UTF-8')) . '">' . $c_votacaos['Votacao']['item'] . '</abbr>';
+                                        echo '<abbr title="' . strip_tags(html_entity_decode($c_votacaos['Votacao']['texto'], ENT_QUOTES, 'UTF-8')) . '">' . $c_votacaos['Votacao']['item'] . '</abbr>';
                                     endif;
                                     ?>
                                 </td>
