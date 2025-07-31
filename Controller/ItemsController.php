@@ -394,7 +394,7 @@ class ItemsController extends AppController
             : 0;
         $this->set("votacao", $votacao);
 
-        $options = ["conditions" => ["Item." . $this->Item->primaryKey => $id]];
+        $options = ["contain" => ['Apoio' => ['Evento'], 'Votacao'], "conditions" => ["Item." . $this->Item->primaryKey => $id]];
         $this->set("item", $this->Item->find("first", $options));
     }
 

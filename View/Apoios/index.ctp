@@ -22,9 +22,9 @@
 
 <div class="row justify-content-center">
     <div class="row mb-3">
-    <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-    <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => isset($evento_id) ? $evento_id : end($eventos), 'class' => 'form-control']); ?>
-    <?php echo $this->Form->end(); ?>
+        <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
+        <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => isset($evento_id) ? $evento_id : end($eventos), 'class' => 'form-control']); ?>
+        <?php echo $this->Form->end(); ?>
     </div>
 </div>
 
@@ -49,7 +49,8 @@
 </div>
 
 <div class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerAndestr" aria-controls="navbarTogglerAndestr" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerAndestr"
+        aria-controls="navbarTogglerAndestr" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerAndestr">
@@ -58,25 +59,23 @@
         </li>
         <?php if (isset($evento_id)): ?>
             <?php
-            if (isset($usuario)):
-                if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                    ?>
-                    <li class="nav-item">
-                        <?php echo $this->Html->link(__('Novo texto de apoio'), ['action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class="nav-item">
-                        <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
-                    </li>
-                <?php elseif ($usuario['role'] == 'relator'): ?>
-                    <li class="nav-item">
-                        <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
-                    </li>
-                <?php endif; ?>
-            <?php else: ?>
+            if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                ?>
+                <li class="nav-item">
+                    <?php echo $this->Html->link(__('Novo texto de apoio'), ['action' => 'add', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+                </li>
                 <li class="nav-item">
                     <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
                 </li>
+            <?php elseif (isset($usuario) && $usuario['role'] == 'relator'): ?>
+                <li class="nav-item">
+                    <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
+                </li>
             <?php endif; ?>
+        <?php else: ?>
+            <li class="nav-item">
+                <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['evento_id' => $evento_id]], ['class' => 'nav-link']); ?>
+            </li>
         <?php endif; ?>
     </ul>
 </div>
@@ -96,7 +95,7 @@
                 <th><?php echo $this->Paginator->sort('titulo'); ?></th>
                 <th><?php echo $this->Paginator->sort('autor'); ?></th>
                 <th><?php echo $this->Paginator->sort('texto'); ?></th>
-                <th class="row"><?php echo __('Ações'); ?></th>
+                <th class="table-active"><?php echo __('Ações'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -115,15 +114,13 @@
                     </td>
                     <td><?php echo $this->Text->truncate(strip_tags($apoio['Apoio']['texto']), 120, ['ellipsis' => ' ...', 'exact' => false]); ?>&nbsp;
                     </td>
-                    <td class="row">
+                    <td class="table-active">
                         <?php echo $this->Html->link(__('Ver'), ['action' => 'view', $apoio['Apoio']['id']]); ?>
                         <?php
-                        if (isset($usuario)):
-                            if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                                ?>
-                                <?php echo $this->Html->link(__('Editar'), ['action' => 'edit', $apoio['Apoio']['id']]); ?>
-                                <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id'])]); ?>
-                            <?php endif; ?>
+                        if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                            ?>
+                            <?php echo $this->Html->link(__('Editar'), ['action' => 'edit', $apoio['Apoio']['id']]); ?>
+                            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Confirma excluir o registro # %s?', $apoio['Apoio']['id'])]); ?>
                         <?php endif; ?>
                     </td>
                 </tr>

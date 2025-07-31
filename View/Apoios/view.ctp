@@ -5,45 +5,43 @@
 <div class="container">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerAndestr" aria-controls="navbarTogglerAndestr" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerAndestr"
+            aria-controls="navbarTogglerAndestr" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav collapse navbar-collapse" id="navbarTogglerAndestr">
-            <?php if (isset($usuario)): ?>
-                <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Editar Texto'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Form->postLink(__('Excluir Texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Está seguro que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Novo Texto'), ['action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Inserir TR item'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id'], 'apoio_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
-                    </li>
-                <?php else: ?>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
-                    </li>
-                    <li class='nav-item'>
-                        <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
-                    </li>
-
-                <?php endif; ?>
+            <?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Editar Texto'), ['action' => 'edit', $apoio['Apoio']['id']], ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Form->postLink(__('Excluir Texto'), ['action' => 'delete', $apoio['Apoio']['id']], ['confirm' => __('Está seguro que quer excluir este registro # %s?', $apoio['Apoio']['id']), 'class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Novo Texto'), ['action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id']]], ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Inserir TR item'), ['controller' => 'Items', 'action' => 'add', '?' => ['evento_id' => $apoio['Apoio']['evento_id'], 'apoio_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
+                </li>
+            <?php else: ?>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Evento'), ['controller' => 'Eventos', 'action' => 'view', $apoio['Apoio']['evento_id']], ['class' => 'nav-link']); ?>
+                </li>
+                <li class='nav-item'>
+                    <?php echo $this->Html->link(__('Listar Textos'), ['action' => 'index', '?' => ['evento_id' => $apoio['Apoio']['id']]], ['class' => 'nav-link']); ?>
+                </li>
             <?php endif; ?>
         </ul>
     </nav>
 
     <h1 class="h3"><?php echo __('Texto de apoio: ' . $apoio['Apoio']['numero_texto']); ?></h1>
+
     <dl class="row">
         <dt class="col-sm-3"><?php echo __('Id'); ?></dt>
         <dd class="col-sm-9">
@@ -104,21 +102,23 @@
         </dd>
     </dl>
 
-    <div class="row">
+    <div class="container">
         <?php if (count($apoio['Item']) > 0): ?>
             <h3><?php echo __('TR: ' . $apoio['Apoio']['numero_texto']); ?></h3>
 
-            <?php foreach ($apoio['Item'] as $c_apoio): ?>
-                <?php // pr($c_apoio); ?>
-                <dl class="row">
-                    <dt class="col-sm-1">
-                        <?php echo $this->Html->link($c_apoio['item'], ['controller' => 'Items', 'action' => 'view', $c_apoio['id']]); ?>
-                    </dt>
-                    <dd class="col-sm-9">
-                        <?php echo trim($c_apoio['texto']); ?>
-                    </dd>
-                </dl>
-            <?php endforeach; ?>
+            <dl class="col-sm-12">
+                <?php foreach ($apoio['Item'] as $c_apoio): ?>
+                    <div class="row">
+                        <dt class="col-1">
+                            <?php echo $this->Html->link($c_apoio['item'], ['controller' => 'Items', 'action' => 'view', $c_apoio['id']]); ?>
+                        </dt>
+                        <dd class="col-9">
+                            <?php echo trim($c_apoio['texto']); ?>
+                        </dd>
+                    </div>
+                <?php endforeach; ?>
+            </dl>
+
         <?php endif; ?>
     </div>
 </div>

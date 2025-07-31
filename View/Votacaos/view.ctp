@@ -1,14 +1,26 @@
-<?php // pr($votacao) ?>
+<?php 
+// pr($votacao) 
+?>
+
+<h1 class="h3">
+    <?php echo $votacao['Evento']['nome'] . ' - ' . $votacao['Evento']['local'] . ' - ' . $votacao['Evento']['data']; ?>
+</h1>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <?php if (isset($usuario)): ?>
-        <?php if ($usuario['role'] == 'relator' || $usuario['role'] == 'admin'): ?>
-            <?php echo $this->Html->link('Editar', 'edit/' . $votacao['Votacao']['id'], ['class' => 'btn btn-info']); ?>
-            <?php echo " "; ?>
-            <?php // echo $this->Html->link('TR', '/Resolucaos/view/' . $votacao['Votacao']['resolucao_id']); ?>
-            <?php echo $this->Html->link('Exluir', 'delete/' . $votacao['Votacao']['id'], array('confirm' => __('Está seguro que quer excluir este registro'), 'class' => 'btn btn-danger')); ?>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <?php echo $this->Html->link(__('Listar Votações'), ['action' => 'index', '?' => ['item_id' => $votacao['Item']['id']]], ['class' => 'btn btn-primary mr-1']); ?>
+        </li>
+        <?php if (isset($usuario) && ($usuario['role'] == 'relator' || $usuario['role'] == 'admin')): ?>
+            <li class="nav-item">
+                <?php echo $this->Html->link('Editar', ['action' => 'edit', $votacao['Votacao']['id']], ['class' => 'btn btn-info mr-1']); ?>
+            </li>
+            <li class="nav-item">
+                <?php // echo $this->Html->link('TR', '/Resolucaos/view/' . $votacao['Votacao']['resolucao_id']); ?>
+                <?php echo $this->Html->link('Exluir', ['delete', $votacao['Votacao']['id']], ['confirm' => __('Está seguro que quer excluir este registro'), 'class' => 'btn btn-danger']); ?>
+            </li>
         <?php endif; ?>
-    <?php endif; ?>
+    </ul>
 </nav>
 
 <dl class="row">
