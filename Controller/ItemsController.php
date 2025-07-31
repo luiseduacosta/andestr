@@ -27,20 +27,6 @@ class ItemsController extends AppController
      */
     public $components = ["Paginator", "Session"];
 
-    public function isAuthorized($user)
-    {
-        if (isset($user["role"]) && $user["role"] == "editor") {
-            return true;
-        }
-
-        // All registered users can add posts
-        if ($this->action === "add") {
-            return true;
-        }
-
-        return parent::isAuthorized($user);
-    }
-
     function beforeFilter()
     {
         parent::beforeFilter();

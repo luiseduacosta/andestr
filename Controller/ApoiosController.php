@@ -28,26 +28,6 @@ class ApoiosController extends AppController
     public $components = ["Paginator", "Session"];
 
     /**
-     * isAuthorized method
-     *
-     * @param array $user
-     * @return boolean
-     */
-    public function isAuthorized($user)
-    {
-        if (isset($user["role"]) && $user["role"] === "editor") {
-            return true;
-        }
-
-        // All registered users can add posts
-        if ($this->action === "add") {
-            return true;
-        }
-
-        return parent::isAuthorized($user);
-    }
-
-    /**
      * beforeFilter method
      *
      * @return void
