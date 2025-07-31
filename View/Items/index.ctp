@@ -37,8 +37,7 @@
         <h3 class="h2"><?php echo __('TRs'); ?></h3>
         <ul class="list-group">
             <?php
-            if (isset($usuario)):
-                if ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
+            if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')):
                     ?>
                     <li class="list-group-item">
                         <?php
@@ -48,21 +47,19 @@
                         ?>
                     </li>
                     <?php
-                endif;
             endif;
             ?>
 
             <?php
-            if (isset($usuario['role'])):
-                if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                    ?>
+            if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                ?>
                     <li class="list-group-item">
                         <?php
                         echo $this->Html->link('Ver votações', ['controller' => 'Votacaos', 'action' => 'index', '?' => ['evento_id' => $evento_id]]);
                         ?>
                     </li>
                     <?php
-                elseif ($usuario['role'] == 'relator'):
+                elseif (isset($usuario) && $usuario['role'] == 'relator'):
                     ?>
                     <li class="list-group-item">
                         <?php
@@ -70,7 +67,6 @@
                         ?>
                     </li>
                     <?php
-                endif;
             endif;
             ?>
 
@@ -114,7 +110,6 @@
                         <?php foreach ($items as $c_item): ?>
                             <?php // pr($c_item); ?>
                             <tr>
-
                                 <td>
                                     <?php
                                     if (isset($usuario)):
@@ -131,13 +126,10 @@
 
                                 <td>
                                     <?php
-                                    if (isset($usuario)):
-                                        if ($usuario['role'] == 'admin' || $usuario['role'] == 'editor'):
-                                            echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'Apoios', 'action' => 'view', $c_item['Apoio']['id']]);
-                                        elseif ($usuario['role'] == 'relator'):
-
-                                            echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'Apoios', 'action' => 'view', $c_item['Apoio']['id']]);
-                                        endif;
+                                    if (isset($usuario) && ($usuario['role'] == 'admin' || $usuario['role'] == 'editor')):
+                                        echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'Apoios', 'action' => 'view', $c_item['Apoio']['id']]);
+                                    elseif (isset($usuario) && $usuario['role'] == 'relator'):
+                                        echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'Apoios', 'action' => 'view', $c_item['Apoio']['id']]);
                                     else:
                                         echo $this->Html->link($c_item['Item']['tr'], ['controller' => 'Apoios', 'action' => 'view', $c_item['Apoio']['id']]);
                                     endif;
