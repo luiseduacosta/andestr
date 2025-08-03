@@ -70,9 +70,69 @@
         echo $this->Form->input('apoio_id', ['value' => $apoio_id, 'options' => $apoios]);
         echo $this->Form->input('tr', ['label' => ['text' => 'TR', 'class' => 'col-3'], 'value' => $ultimo_tr]);
         echo $this->Form->input('item', ['label' => ['text' => 'Item. Formato nn.nn Digitar: número da TR, "." o número do item.', 'class' => 'col-3'], 'value' => $ultimo_tr . "." . $item_item, 'placeholder' => '__.__']);
-        echo $this->Form->input('texto', ['label' => ['text' => 'Item do texto de resolução', 'class' => 'col-3'], 'class' => 'ckeditor']);
+        echo $this->Form->input('texto', ['label' => ['text' => 'Item do texto de resolução', 'class' => 'col-3']]);
         ?>
     </fieldset>
     <?= $this->Form->submit('Confirma', ['type' => 'Submit', 'label' => ['text' => 'Confirma', 'class' => 'col-4'], 'class' => 'btn btn-primary']) ?>
     <?= $this->Form->end(); ?>
 </div>
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Essentials,
+        Bold,
+        Italic,
+        Strikethrough,
+        Font,
+        Paragraph,
+        Table,
+        TableToolbar,
+        SourceEditing
+    } from 'ckeditor5';
+
+    function initTextoEditor() {
+        let texto;
+        if (typeof texto !== 'undefined') {
+            texto.destroy()
+                .then(() => {
+                    console.log('Texto editor destroyed successfully');
+                })
+                .catch(error => {
+                    console.error('Error destroying text editor:', error);
+                });
+        }
+        ClassicEditor
+            .create(document.querySelector('#ItemTexto'), {
+                plugins: [Essentials, Bold, Italic, Strikethrough, Font, Paragraph, Table, TableToolbar, SourceEditing],
+                toolbar: [
+                    'sourceEditing', 'undo', 'redo', '|', 'bold', 'italic', 'strikethrough', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'insertTable'
+                ],
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                }
+            })
+            .then(editor => {
+                texto = editor;
+                var campoTexto = document.querySelector('#ItemTexto');
+                texto.setData(campoTexto.value);
+                let contenudoTexto = texto.getData();
+                console.log('Conteúdo do texto:', contenudoTexto);
+            })
+            .catch(error => {
+                console.error('Error initializing text editor:', error);
+            });
+    }
+
+    // Initialize editors when the DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        initTextoEditor();
+    });
+
+</script>
