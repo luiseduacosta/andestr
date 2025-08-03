@@ -81,24 +81,24 @@
 
         <dt class="col-sm-3"><?php echo __('Titulo'); ?></dt>
         <dd class="col-sm-9">
-            <?php echo h($apoio['Apoio']['titulo']); ?>
+            <?php echo h(trim($apoio['Apoio']['titulo'])); ?>
             &nbsp;
         </dd>
 
         <dt class="col-sm-3"><?php echo __('Autor(es)'); ?></dt>
         <dd class="col-sm-9">
             <?php
-            echo $this->Text->truncate($apoio['Apoio']['autor'], 200, ['ellipsis' => ' ...', 'exact' => false]);
+            echo $this->Text->truncate(strip_tags($apoio['Apoio']['autor']), 120, ['ellipsis' => ' e outros.', 'exact' => false]);
             ?>
             &nbsp;
         </dd>
 
         <dt class="col-sm-3"><?php echo __('Texto de apoio'); ?></dt>
         <dd class="col-sm-9">
-            <?php
-            echo $this->Text->truncate($apoio['Apoio']['texto'], 120, ['ellipsis' => $this->Html->link(' ...', ['action' => 'apoiocompleto', $apoio['Apoio']['id']]), 'exact' => true]);
-            ?>
-            &nbsp;
+        <?php
+        echo $this->Text->truncate(trim(strip_tags($apoio['Apoio']['texto'])), 120, ['ellipsis' => $this->Html->link(' ...', ['action' => 'apoiocompleto', $apoio['Apoio']['id']]), 'exact' => true]);
+        ?>
+        &nbsp;
         </dd>
     </dl>
 
