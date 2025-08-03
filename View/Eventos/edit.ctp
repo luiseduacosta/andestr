@@ -10,11 +10,11 @@ if ($this->Session->check('Auth.User')) {
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<?php echo $this->Html->link(__('Listar'), ['action' => 'index', 'class' => 'btn btn-primary']); ?>
+			<?php echo $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'btn btn-primary me-1']); ?>
 		</li>
 		<?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
 			<li class="nav-item">
-				<?php echo $this->Html->link(__('Novo evento'), ['controller' => 'evento', 'action' => 'add', 'class' => 'btn btn-primary']); ?>
+				<?php echo $this->Html->link(__('Novo evento'), ['controller' => 'evento', 'action' => 'add'], ['class' => 'btn btn-primary me-1']); ?>
 			</li>
 			<li class="nav-item">
 				<?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Evento.id')], ['confirm' => __('Tem certeza que quer excluir este registro # %s?', $this->Form->value('Evento.id')), 'class' => 'btn btn-danger btn-block']); ?>
@@ -48,6 +48,7 @@ if ($this->Session->check('Auth.User')) {
 			echo $this->Form->input('local');
 			?>
 		</fieldset>
-		<?php echo $this->Form->end(__('Confirma'), ['type' => 'Submit', 'label' => __('Confirma'), 'class' => 'btn btn-primary']); ?>
+		<?php echo $this->Form->submit(__('Confirma'), ['type' => 'Submit', 'label' => __('Confirma'), 'class' => 'btn btn-primary']); ?>
+		<?php echo $this->Form->end(); ?>
 	</div>
 <?php endif;

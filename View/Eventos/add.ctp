@@ -1,27 +1,9 @@
-<?php
-if ($this->Session->check('Auth.User')) {
-    $usuario = $this->Session->read('Auth.User');
-} else {
-    echo 'Visitante.';
-    exit;
-}
-?>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav mr-auto">
         <a class='navbar-brand'><?php echo __('Ações'); ?></a>
         <li class='nav-item'>
             <?php echo $this->Html->link(__('Listar eventos'), array('action' => 'index'), ['class' => 'nav-link']); ?>
         </li>
-        <?php
-        if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
-            ?>
-            <li class='nav-item'>
-                <?php echo $this->Html->link(__('Novo evento'), array('controller' => 'eventos', 'action' => 'add'), ['class' => 'nav-link']); ?>
-            </li>
-            <?php
-        endif;
-        ?>
     </ul>
 </nav>
 
@@ -45,10 +27,10 @@ if ($this->Session->check('Auth.User')) {
         <fieldset>
             <legend><?php echo __('Acrescentar um evento'); ?></legend>
             <?php
-            echo $this->Form->input('nome', ['label' => ['text' => 'Evento']]);
-            echo $this->Form->input('ordem', ['value' => $evento['Evento']['ordem'] + 1, 'required']);
-            echo $this->Form->input('data');
-            echo $this->Form->input('local');
+            echo $this->Form->input('nome', ['label' => ['text' => 'Evento', 'class' => 'col-2'], 'required' => true]);
+            echo $this->Form->input('ordem', ['value' => $evento['Evento']['ordem'] + 1, 'required' => true]);
+            echo $this->Form->input('data', ['label' => ['text' => 'Data', 'class' => 'col-2'], 'required' => true]);
+            echo $this->Form->input('local', ['label' => ['text' => 'Local', 'class' => 'col-2'], 'required' => true]);
             ?>
         </fieldset>
         <div class='row justify-content-left'>
