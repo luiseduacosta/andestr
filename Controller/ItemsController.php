@@ -410,6 +410,7 @@ class ItemsController extends AppController
         if (!$this->Item->exists($id)) {
             throw new NotFoundException(__("Item não localizado"));
         }
+
         if ($this->request->is(["post", "put"])) {
             // Elimina os \r e \n e <br /> do texto original
             $this->request->data["Item"]["texto"] = str_replace(
@@ -442,7 +443,7 @@ class ItemsController extends AppController
             $this->request->data = $this->Item->find("first", $options);
         }
 
-        $options = ["conditions" => ["Item." . $this->Item->primaryKey => $id]];
+        $options = ['contain' => ['Apoio' => ['Evento']], "conditions" => ["Item." . $this->Item->primaryKey => $id]];
         $resolucaos = $this->Item->find("first", $options);
 
         $this->set("resolucaos", $resolucaos);

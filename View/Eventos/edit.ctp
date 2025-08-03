@@ -1,12 +1,3 @@
-<?php
-if ($this->Session->check('Auth.User')) {
-	$usuario = $this->Session->read('Auth.User');
-} else {
-	echo 'Visitante.';
-	exit;
-}
-?>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<ul class="navbar-nav">
 		<li class="nav-item">

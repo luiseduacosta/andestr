@@ -3,6 +3,8 @@
 <?php // pr($trs); ?>
 <?php // pr($r['Resolucao']['tr']); ?>
 
+<h1 class="h3"><?php echo $resolucaos['Apoio']['Evento']['nome'] . ' - ' . $resolucaos['Apoio']['Evento']['data'] . ' - ' . $resolucaos['Apoio']['Evento']['local']; ?></h1>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav">
         <li class="nav-item">
