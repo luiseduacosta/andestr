@@ -39,7 +39,7 @@ class EventosController extends AppController
             endif;
             $this->set("usuariogrupo", $usuariogrupo);
         endif;
-        $this->set("usuario", $usuario);
+        $this->set("usuario", $this->Auth->user());
     }
 
     /**
@@ -158,6 +158,8 @@ class EventosController extends AppController
             $this->Flash->error(
                 __("Não foi possível excluir o evento. Tente novamente."),
             );
+            return $this->redirect(["action" => "view", $id]);
+
         }
         return $this->redirect(["action" => "index"]);
     }

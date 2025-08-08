@@ -130,9 +130,10 @@ class UsersController extends AppController {
 
         if ($this->User->delete()) {
             $this->Flash->success(__('Usuário excluído!'));
-            return $this->redirect(['action' => 'index']);
         } else {
             $this->Flash->error(__('Não foi possível excluir o usuário. Tente novamente.'));
+            return $this->redirect(['action' => 'view', $id]);
+
         }
         return $this->redirect(['action' => 'index']);
     }

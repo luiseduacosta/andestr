@@ -50,7 +50,8 @@ class VotacaosController extends AppController
             endif;
             $this->set("usuariogrupo", $usuariogrupo);
         endif;
-        $this->set("usuario", $usuario);
+        $this->set("usuario", $this->Auth->user());
+
     }
 
     /**

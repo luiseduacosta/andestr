@@ -40,7 +40,7 @@ class ItemsController extends AppController
             endif;
             $this->set("usuariogrupo", $usuariogrupo);
         endif;
-        $this->set("usuario", $usuario);
+        $this->set("usuario", $this->Auth->user());
     }
 
     /**
@@ -143,7 +143,7 @@ class ItemsController extends AppController
          */
         $this->loadModel("Evento");
         $eventos = $this->Evento->find("list", [
-            "order" => ["id" => "asc"],
+            "order" => ["ordem" => "asc"],
         ]);
         if (empty($eventos)) {
             $this->Flash->error(__("Não há eventos cadastrados!"));
@@ -386,7 +386,7 @@ class ItemsController extends AppController
             throw new NotFoundException(__("Item não localizado."));
         }
 
-        /** Não usada? A função autenticausuario está em AppController */
+        /** Não usada? A função autenticausuario() está em AppController */
         if ($this->Auth->user("id")):
             $categoria = $this->autenticausuario();
         endif;
@@ -473,6 +473,8 @@ class ItemsController extends AppController
             $this->Flash->success(__("Item excluído."));
         } else {
             $this->Flash->error(__("Item não foi excluído. Tente novamente."));
+            return $this->redirect(["action" => "view", $id]);
+
         }
         return $this->redirect([
             "controller" => "items",

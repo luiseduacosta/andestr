@@ -115,6 +115,7 @@ class GtsController extends AppController
             $this->Flash->error(
                 __("Não foi possível excluir o GT. Tente novamente."),
             );
+            return $this->redirect(["action" => "view", $id]);
         }
         return $this->redirect(["action" => "index"]);
     }

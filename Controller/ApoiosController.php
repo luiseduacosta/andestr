@@ -47,7 +47,7 @@ class ApoiosController extends AppController
             endif;
             $this->set("usuariogrupo", $usuariogrupo);
         endif;
-        $this->set("usuario", $usuario);
+        $this->set("usuario", $this->Auth->user());
     }
 
     /**
@@ -372,6 +372,7 @@ class ApoiosController extends AppController
                     "Não foi possível excluir o Texto de Apoio. Tente novamente.",
                 ),
             );
+            return $this->redirect(["action" => "view", $id]);
         }
         return $this->redirect(["action" => "index"]);
     }
