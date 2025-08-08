@@ -13,7 +13,7 @@
         </li>
         <?php if (isset($usuario) && ($usuario['role'] == 'relator' || $usuario['role'] == 'admin')): ?>
             <li class="nav-item">
-                <?php echo $this->Html->link('Nova votação', '/Items/index?tr=' . $votacao['Votacao']['tr'] . '&evento_id=' . $votacao['Votacao']['evento_id'], ['class' => 'btn btn-info mr-1']); ?>
+                <?php echo $this->Html->link('Nova votação', ['controller' => 'Items', 'action' => 'index', '?' => ['tr' => $votacao['Votacao']['tr'], 'evento_id' => $votacao['Votacao']['evento_id']]], ['class' => 'btn btn-info mr-1']); ?>
            </li>
 
             <li class="nav-item">
@@ -21,8 +21,7 @@
             </li>
 
             <li class="nav-item">
-                <?php // echo $this->Html->link('TR', '/Resolucaos/view/' . $votacao['Votacao']['resolucao_id']); ?>
-                <?php echo $this->Html->link('Exluir', ['delete', $votacao['Votacao']['id']], ['confirm' => __('Está seguro que quer excluir este registro'), 'class' => 'btn btn-danger']); ?>
+                <?php echo $this->Html->link('Exluir', ['action' => 'delete', $votacao['Votacao']['id']], ['confirm' => __('Está seguro que quer excluir este registro'), 'class' => 'btn btn-danger']); ?>
             </li>
         <?php endif; ?>
     </ul>

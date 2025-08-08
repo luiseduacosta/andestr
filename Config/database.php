@@ -7,7 +7,9 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => 'root',
-		'database' => 'andestr',
+		'database' => 'andestr_bak',
+		'charset' => 'utf8',
+		'collation' => 'utf8_general_ci',
 	);
 	public $default = array(
 		'datasource' => 'Database/Mysql',
@@ -17,5 +19,7 @@ class DATABASE_CONFIG {
 		'login' => 'root',
 		'password' => 'root',
 		'database' => 'andestr',
+		'charset' => 'utf8',
+		'collation' => 'utf8_general_ci',
 	);
 }

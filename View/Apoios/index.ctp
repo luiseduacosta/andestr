@@ -11,8 +11,8 @@
 <script>
     $(document).ready(function () {
         var url = "<?= $this->Html->url(['controller' => 'Apoios', 'action' => 'index?evento_id=']); ?>";
+        // var url = '/andestr/Apoios/index?evento_id=';
         // alert(url);
-        var url = 'Apoios/index?evento_id=';
         $("#EventoEventoId").change(function () {
             var evento_id = $(this).val();
             // alert(evento_id);

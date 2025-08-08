@@ -164,17 +164,20 @@ class ItemsController extends AppController
 
         /** Localiza se há TRs */
         $this->loadModel("Apoio");
+        $apoios = null;
         if ($apoio_id) {
             $apoios = $this->Apoio->find("all", [
                 "conditions" => ["Apoio.evento_id" => $evento_id, "Apoio.id" => $apoio_id],
                 "order" => ["numero_texto" => "desc"],
             ]);
+            // debug($apoios);
         } else {
             $apoios = $this->Apoio->find("all", [
                 "conditions" => ["Apoio.evento_id" => $evento_id],
                 "order" => ["numero_texto" => "desc"],
             ]);
-            if (empty($apoios)) {
+            // debug($apoios);
+            if (sizeof($apoios) == 0) {
                 $this->Flash->error(__("Não há textos de apoio nem TRs cadastrados!"));
                 return $this->redirect([
                     "controller" => "Apoios",
@@ -182,8 +185,13 @@ class ItemsController extends AppController
                 ]);
             }
         }
-        $apoioslista = $this->Apoio->find("list");
-
+        $apoioslista = $this->Apoio->find("list", [
+            "fields" => ["id", "titulo"],
+            "conditions" => ["Apoio.evento_id" => $evento_id],
+            "order" => ["numero_texto" => "asc"],
+        ]);
+        // pr($apoioslista);
+        // die();
         /** Para aumentar a numeração dos items da TR */
         if ($apoios) {
             if ($apoio_id) {
@@ -360,13 +368,6 @@ class ItemsController extends AppController
             "fields" => ["Apoio.numero_texto"],
             "conditions" => ["Apoio.evento_id" => $evento_id],
         ]);
-        if (empty($tr)) {
-            $this->Flash->error(__("Não há textos de resolução cadastrados!"));
-            return $this->redirect([
-                "controller" => "Apoios",
-                "action" => "index",
-            ]);
-        }
 
         $this->set("tr", $tr);
         $this->set("eventos", $eventos);
