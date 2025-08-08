@@ -10,6 +10,8 @@ App::uses("AppController", "Controller");
  * @property Evento $Evento
  * @property Item $Item
  * @property PaginatorComponent $Paginator
+ * @property SessionComponent $Session
+ * 
  */
 class ApoiosController extends AppController
 {

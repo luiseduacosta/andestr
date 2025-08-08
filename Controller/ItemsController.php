@@ -385,6 +385,7 @@ class ItemsController extends AppController
             throw new NotFoundException(__("Item não localizado."));
         }
 
+        /** Não usada? A função autenticausuario está em AppController */
         if ($this->Auth->user("id")):
             $categoria = $this->autenticausuario();
         endif;

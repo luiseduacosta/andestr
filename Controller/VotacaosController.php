@@ -1135,8 +1135,11 @@ class VotacaosController extends AppController
 
         $quantidade = null;
         $tr = null;
-        /** Obtenho o grupo e o papel do usuário */
+        /** Obtenho o grupo e o papel do usuário com a função que está em AppConntroller */
         $categoria = $this->autenticausuario();
+        /** Mais, pode ser obtido assim: 
+         * $papel = $this->Auth->user('role') 
+         * $grupo = substr($this->Auth->user('username'), 5, 2) */
         // pr($categoria);
         // die('relatorio');
 
@@ -1150,7 +1153,7 @@ class VotacaosController extends AppController
             foreach ($dados as $c_dados) {
                 // pr($c_dados);
 
-                /* Relatorio por grupo ou total */
+                /** Relatorio por grupo ou total */
                 if (!empty($categoria["grupo"])):
                     $relatorio[$i] = $this->Votacao->find("all", [
                         "order" => ["Votacao.item, Votacao.grupo ASC"],
