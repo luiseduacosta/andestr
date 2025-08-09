@@ -18,7 +18,7 @@ class EventosController extends AppController
      * @var array
      */
     public $helpers = ["Session", "Html", "Form", "Text"];
-    
+
     /**
      * Components
      *
@@ -29,16 +29,7 @@ class EventosController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
-
-        $usuario = $this->Auth->user();
-        if (isset($usuario) && $usuario["role"] == "relator"):
-            if (strlen($usuario["username"]) == 6):
-                $usuariogrupo = substr($usuario["username"], 5, 1);
-            elseif (strlen($usuario["username"]) == 7):
-                $usuariogrupo = substr($usuario["username"], 5, 2);
-            endif;
-            $this->set("usuariogrupo", $usuariogrupo);
-        endif;
+        $this->Auth->allow(['index', 'view']); // Allow public access to these actions
         $this->set("usuario", $this->Auth->user());
     }
 
@@ -76,9 +67,12 @@ class EventosController extends AppController
             ]
         ]);
         $options = [
-            'contains' => ['Apoio' => [
-                'order' => ['Apoio.evento_id' => 'asc', 'Apoio.numero_texto' => 'asc']], 
-                'Gt'],
+            'contains' => [
+                'Apoio' => [
+                    'order' => ['Apoio.evento_id' => 'asc', 'Apoio.numero_texto' => 'asc']
+                ],
+                'Gt'
+            ],
             "conditions" => ["Evento." . $this->Evento->primaryKey => $id],
         ];
         $this->set("evento", $this->Evento->find("first", $options));
@@ -91,6 +85,12 @@ class EventosController extends AppController
      */
     public function add()
     {
+        if ($this->Auth->user('role') === 'admin' || $this->Auth->user('role') === 'editor') {
+            // User has permission to add events
+        } else {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         /** Envio o numero de ordem para o formulário */
         $this->Evento->contain();
         $this->set(
@@ -101,12 +101,12 @@ class EventosController extends AppController
             $this->Evento->create();
             if ($this->Evento->save($this->request->data)) {
                 $this->Flash->success(__("Evento cadastrado."));
-                return $this->redirect(["action" => "index"]);
             } else {
                 $this->Flash->error(
                     __("Não foi possível cadastrar o evento. Tente novamente."),
                 );
             }
+            return $this->redirect(["action" => "index"]);
         }
     }
 
@@ -119,18 +119,22 @@ class EventosController extends AppController
      */
     public function edit($id = null)
     {
+        if ($this->Auth->user('role') !== 'admin' && $this->Auth->user('role') !== 'editor') {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__("Evento não encontrado"));
         }
         if ($this->request->is(["post", "put"])) {
             if ($this->Evento->save($this->request->data)) {
                 $this->Flash->success(__("Evento atualizado."));
-                return $this->redirect(["action" => "view", $id]);
             } else {
                 $this->Flash->error(
                     __("Evento não foi atualizado. Tente novamente."),
                 );
             }
+            return $this->redirect(["action" => "view", $id]);
         } else {
             $options = [
                 "conditions" => ["Evento." . $this->Evento->primaryKey => $id],
@@ -148,6 +152,10 @@ class EventosController extends AppController
      */
     public function delete($id = null)
     {
+        if ($this->Auth->user('role') !== 'admin' && $this->Auth->user('role') !== 'editor') {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Evento->exists($id)) {
             throw new NotFoundException(__("Evento não encontrado"));
         }

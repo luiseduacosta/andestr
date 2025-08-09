@@ -44,17 +44,3 @@
 		</dd>
 	</dl>
 </div>
-
-<?php
-if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
-	?>
-	<div class="container">
-		<div class="row">
-			<ul class="list-group">
-				<li class="list-group-item">
-					<?php echo $this->Html->link(__('Novo GT'), ['controller' => 'gts', 'action' => 'add'], ['class' => 'btn btn-primary btn-sm btn-block']); ?>
-				</li>
-			</ul>
-		</div>
-	</div>
-<?php endif; ?>

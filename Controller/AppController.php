@@ -72,7 +72,14 @@ class AppController extends Controller {
         $this->set('usuario', $this->Auth->user());
 
     }
-
+    /**
+     * Summary of autenticausuario
+     * This method checks the authenticated user and returns their group and role.
+     * If the user is an editor or admin, it returns null for group and their role.
+     * If the user is a regular user, it extracts the group from their username.
+     * Now, it is not necessary to set the user here.
+     * @return array{grupo: string|null, papel: mixed|null}
+     */
     public function autenticausuario() {
 
         if ($this->Auth->user('id')):
@@ -89,12 +96,14 @@ class AppController extends Controller {
                     $grupo = substr($usuario['User']['username'], 5, 2);
                     $papel = $usuario['User']['role'];
                 endif;
-                $usuario = ['grupo' => $grupo, 'papel' => $papel];
-                // pr($usuario);
+                $usuario_autenticado = ['grupo' => $grupo, 'papel' => $papel];
             endif;
-        // $this->set('usuario', $usuario);
-        return $usuario;
+        else:
+            $usuario = null;
+            $usuario_autenticado = null;
         endif;
+
+        return [$usuario, $usuario_autenticado];
     }
 
 }

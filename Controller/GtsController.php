@@ -23,6 +23,19 @@ class GtsController extends AppController
     public $components = ["Paginator"];
 
     /**
+     * Before filter method
+     *
+     * @return void
+     */
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow(['index', 'view']); // Allow public access to these actions
+        // Set the logged user and site title for the view
+        $this->set("usuario", $this->Auth->user());
+    }
+
+    /**
      * index method
      *
      * @return void
@@ -56,16 +69,19 @@ class GtsController extends AppController
      */
     public function add()
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
         if ($this->request->is("post")) {
             $this->Gt->create();
             if ($this->Gt->save($this->request->data)) {
                 $this->Flash->success(__("GT cadastrado."));
-                return $this->redirect(["action" => "index"]);
             } else {
                 $this->Flash->error(
                     __("Não foi possível cadastrar o GT. Tente novamente."),
                 );
             }
+            return $this->redirect(["action" => "index"]);
         }
     }
 
@@ -78,17 +94,23 @@ class GtsController extends AppController
      */
     public function edit($id = null)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Gt->exists($id)) {
             throw new NotFoundException(__("GT não encontrado"));
         }
+
         if ($this->request->is(["post", "put"])) {
             if ($this->Gt->save($this->request->data)) {
                 $this->Flash->success(__("GT atualizado."));
-                return $this->redirect(["action" => "index"]);
+                return $this->redirect(["action" => "view", $id]);
             } else {
                 $this->Flash->error(
                     __("Não foi possível atualizar o GT. Tente novamente."),
                 );
+                return $this->redirect(["action" => "index"]);
             }
         } else {
             $options = ["conditions" => ["Gt." . $this->Gt->primaryKey => $id]];
@@ -105,6 +127,10 @@ class GtsController extends AppController
      */
     public function delete($id = null)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Gt->exists($id)) {
             throw new NotFoundException(__("GT não encontrado"));
         }

@@ -1,12 +1,3 @@
-<?php
-if ($this->Session->check('Auth.User')) {
-	$usuario = $this->Session->read('Auth.User');
-} else {
-	echo 'Visitante.';
-	exit;
-}
-?>
-
 <?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
 
 	<div class="navbar navbar-expand-lg navbar-light bg-light">

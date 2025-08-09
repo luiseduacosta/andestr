@@ -1,13 +1,11 @@
-<?php if (isset($usuario)): ?>
-    <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <ul class='navbar-nav mr-auto'>
-                <li class='nav-item'>
-                    <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
-                </li>
-            </ul>
-        </nav>
-    <?php endif ?>
+<?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <ul class='navbar-nav mr-auto'>
+            <li class='nav-item'>
+                <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
+            </li>
+        </ul>
+    </nav>
 <?php endif ?>
 
 <div class="container">

@@ -20,12 +20,10 @@
             <?php echo $this->Html->link(__('Eventos'), ['action' => 'index'], ['class' => 'nav-link']); ?>
         </li>
 
-        <?php if (isset($usuario)): ?>
-            <?php if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'): ?>
-                <li class='nav-item'>
-                    <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
-                </li>
-            <?php endif ?>
+        <?php if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')): ?>
+            <li class='nav-item'>
+                <?php echo $this->Html->link(__('Novo evento'), ['action' => 'add'], ['class' => 'nav-link']); ?>
+            </li>
         <?php endif ?>
 
         <?php if (isset($evento)): ?>
@@ -51,12 +49,14 @@
     </ul>
 </nav>
 
-<h2 class='h2'><?php echo $evento['Evento']['nome'], ' - ', $evento['Evento']['data'], ' - ', $evento['Evento']['local']; ?></h2>
+<h2 class='h2'>
+    <?php echo $evento['Evento']['nome'], ' - ', $evento['Evento']['data'], ' - ', $evento['Evento']['local']; ?>
+</h2>
 
-<div class="r">
+<div class="row">
     <h2 class='h2'><?php echo __('Textos de apoio'); ?></h2>
     <?php if (!empty($evento['Apoio'])): ?>
-        <table cellpadding="0" cellspacing="0" class="table table-hover table-striped table-responsive">
+        <table class="table table-hover table-striped table-responsive">
             <thead class='thead-light'>
                 <tr>
                     <th><?php echo __('Id'); ?></th>
@@ -75,11 +75,11 @@
                         <td><?php echo $apoio['numero_texto']; ?></td>
                         <td><?php echo $apoio['tema']; ?></td>
                         <td><?php echo $apoio['Gt']['sigla']; ?></td>
-                        <td><?php echo $this->Html->link($apoio['titulo'], ['controller' => 'apoios', 'action' => 'view', $apoio['id']]); ?></td>
+                        <td><?php echo $this->Html->link($apoio['titulo'], ['controller' => 'apoios', 'action' => 'view', $apoio['id']]); ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     <?php endif; ?>
-
 </div>

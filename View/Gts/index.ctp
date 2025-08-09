@@ -10,7 +10,7 @@
         </nav>
     <?php endif; ?>
 
-    <div class="gts row">
+    <div class="container">
         <h2 class="h2"><?php echo __('Grupos de Trabalho'); ?></h2>
         <table cellpadding="0" cellspacing="0" class="table table-hover table-striped table-responsive">
             <thead class="thead-light">

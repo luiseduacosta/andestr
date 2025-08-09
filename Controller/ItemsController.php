@@ -30,16 +30,7 @@ class ItemsController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
-
-        $usuario = $this->Auth->user();
-        if (isset($usuario) && $usuario["role"] == "relator"):
-            if (strlen($usuario["username"]) == 6):
-                $usuariogrupo = substr($usuario["username"], 5, 1);
-            elseif (strlen($usuario["username"]) == 7):
-                $usuariogrupo = substr($usuario["username"], 5, 2);
-            endif;
-            $this->set("usuariogrupo", $usuariogrupo);
-        endif;
+        $this->Auth->allow(['index', 'view']); // Allow public access to these actions
         $this->set("usuario", $this->Auth->user());
     }
 
@@ -126,6 +117,10 @@ class ItemsController extends AppController
      */
     public function add()
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         /**
          * @var mixed $evento_id
          * Captura o evento_id do querystring ou da sessão
@@ -409,6 +404,10 @@ class ItemsController extends AppController
      */
     public function edit($id = null)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Item->exists($id)) {
             throw new NotFoundException(__("Item não localizado"));
         }
@@ -460,6 +459,11 @@ class ItemsController extends AppController
      */
     public function delete($id = null)
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Item->exists($id)) {
             throw new NotFoundException(__("Item não localizado"));
         }
@@ -488,6 +492,11 @@ class ItemsController extends AppController
      */
     public function atualiza()
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['editor', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $this->Item->contain();
         $items = $this->Item->find("all");
 
@@ -584,6 +593,10 @@ class ItemsController extends AppController
 
     public function collation()
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $items = $this->Item->find("all");
 
         foreach ($items as $item) {

@@ -37,16 +37,7 @@ class ApoiosController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
-
-        $usuario = $this->Auth->user();
-        if (isset($usuario) && $usuario["role"] == "relator"):
-            if (strlen($usuario["username"]) == 6):
-                $usuariogrupo = substr($usuario["username"], 5, 1);
-            elseif (strlen($usuario["username"]) == 7):
-                $usuariogrupo = substr($usuario["username"], 5, 2);
-            endif;
-            $this->set("usuariogrupo", $usuariogrupo);
-        endif;
+        $this->Auth->allow(['index', 'view', 'apoiocompleto']); // Allow public access to these actions
         $this->set("usuario", $this->Auth->user());
     }
 
@@ -57,6 +48,7 @@ class ApoiosController extends AppController
      */
     public function index()
     {
+        // Get the event ID from query or session
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
@@ -139,6 +131,10 @@ class ApoiosController extends AppController
      */
     public function add()
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin', 'editor'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+        // Get the event ID from query or session
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
@@ -207,7 +203,7 @@ class ApoiosController extends AppController
                 if ($this->request->data['Apoio']['evento_id']) {
                     $this->loadModel('Evento');
                     $evento = $this->Evento->find('first', [
-                    'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
+                        'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
                     ]);
                 } else {
                     $this->Flash->error(__('Selecione o evento'));
@@ -220,7 +216,7 @@ class ApoiosController extends AppController
                 if ($this->request->data['Apoio']['gt_id']) {
                     $this->loadModel('Gt');
                     $grupodetrabalho = $this->Gt->find('first', [
-                    'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
+                        'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
                     ]);
                 } else {
                     $this->Flash->error(__('Selecione um Grupo de Trabalho ou Setor'));
@@ -265,6 +261,10 @@ class ApoiosController extends AppController
      */
     public function edit($id = null)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin', 'editor'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__("Texto de Apoio não encontrado"));
         }
@@ -294,7 +294,7 @@ class ApoiosController extends AppController
             if ($this->request->data['Apoio']['evento_id']) {
                 $this->loadModel('Evento');
                 $evento = $this->Evento->find('first', [
-                'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
+                    'conditions' => ['Evento.id' => $this->request->data['Apoio']['evento_id']]
                 ]);
             } else {
                 $this->Flash->error(__('Selecione o evento'));
@@ -307,7 +307,7 @@ class ApoiosController extends AppController
             if ($this->request->data['Apoio']['gt_id']) {
                 $this->loadModel('Gt');
                 $grupodetrabalho = $this->Gt->find('first', [
-                'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
+                    'conditions' => ['Gt.id' => $this->request->data['Apoio']['gt_id']]
                 ]);
             } else {
                 $this->Flash->error(__('Selecione um Grupo de Trabalho ou Setor'));
@@ -359,6 +359,10 @@ class ApoiosController extends AppController
      */
     public function delete($id = null)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin', 'editor'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+ 
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__("Texto de Apoio não encontrado"));
         }
@@ -384,6 +388,11 @@ class ApoiosController extends AppController
      */
     public function collation()
     {
+        if ($this->Auth->user()) {
+            $this->Auth->user('role') === 'admin';
+        } else {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
         $this->autoRender = false;
         $apoios = $this->Apoio->find("all");
 
@@ -435,8 +444,8 @@ class ApoiosController extends AppController
                 $this->Flash->error(
                     __(
                         "Não foi possível atualizar o texto de apoio " .
-                            $apoio["Apoio"]["id"] .
-                            ". Tente novamente.",
+                        $apoio["Apoio"]["id"] .
+                        ". Tente novamente.",
                     ),
                 );
                 // die();

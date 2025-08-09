@@ -39,17 +39,7 @@ class VotacaosController extends AppController
     {
         parent::beforeFilter();
 
-        $this->Auth->allow("add", "edit", "delete", "relatorio");
-
-        $usuario = $this->Auth->user();
-        if (isset($usuario) && $usuario["role"] == "relator"):
-            if (strlen($usuario["username"]) == 6):
-                $usuariogrupo = substr($usuario["username"], 5, 1);
-            elseif (strlen($usuario["username"]) == 7):
-                $usuariogrupo = substr($usuario["username"], 5, 2);
-            endif;
-            $this->set("usuariogrupo", $usuariogrupo);
-        endif;
+        $this->Auth->allow("index", "view", "relatorio");
         $this->set("usuario", $this->Auth->user());
 
     }
@@ -185,6 +175,11 @@ class VotacaosController extends AppController
      */
     public function edit($id = null)
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__("Votação não localizada"));
         }
@@ -221,8 +216,8 @@ class VotacaosController extends AppController
             /** O tr tem que ter dois dígitos */
             $this->request->data["Votacao"]["tr"] =
                 strlen($this->request->data["Votacao"]["tr"]) == 1
-                    ? "0" . $this->request->data["Votacao"]["tr"]
-                    : $this->request->data["Votacao"]["tr"];
+                ? "0" . $this->request->data["Votacao"]["tr"]
+                : $this->request->data["Votacao"]["tr"];
 
             /** Se é uma inclusão atualiza o texto do item */
             if ($this->request->data["Votacao"]["resultado"] == "inclusão") {
@@ -373,6 +368,9 @@ class VotacaosController extends AppController
     /** Atualiza o user_id da tabela Votacao com o id do usuario que tem o username igual a grupoX, onde X é o número do grupo */
     public function atualizausuario()
     {
+
+        $this->Auth->user('role') === 'admin';
+
         $grupos = $this->Votacao->find("all", [
             "order" => ["grupo"],
         ]);
@@ -398,9 +396,9 @@ class VotacaosController extends AppController
             endif;
             $this->Votacao->query(
                 "update votacaos set user_id = " .
-                    $usuario[0]["User"]["id"] .
-                    " where id = " .
-                    $c_grupos["Votacao"]["id"],
+                $usuario[0]["User"]["id"] .
+                " where id = " .
+                $c_grupos["Votacao"]["id"],
             );
         endforeach;
     }
@@ -413,6 +411,11 @@ class VotacaosController extends AppController
      */
     public function add($id = null)
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
@@ -815,6 +818,11 @@ class VotacaosController extends AppController
     /** Aprova todos os items da TR em bloco */
     public function aprovaembloco($dados)
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $evento_id = $this->Session->read("evento_id");
         if ($this->request->data["Votacao"]["tr_aprovada"] == 1) {
             $this->loadModel("Item");
@@ -886,6 +894,11 @@ class VotacaosController extends AppController
      */
     public function suprimeTR($suprime)
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
+        /** Verifica se o campo tr_suprimida está marcado */
         if ($this->request->data["Votacao"]["tr_suprimida"] == 1) {
             /* Tem que verificar que selecionou resultado = 'suprimida' */
             if ($this->request->data["Votacao"]["resultado"] !== "suprimida") {
@@ -1051,6 +1064,11 @@ class VotacaosController extends AppController
 
     public function delete($id = null)
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         if (!$this->Votacao->exists($id)) {
             throw new NotFoundException(__("Registro inexistente."));
         }
@@ -1179,18 +1197,18 @@ class VotacaosController extends AppController
                         echo $this->Flash->error(
                             __(
                                 "TR " .
-                                    $c_dados .
-                                    " sem votação neste grupo " .
-                                    $categoria["grupo"] .
-                                    " ou inexistente",
+                                $c_dados .
+                                " sem votação neste grupo " .
+                                $categoria["grupo"] .
+                                " ou inexistente",
                             ),
                         );
                     else:
                         echo $this->Flash->error(
                             __(
                                 "TR " .
-                                    $c_dados .
-                                    " sem votação ou inexistente",
+                                $c_dados .
+                                " sem votação ou inexistente",
                             ),
                         );
                     endif;
@@ -1540,6 +1558,11 @@ class VotacaosController extends AppController
     /** Resolve a colation dos campos da tabela. Precisa crir campos auxiliares que serão excluídos depois */
     public function collation()
     {
+
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $this->autoRender = false;
         $votacoes = $this->Votacao->find("all");
 
@@ -1584,8 +1607,8 @@ class VotacaosController extends AppController
                 $this->Flash->error(
                     __(
                         "Não foi possível atualizar a votação " .
-                            $votacao["Votacao"]["id"] .
-                            ". Tente novamente.",
+                        $votacao["Votacao"]["id"] .
+                        ". Tente novamente.",
                     ),
                 );
             }
@@ -1595,6 +1618,10 @@ class VotacaosController extends AppController
     /** Insere o item_modificado da votação de 'inclusão' na tabela Item */
     public function insercao()
     {
+        if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['relator', 'admin'])) {
+            throw new ForbiddenException(__('Acesso negado.'));
+        }
+
         $this->Votacao->contain(["Item"]);
         $insercao = $this->Votacao->find("all", [
             "conditions" => ["resultado" => "inclusão"],

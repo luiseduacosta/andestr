@@ -1,8 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav mr-auto">
-        <a class='navbar-brand'><?php echo __('Ações'); ?></a>
         <li class='nav-item'>
-            <?php echo $this->Html->link(__('Listar eventos'), array('action' => 'index'), ['class' => 'nav-link']); ?>
+            <?php echo $this->Html->link(__('Listar eventos'), ['action' => 'index'], ['class' => 'nav-link']); ?>
         </li>
     </ul>
 </nav>
