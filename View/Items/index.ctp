@@ -3,7 +3,6 @@
 <?php // pr($votacao);  ?>
 <?php // pr($evento_id);  ?>
 <?php // pr($eventos);  ?>
-<?php // pr($usuariogrupo);  ?>
 <?php // pr($usuario);  ?>
 
 <script>

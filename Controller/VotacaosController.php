@@ -1155,12 +1155,23 @@ class VotacaosController extends AppController
         $quantidade = null;
         $tr = null;
         /** Obtenho o grupo e o papel do usuário com a função que está em AppConntroller */
-        $categoria = $this->autenticausuario();
+        // $categoria = $this->autenticausuario();
+        // pr($categoria);
+
         /** Mais, pode ser obtido assim: 
          * $papel = $this->Auth->user('role') 
-         * $grupo = substr($this->Auth->user('username'), 5, 2) */
-        // pr($categoria);
-        // die('relatorio');
+         * $grupo = substr($this->Auth->user('username'), 5, 2)
+         */
+        $papel = $this->Auth->user('role'); 
+        if ($papel === 'admin' || $papel === 'editor') {
+            $grupo = null;
+        } else {
+            $grupo = substr($this->Auth->user('username'), 5, 2);
+        }
+        $categoria = [
+            "grupo" => $grupo,
+            "papel" => $papel,
+        ];
 
         if ($this->request->data) {
             // pr($this->request->data);

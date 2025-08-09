@@ -39,7 +39,7 @@
                     <!-- verificar como se faz isto  -->
                     <?php
                     if (isset($usuario) && ($usuario['role'] == 'relator' || $usuario['role'] == 'admin')):
-                        echo $this->Html->link('Votação de novo item ', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $evento_id, 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null]], ['class' => ['btn btn-secondary']]);
+                        echo $this->Html->link('Votação de novo item ', ['controller' => 'Items', 'action' => 'index', '?' => ['evento_id' => $evento_id, 'grupo' => isset($usuario) ? substr($usuario['username'], 5, 2) : null]], ['class' => ['btn btn-secondary']]);
                     elseif (isset($usuario) && $usuario['role'] == 'editor'):
                         echo "<h3>Grupos</h3>";
                     endif;
@@ -144,7 +144,7 @@
                                     <?php
                                     if (isset($usuario['role'])):
                                         if ($usuario['role'] == 'relator'):
-                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['action' => 'index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
+                                            echo $this->Html->link($c_votacaos['Votacao']['tr'], ['action' => 'index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'grupo' => isset($usuario) ? substr($usuario['username'], 5, 2) : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         elseif ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
                                             echo $this->Html->link($c_votacaos['Votacao']['tr'], ['action' => 'index', '?' => ['tr' => $c_votacaos['Votacao']['tr'], 'evento_id' => $c_votacaos['Votacao']['evento_id']]]);
                                         endif;
@@ -164,7 +164,7 @@
                                     <?php
                                     if (isset($usuario) && $usuario['role'] == 'relator'):
                                         echo $this->Html->link($c_votacaos['Votacao']['item'], 
-                                        ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'grupo' => isset($usuariogrupo) ? $usuariogrupo : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]],
+                                        ['action' => 'index', '?' => ['item_id' => $c_votacaos['Votacao']['item_id'], 'grupo' => isset($usuario) ? substr($usuario['username'], 5, 2) : null, 'evento_id' => $c_votacaos['Votacao']['evento_id']]],
                                         ['title' => strip_tags(html_entity_decode($c_votacaos['Item']['texto'], ENT_QUOTES, 'UTF-8'))]
                                     );
                                     elseif (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):

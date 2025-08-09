@@ -78,7 +78,7 @@
                 </li>
             <?php elseif (isset($usuario) && $usuario['role'] == 'relator'): ?>
                 <li class="nav-item">
-                    <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => $usuariogrupo], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
+                    <?php echo $this->Html->link(__('TRs'), ['controller' => 'items', 'action' => 'index', '?' => ['grupo' => substr($usuario['username'], 5, 2), 'evento_id' => $evento_id], 'evento_id' => $evento_id], ['class' => 'nav-link']); ?>
                 </li>
             <?php endif; ?>
         <?php else: ?>

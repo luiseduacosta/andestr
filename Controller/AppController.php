@@ -78,13 +78,14 @@ class AppController extends Controller {
      * If the user is an editor or admin, it returns null for group and their role.
      * If the user is a regular user, it extracts the group from their username.
      * Now, it is not necessary to set the user here.
-     * @return array{grupo: string|null, papel: mixed|null}
+     * @return array{string|null, string|null}
      */
     public function autenticausuario() {
 
         if ($this->Auth->user('id')):
             $this->loadModel('User');
             $usuario = $this->User->find('first', [
+                'contain' => [],
                 'conditions' => ['User.id' => $this->Auth->user('id')]
             ]);
             // pr($usuario);
@@ -103,7 +104,7 @@ class AppController extends Controller {
             $usuario_autenticado = null;
         endif;
 
-        return [$usuario, $usuario_autenticado];
+        return $usuario_autenticado;
     }
 
 }
