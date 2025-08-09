@@ -30,7 +30,7 @@ class ItemsController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow(['index', 'view']); // Allow public access to these actions
+        $this->Auth->allow(['index', 'view', 'busca']); // Allow public access to these actions
         $this->set("usuario", $this->Auth->user());
     }
 
@@ -381,11 +381,6 @@ class ItemsController extends AppController
             throw new NotFoundException(__("Item não localizado."));
         }
 
-        /** Não usada? A função autenticausuario() está em AppController */
-        if ($this->Auth->user("id")):
-            $categoria = $this->autenticausuario();
-        endif;
-
         $votacao = isset($this->request->query["votacao"])
             ? $this->request->query["votacao"]
             : 0;
@@ -393,6 +388,68 @@ class ItemsController extends AppController
 
         $options = ["contain" => ['Apoio' => ['Evento'], 'Votacao'], "conditions" => ["Item." . $this->Item->primaryKey => $id]];
         $this->set("item", $this->Item->find("first", $options));
+    }
+
+    /**
+     * busca method - Search through Apoios
+     *
+     * @return void
+     */
+    public function busca()
+    {
+        // Get the event ID from query or session
+        $evento_id = isset($this->request->query["evento_id"]) 
+            ? $this->request->query["evento_id"]
+            : $this->Session->read("evento_id");
+
+        // Initialize conditions array
+        $conditions = [];
+
+        // Add event condition if event_id exists
+        if (!empty($evento_id)) {
+            $conditions['Apoio.evento_id'] = $evento_id;
+        }
+
+        // Check if there's a search term
+        if (!empty($this->request->query['termo'])) {
+            $termo = $this->request->query['termo'];
+            $conditions['Item.texto LIKE'] = '%' . $termo . '%';
+        }
+
+        // Para fazer a lista das TRs na coluna lateral
+        $this->Item->contain(['Apoio']);
+        $tresolucao = $this->Item->find("all", [
+            "conditions" => ["Apoio.evento_id" => $evento_id],
+            "fields" => ["Item.tr"],
+            "group" => ["Item.tr"],
+        ]);
+
+        // Configure pagination
+        $this->Paginator->settings = [
+            'Item' => [
+                'conditions' => $conditions,
+                'fields' => ['Item.id', 'Item.item', 'Item.texto', 'Item.tr', 'Apoio.evento_id', 'Apoio.nomedoevento'],
+                'limit' => 20,
+                'order' => ['Item.item' => 'asc'],
+                'contain' => ['Apoio' => ['fields' => ['evento_id'], 'Evento' => ['fields' => ['nome']]], 'Votacao']
+            ]
+        ];
+
+        // Get all events for the dropdown
+        $this->loadModel("Evento");
+        $eventos = $this->Evento->find("list", [
+            "fields" => ["id", "nome"],
+            "order" => ["ordem" => "asc"]
+        ]);
+
+        // debug($this->Paginator->paginate());
+
+        // Set variables for the view
+        $this->set("tr", $tresolucao);
+        $this->set('items', $this->Paginator->paginate());
+        $this->set('eventos', $eventos);
+        $this->set('evento_id', $evento_id);
+        $this->set('termo', isset($this->request->query['termo']) ? $this->request->query['termo'] : '');
     }
 
     /**

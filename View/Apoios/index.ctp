@@ -21,6 +21,14 @@
     })
 </script>
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class='navbar-nav mr-auto'>
+        <li class='nav-item'>
+            <?php echo $this->Html->link(__('Busca'), ['action' => 'busca'], ['class' => 'nav-link']); ?>
+        </li>
+    </ul>
+</nav>
+
 <div class="row justify-content-center">
     <div class="row mb-3">
         <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
@@ -88,7 +96,6 @@
         <thead class="thead-light">
             <tr>
                 <th><?php echo $this->Paginator->sort('id'); ?></th>
-                <th><?php echo $this->Paginator->sort('nomedoevento', 'Evento'); ?></th>
                 <th><?php echo $this->Paginator->sort('caderno'); ?></th>
                 <th><?php echo $this->Paginator->sort('numero_texto', 'Nº'); ?></th>
                 <th><?php echo $this->Paginator->sort('tema'); ?></th>
@@ -104,7 +111,6 @@
                 <?php // pr($apoio) ?>
                 <tr>
                     <td><?php echo h($apoio['Apoio']['id']); ?>&nbsp;</td>
-                    <td><?php echo h($apoio['Evento']['nome']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['caderno']); ?>&nbsp;</td>
                     <td><?php echo h($apoio['Apoio']['numero_texto']); ?>&nbsp;</td>
                     <td><?php echo $this->Html->link(strip_tags($apoio['Apoio']['tema']), ['index', '?' => ['tema:' . $apoio['Apoio']['tema']]]); ?>&nbsp;

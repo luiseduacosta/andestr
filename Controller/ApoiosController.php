@@ -37,7 +37,7 @@ class ApoiosController extends AppController
     function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow(['index', 'view', 'apoiocompleto']); // Allow public access to these actions
+        $this->Auth->allow(['index', 'view', 'apoiocompleto', 'busca']); // Allow public access to these actions
         $this->set("usuario", $this->Auth->user());
     }
 
@@ -122,6 +122,60 @@ class ApoiosController extends AppController
             "conditions" => ["Apoio." . $this->Apoio->primaryKey => $id],
         ];
         $this->set("apoio", $this->Apoio->find("first", $options));
+    }
+
+    /**
+     * busca method - Search through Apoios
+     *
+     * @return void
+     */
+    public function busca()
+    {
+        // Get the event ID from query or session
+        $evento_id = isset($this->request->query["evento_id"]) 
+            ? $this->request->query["evento_id"]
+            : $this->Session->read("evento_id");
+
+        // Initialize conditions array
+        $conditions = [];
+
+        // Add event condition if event_id exists
+        if (!empty($evento_id)) {
+            $conditions['Apoio.evento_id'] = $evento_id;
+        }
+
+        // Check if there's a search term
+        if (!empty($this->request->query['termo'])) {
+            $termo = $this->request->query['termo'];
+            $conditions['OR'] = [
+                'Apoio.titulo LIKE' => '%' . $termo . '%',
+                'Apoio.texto LIKE' => '%' . $termo . '%',
+                'Apoio.autor LIKE' => '%' . $termo . '%'
+            ];
+        }
+
+        // Configure pagination
+        $this->Paginator->settings = [
+            'Apoio' => [
+                'conditions' => $conditions,
+                'limit' => 20,
+                'order' => ['Apoio.numero_texto' => 'asc'],
+                'contain' => ['Gt', 'Evento']
+            ]
+        ];
+
+        // Get all events for the dropdown
+        $this->loadModel("Evento");
+        $eventos = $this->Evento->find("list", [
+            "fields" => ["id", "nome"],
+            "order" => ["ordem" => "asc"]
+        ]);
+
+        // Set variables for the view
+        $this->set('apoios', $this->Paginator->paginate());
+        $this->set('eventos', $eventos);
+        $this->set('evento_id', $evento_id);
+        $this->set('termo', isset($this->request->query['termo']) ? $this->request->query['termo'] : '');
     }
 
     /**
@@ -393,6 +447,7 @@ class ApoiosController extends AppController
         } else {
             throw new ForbiddenException(__('Acesso negado.'));
         }
+
         $this->autoRender = false;
         $apoios = $this->Apoio->find("all");
 

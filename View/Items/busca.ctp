@@ -6,38 +6,31 @@
 <?php // pr($usuariogrupo);  ?>
 <?php // pr($usuario);  ?>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        var url = "<?= $this->Html->url(['controller' => 'Items', 'action' => 'index']); ?>";
-
-        console.log(document.getElementById('EventoEventoId'));
-        document.querySelector("#EventoEventoId").addEventListener('change', function () {
-            console.log('Valor: ', this.value);
-            var evento_id = this.value;
-            window.location.assign(url + '?evento_id=' + evento_id);
-        })
-    });
-</script>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class='navbar-nav mr-auto'>
         <li class='nav-item'>
-            <?php echo $this->Html->link(__('Buscar'), ['action' => 'busca'], ['class' => 'nav-link']); ?>
+            <?php echo $this->Html->link(__('Listar'), ['action' => 'index'], ['class' => 'nav-link']); ?>
         </li>
     </ul>
 </nav>
 
 <div class="row justify-content-center">
-    <div class="col-auto">
-        <?php if (isset($evento_id)): ?>
-            <?php echo $this->Form->create('Evento', ['class' => 'form-inline']); ?>
-            <?php echo $this->Form->input('evento_id', ['id' => 'EventoEventoId', 'type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
-            <?php echo $this->Form->end(); ?>
-        <?php else: ?>
-            <p class="text-center text-secondary h2"><?php echo end($eventos); ?></p>
-        <?php endif; ?>
+    <div class="form-group mx-2">
+        <?php echo $this->Form->create('Evento', ['type' => 'get', 'class' => 'form-inline']); ?>
+        <?php echo $this->Form->input('evento_id', ['type' => 'select', 'label' => ['text' => 'Eventos', 'class' => 'd-inline-block p-1 form-label'], 'options' => $eventos, 'default' => $evento_id, 'class' => 'form-control']); ?>
     </div>
+    <div class="form-group mx-2">
+        <?php
+        echo $this->Form->input('termo', [
+            'class' => 'form-control',
+            'placeholder' => 'Digite sua busca...',
+            'label' => false,
+            'value' => $termo
+        ]);
+        ?>
+    </div>
+    <?php echo $this->Form->submit('Buscar', ['class' => 'btn btn-primary mx-2']); ?>
+    <?php echo $this->Form->end(); ?>
 </div>
 
 <div class="row">
@@ -94,7 +87,6 @@
                         <?php echo $this->Html->link('TR: ' . $c_tr['Item']['tr'], ['action' => 'index', '?' => ['tr' => $c_tr['Item']['tr'], 'evento_id' => $evento_id]]); ?>
                     </li>
                 <?php endif; ?>
-
             <?php endforeach; ?>
 
         </ul>
@@ -103,7 +95,7 @@
 
     <div class="col-10">
         <h3 class="h3"><?php echo __('TR por Items'); ?></h2>
-            <table class="table table-hover table-striped table-responsive">
+            <table cellpadding="0" cellspacing="0" class="table table-hover table-striped table-responsive">
                 <thead class="thead-light">
                     <tr>
                         <th><?php echo $this->Paginator->sort('item', 'Id'); ?></th>
@@ -116,7 +108,7 @@
                 <tbody>
                     <?php if (isset($items)): ?>
                         <?php foreach ($items as $c_item): ?>
-                            <?php // pr($c_item['Votacao']); ?>
+                            <?php // pr($c_item); ?>
                             <tr>
                                 <td>
                                     <?php
@@ -232,7 +224,7 @@
 
                                         <?php else: ?>
                                             <!-- /* Visitante não vota */ -->
-                                            <?php if (isset($c_item) && count($c_item['Votacao']) > 0): ?>
+                                            <?php if (count($c_item['Votacao']) > 0): ?>
                                                 <li class="nav-item">
                                                     <?php echo $this->Html->link(__('Votações: ') . count($c_item['Votacao']), ['controller' => 'votacaos', 'action' => 'index', '?' => ['item' => $c_item['Item']['item'], 'evento_id' => $c_item['Apoio']['evento_id']]], ['class' => 'btn btn-secondary']); ?>
                                                 </li>
