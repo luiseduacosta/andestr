@@ -132,7 +132,7 @@ class ApoiosController extends AppController
     public function busca()
     {
         // Get the event ID from query or session
-        $evento_id = isset($this->request->query["evento_id"]) 
+        $evento_id = isset($this->request->query["evento_id"])
             ? $this->request->query["evento_id"]
             : $this->Session->read("evento_id");
 
@@ -244,7 +244,7 @@ class ApoiosController extends AppController
                 /** Elimina os retornos e as novas linhas do texto original */
                 $this->request->data["Apoio"]["autor"] = str_replace(
                     ["<br />", "<br>"],
-                    "",
+                    " ",
                     $this->request->data["Apoio"]["autor"],
                 );
                 $this->request->data["Apoio"]["texto"] = str_replace(
@@ -315,6 +315,7 @@ class ApoiosController extends AppController
      */
     public function edit($id = null)
     {
+        // Check if the user is authorized to edit
         if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin', 'editor'])) {
             throw new ForbiddenException(__('Acesso negado.'));
         }
@@ -333,11 +334,11 @@ class ApoiosController extends AppController
                 " ",
                 $this->request->data["Apoio"]["autor"],
             );
-            $this->request->data["Apoio"]["texto"] = str_replace(
-                ["<br />", "<br>"],
-                "",
-                $this->request->data["Apoio"]["texto"],
-            );
+            // $this->request->data["Apoio"]["texto"] = str_replace(
+            //    ["<br />", "<br>"],
+            //    " ",
+            //    $this->request->data["Apoio"]["texto"],
+            // );
             $this->request->data["Apoio"]["texto"] = str_replace(
                 ["\r", "\n"],
                 " ",
@@ -416,7 +417,7 @@ class ApoiosController extends AppController
         if (!$this->Auth->user() || !in_array($this->Auth->user('role'), ['admin', 'editor'])) {
             throw new ForbiddenException(__('Acesso negado.'));
         }
- 
+
         if (!$this->Apoio->exists($id)) {
             throw new NotFoundException(__("Texto de Apoio não encontrado"));
         }

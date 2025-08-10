@@ -48,7 +48,7 @@ class AppController extends Controller {
                     'passwordHasher' => 'Blowfish'
                 )
             ),
-            'authError' => 'Ação não autorizada.',
+            'authError' => 'Esta ação não está autorizada.',
             'loginError' => 'Login errado. Tente novamente.',
             'authorize' => array('Controller')
         ),
@@ -58,7 +58,7 @@ class AppController extends Controller {
     public function isAuthorized($user) {
         // Admin can access every action
 
-        if (isset($user['role']) && $user['role'] === 'admin') {
+        if (isset($user['role']) && ($user['role'] === 'admin') || ($user['role'] === 'editor')) {
             return TRUE;
         }
 

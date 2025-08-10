@@ -16,6 +16,7 @@
 $cakeDescription = __d('cake_dev', 'Andes-SN: plataforma para os grupos mistos dos Conads e Congressos');
 $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -73,7 +74,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 <body class="bg-ligth">
     <div class="container-fluid">
-        <h1 class='h2 bg-danger text-light p-3'>Andes-SN: plataforma para os grupos mistos dos Conads e Congressos</h1>
+        <h1 class='h2 bg-danger text-light p-1'>Andes-SN: plataforma para os grupos mistos dos Conads e Congressos</h1>
         <nav class='navbar navbar-expand-lg navbar-light bg-light'>
             <?php echo $this->Html->link('ANDES-SN', 'http://www.andes.org.br', ['target' => '_blank', '_full' => true, 'class' => 'navbar-brand']); ?>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuprincipal"
@@ -87,10 +88,8 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
                 <li class="nav-item">
                     <?php
-                    if (isset($usuario)):
-                        if ($usuario['role'] == 'editor' || $usuario['role'] == 'admin'):
-                            echo $this->Html->link('Usuários', ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link']);
-                        endif;
+                    if (isset($usuario) && ($usuario['role'] == 'editor' || $usuario['role'] == 'admin')):
+                        echo $this->Html->link('Usuários', ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link']);
                     endif;
                     ?>
                 </li>
@@ -149,6 +148,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         </nav>
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <ul class="navbar-nav mr-auto">
             <?php
             if (isset($usuario)):
                 if ($usuario['role'] === 'relator'):
@@ -157,16 +157,35 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
                     elseif (strlen($usuario['username']) == 7):
                         $usuariogrupo = substr($usuario['username'], 5, 2);
                     endif;
-                    echo $this->Html->link("Grupo: " . $usuariogrupo, ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => $usuariogrupo]], ['class' => 'navbar-brand mb-0 h1']);
+                    ?>
+                    <li class="nav-item">
+                        <?php
+                        echo $this->Html->link("Grupo: " . $usuariogrupo, ['controller' => 'Votacaos', 'action' => 'index', '?' => ['grupo' => $usuariogrupo]], ['class' => 'navbar-brand mb-0 h1']);
+                        ?>
+                    </li>
+                    <?php
                 elseif ($usuario['role'] === 'editor'):
-                    echo "<span class = 'navbar-brand mb-0 h1'>Editor</p>";
+                    ?>
+                    <li class="nav-item">
+                        <span class='navbar-brand mb-0 h1'>Editor</span>
+                    </li>
+                    <?php
                 elseif ($usuario['role'] == 'admin'):
-                    echo "<span class = 'navbar-brand mb-0 h1'>Administrador</span>";
+                    ?>
+                    <li class="nav-item">
+                        <span class='navbar-brand mb-0 h1'>Administrador</span>
+                    </li>
+                    <?php
                 endif;
             else:
-                echo "<span class = 'navbar-brand mb-0 h1'>Visitante</span>";
+                ?>
+                <li class="nav-item">
+                    <span class='navbar-brand mb-0 h1'>Visitante</span>
+                </li>
+                <?php
             endif;
             ?>
+            </ul>
         </nav>
 
         <div class="container">

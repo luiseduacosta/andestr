@@ -7,11 +7,11 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <ul class="navbar-nav">
         <li class="nav-item">
-            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Item.id')], ['confirm' => __('Are you sure you want to delete # %s?', $this->Form->value('Item.id'))], ['class' => 'nav-link']);
+            <?php echo $this->Form->postLink(__('Excluir'), ['action' => 'delete', $this->Form->value('Item.id')], ['confirm' => __('Tem certeza que quer excluir este item # %s?', $this->Form->value('Item.id')), 'class' => 'nav-link']);
             ?>
         </li>
         <li class='nav-item'>
-            <?php echo $this->Html->link(__('Listar items'), array('action' => 'index'), ['nav-link']); ?>
+            <?php echo $this->Html->link(__('Listar items'), ['action' => 'index'], ['class' => 'nav-link']); ?>
         </li>
     </ul>
 </nav>
